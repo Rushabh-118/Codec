@@ -56,7 +56,8 @@ body {
 }
 .join-form button {
   width: 100%;
-  padding: 0.75rem;
+  padding: 0.7rem 1.2rem;
+  margin-bottom: 1rem;
   background: linear-gradient(135deg, #ff7eb3, #ff758c);
   color: #fff;
   border: none;

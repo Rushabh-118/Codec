@@ -13,7 +13,7 @@ const Editor1 = () => {
   const [joined, setJoined] = useState(false);
   const [roomId, setRoomId] = useState("");
   const [userName, setUserName] = useState("");
-  const [language, setLanguage] = useState("javascript");
+  const [language, setLanguage] = useState("");
   const [code, setCode] = useState("// start code here");
   const [copySuccess, setCopySuccess] = useState("");
   const [users, setUsers] = useState([]);
@@ -178,6 +178,13 @@ const Editor1 = () => {
           <option value="python">Python</option>
           <option value="java">Java</option>
           <option value="cpp">C++</option>
+          <option value="c">C</option>
+          <option value="csharp">C#</option>
+          <option value="php">PHP</option>
+          <option value="go">Go</option>
+          <option value="ruby">Ruby</option>
+          <option value="rust">Rust</option>
+          <option value="kotlin">Kotlin</option>
         </select>
         <Link to="/">
           <button className="leave-button" onClick={leaveRoom}>

@@ -11,13 +11,14 @@
   },
   "dependencies": {
     "@monaco-editor/react": "^4.7.0",
+    "axios": "^1.9.0",
     "cce": "file:..",
     "frontend": "file:",
     "lucide-react": "^0.476.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hot-toast": "^2.5.2",
-    "react-router-dom": "^7.2.0",
+    "react-router-dom": "^7.6.1",
     "react-toastify": "^11.0.5",
     "socket.io-client": "^4.8.1",
     "uuid": "^11.1.0"

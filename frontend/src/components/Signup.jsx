@@ -1,15 +1,43 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const Signup = () => {
   const [form, setForm] = useState({ name: "", email: "", password: "" });
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate(); // <- navigate hook
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Signup data:", form);
+    setLoading(true);
+
+    try {
+      const response = await fetch("http://localhost:5001/api/auth/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        toast.error(data.message || "Signup failed");
+      } else {
+        toast.success("Signup successful! Redirecting to login...");
+        setForm({ name: "", email: "", password: "" });
+
+        // Redirect to login page after short delay
+        setTimeout(() => navigate("/login"), 1000);
+      }
+    } catch (error) {
+      toast.error("Network error. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -20,10 +48,12 @@ const Signup = () => {
       >
         <h2 className="text-3xl font-bold text-center text-gray-900 mb-2">Create Account</h2>
         <p className="text-center text-gray-600 mb-6">Start your journey with us</p>
+
         <input
           type="text"
           name="name"
           placeholder="Full Name"
+          value={form.name}
           onChange={handleChange}
           className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-900"
           required
@@ -32,6 +62,7 @@ const Signup = () => {
           type="email"
           name="email"
           placeholder="Email"
+          value={form.email}
           onChange={handleChange}
           className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-900"
           required
@@ -40,16 +71,20 @@ const Signup = () => {
           type="password"
           name="password"
           placeholder="Password"
+          value={form.password}
           onChange={handleChange}
           className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-900"
           required
         />
+
         <button
           type="submit"
-          className="w-full py-3 bg-gray-900 text-white rounded-xl font-semibold hover:bg-gray-800 transition-all hover:shadow-md"
+          disabled={loading}
+          className="w-full py-3 bg-gray-900 text-white rounded-xl font-semibold hover:bg-gray-800 transition-all hover:shadow-md disabled:opacity-50"
         >
-          Sign Up
+          {loading ? "Signing up..." : "Sign Up"}
         </button>
+
         <p className="text-center text-sm text-gray-500">
           Already have an account? <a href="/login" className="text-[#F83002] font-medium">Login</a>
         </p>

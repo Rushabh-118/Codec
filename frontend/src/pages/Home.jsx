@@ -29,6 +29,22 @@ export const Navigation = () => {
               Co<span className="text-[#F83002]">dac</span>
             </h1>
           </a>
+
+          {/* Login/Sign Up Buttons */}
+          <div className="flex items-center gap-4">
+            <Link
+              to="/login"
+              className="text-sm font-medium text-gray-700 hover:text-gray-900"
+            >
+              Login
+            </Link>
+            <Link
+              to="/signup"
+              className="px-4 py-2 bg-gray-900 text-white text-sm rounded-full hover:bg-gray-800 transition-colors"
+            >
+              Sign Up
+            </Link>
+          </div>
         </div>
       </div>
     </nav>

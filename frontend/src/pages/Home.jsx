@@ -55,7 +55,9 @@ export const Navigation = () => {
           <Link to="/" className="flex items-center gap-2">
             <MonitorCog className="text-[#F83002]" size={24} />
             <h1 className="text-2xl font-bold font-display dark:text-white">
-              Co<span className="text-[#F83002]">dac</span>
+              Co<span className="text-[#F83002]" onClick={() =>
+                  document.getElementById("hero")?.scrollIntoView({ behavior: "smooth" })
+                }>dac</span>
             </h1>
           </Link>
 
@@ -186,7 +188,7 @@ const Hero = () => {
   };
 
   return (
-    <section className="min-h-[110vh] flex items-center justify-center bg-gradient-to-b from-gray-50 to-white pt-16 pb-24 dark:from-gray-900 dark:to-gray-800">
+    <section id="hero" className="min-h-[110vh] flex items-center justify-center bg-gradient-to-b from-gray-50 to-white pt-16 pb-24 dark:from-gray-900 dark:to-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex flex-col md:flex-row items-center md:items-start gap-12">
         {/* Left Image */}
         <div className="w-full md:w-1/2 flex justify-center md:justify-start">

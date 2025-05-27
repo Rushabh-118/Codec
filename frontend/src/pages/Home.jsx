@@ -65,7 +65,7 @@ export const Navigation = () => {
                 onClick={() =>
                   document.getElementById("features")?.scrollIntoView({ behavior: "smooth" })
                 }
-                className="text-sm text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+                className="text-xl text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
               >
                 Features
               </button>
@@ -75,7 +75,7 @@ export const Navigation = () => {
                 onClick={() =>
                   document.getElementById("Feedback")?.scrollIntoView({ behavior: "smooth" })
                 }
-                className="text-sm text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+                className="text-xl text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
               >
                 Feedback
               </button>
@@ -85,7 +85,7 @@ export const Navigation = () => {
                 onClick={() =>
                   document.getElementById("footer")?.scrollIntoView({ behavior: "smooth" })
                 }
-                className="text-sm text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+                className="text-xl text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
               >
                 Footer
               </button>

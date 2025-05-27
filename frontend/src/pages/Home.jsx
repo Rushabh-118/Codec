@@ -2,6 +2,7 @@ import { ArrowRight, MonitorCog } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Toaster, toast } from "react-hot-toast";
+import picture from "../assets/3911318.jpg"; 
 
 // ------------------------ Navigation ------------------------
 export const Navigation = () => {
@@ -186,43 +187,56 @@ const Hero = () => {
 
   return (
     <section className="min-h-[110vh] flex items-center justify-center bg-gradient-to-b from-gray-50 to-white pt-16 pb-24 dark:from-gray-900 dark:to-gray-800">
-      <div className="text-center px-4 max-w-4xl mx-auto">
-        <span className="inline-block px-4 py-1.5 mb-4 text-sm font-semibold bg-gray-100 rounded-full dark:bg-gray-700 dark:text-gray-200">
-          Build Faster. Collaborate Better.
-        </span>
-        <h1 className="text-4xl md:text-6xl font-bold mb-4 font-display leading-tight dark:text-white">
-          Create Beautiful <br /> Digital Experiences
-        </h1>
-        <p className="text-gray-600 text-lg md:text-xl mb-6 max-w-2xl mx-auto dark:text-gray-300">
-          Transform your ideas into reality with our powerful and intuitive platform.
-        </p>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex flex-col md:flex-row items-center md:items-start gap-12">
+        {/* Left Image */}
+        <div className="w-full md:w-1/2 flex justify-center md:justify-start">
+        <img
+          src={picture} // Replace with your image URL or import
+          alt="Hero"
+          loading="lazy"
+          className="max-w-full h-auto rounded-lg shadow-lg"
+        />
+      </div>
+        {/* Right Content */}
+        <div className="w-full md:w-1/2 text-center md:text-left px-4 md:px-0">
+          <span className="inline-block px-4 py-1.5 mb-4 text-sm font-semibold bg-gray-100 rounded-full dark:bg-gray-700 dark:text-gray-200">
+            Build Faster. Collaborate Better.
+          </span>
+          <h1 className="text-4xl md:text-6xl font-bold mb-4 font-display leading-tight dark:text-white">
+            Create Beautiful <br /> Digital Experiences
+          </h1>
+          <p className="text-gray-600 text-lg md:text-xl mb-6 max-w-2xl dark:text-gray-300">
+            Transform your ideas into reality with our powerful and intuitive platform.
+          </p>
 
-        <div className="flex flex-wrap justify-center gap-4 mb-6">
-          <span className="px-4 py-1 bg-purple-100 text-purple-700 text-sm font-medium rounded-full dark:bg-purple-900 dark:text-purple-300">
-            Real-Time Collaboration
-          </span>
-          <span className="px-4 py-1 bg-red-100 text-red-700 text-sm font-medium rounded-full dark:bg-red-900 dark:text-red-300">
-            Code with Friends
-          </span>
-          <span className="px-4 py-1 bg-green-100 text-green-700 text-sm font-medium rounded-full dark:bg-green-900 dark:text-green-300">
-            Fast & Secure
-          </span>
-          <span className="px-4 py-1 bg-blue-100 text-blue-700 text-sm font-medium rounded-full dark:bg-blue-900 dark:text-blue-300">
-            Real-Time Sync
-          </span>
+          <div className="flex flex-wrap justify-center md:justify-start gap-4 mb-6">
+            <span className="px-4 py-1 bg-purple-100 text-purple-700 text-sm font-medium rounded-full dark:bg-purple-900 dark:text-purple-300">
+              Real-Time Collaboration
+            </span>
+            <span className="px-4 py-1 bg-red-100 text-red-700 text-sm font-medium rounded-full dark:bg-red-900 dark:text-red-300">
+              Code with Friends
+            </span>
+            <span className="px-4 py-1 bg-green-100 text-green-700 text-sm font-medium rounded-full dark:bg-green-900 dark:text-green-300">
+              Fast & Secure
+            </span>
+            <span className="px-4 py-1 bg-blue-100 text-blue-700 text-sm font-medium rounded-full dark:bg-blue-900 dark:text-blue-300">
+              Real-Time Sync
+            </span>
+          </div>
+
+          <button
+            onClick={handleGetStarted}
+            className="inline-flex items-center px-6 py-3 bg-gray-900 text-white rounded-full hover:bg-gray-800 transition-all hover:scale-105 hover:shadow-md"
+          >
+            Get Started
+            <ArrowRight size={20} className="ml-2" />
+          </button>
         </div>
-
-        <button
-          onClick={handleGetStarted}
-          className="inline-flex items-center px-6 py-3 bg-gray-900 text-white rounded-full hover:bg-gray-800 transition-all hover:scale-105 hover:shadow-md"
-        >
-          Get Started
-          <ArrowRight size={20} className="ml-2" />
-        </button>
       </div>
     </section>
   );
 };
+
 
 // ------------------------ Features ------------------------
 const Features = () => {

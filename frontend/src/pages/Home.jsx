@@ -30,14 +30,14 @@ export const Navigation = () => {
   return (
     <nav
       className={`fixed w-full z-50 transition-all duration-300 ${
-        isScrolled ? "bg-white/80 backdrop-blur-md shadow-sm" : "bg-transparent"
+        isScrolled ? "bg-white/90 backdrop-blur-md shadow-md" : "bg-transparent"
       }`}
     >
-      <div className="container mx-auto px-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <Link to="/" className="font-display font-bold text-xl flex items-center gap-2">
-            <MonitorCog />
-            <h1 className="text-2xl font-bold">
+          <Link to="/" className="flex items-center gap-2">
+            <MonitorCog className="text-[#F83002]" size={24} />
+            <h1 className="text-2xl font-bold font-display">
               Co<span className="text-[#F83002]">dac</span>
             </h1>
           </Link>
@@ -45,13 +45,15 @@ export const Navigation = () => {
           <div className="flex items-center gap-4">
             {user ? (
               <div className="flex items-center gap-3">
-                <span className="text-sm font-medium text-gray-700">
+                <span className="text-sm text-gray-700">
                   Welcome,{" "}
-                  <span className="text-[#F83002] font-semibold">{user.email}</span>
+                  <span className="font-semibold text-[#F83002]">
+                    {user.email}
+                  </span>
                 </span>
                 <button
                   onClick={handleLogout}
-                  className="text-sm text-gray-700 hover:text-gray-900"
+                  className="text-sm text-gray-700 hover:text-gray-900 transition-colors"
                 >
                   Logout
                 </button>
@@ -60,7 +62,7 @@ export const Navigation = () => {
               <>
                 <Link
                   to="/login"
-                  className="text-sm font-medium text-gray-700 hover:text-gray-900"
+                  className="text-sm text-gray-700 hover:text-gray-900 transition-colors"
                 >
                   Login
                 </Link>
@@ -99,31 +101,27 @@ const Hero = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-50 to-white">
-      <div className="container mx-auto px-4 py-32 text-center">
-        <span className="inline-block px-4 py-1.5 mb-6 text-sm font-semibold bg-gray-100 rounded-full animate-fade-in">
+    <section className="flex items-center justify-center bg-gradient-to-b from-gray-50 to-white pt-16 pb-24">
+      <div className="text-center px-4 max-w-3xl mx-auto">
+        <span className="inline-block px-4 py-1.5 mb-6 text-sm font-semibold bg-gray-100 rounded-full">
           Introducing Our Platform
         </span>
-        <h1 className="font-display text-4xl md:text-6xl font-bold mb-6 animate-fade-up">
+        <h1 className="text-4xl md:text-6xl font-bold mb-6 font-display leading-tight">
           Create Beautiful <br /> Digital Experiences
         </h1>
-        <p
-          className="text-gray-600 text-lg md:text-xl max-w-2xl mx-auto mb-8 animate-fade-up"
-          style={{ animationDelay: "0.2s" }}
-        >
+        <p className="text-gray-600 text-lg md:text-xl mb-8 max-w-2xl mx-auto">
           Transform your ideas into reality with our powerful and intuitive
           platform
         </p>
         <button
           onClick={handleGetStarted}
-          className="inline-flex items-center px-6 py-3 bg-gray-900 text-white rounded-full hover:bg-gray-800 transition-colors animate-fade-up hover:scale-105 hover:shadow-md"
-          style={{ animationDelay: "0.3s" }}
+          className="inline-flex items-center px-6 py-3 bg-gray-900 text-white rounded-full hover:bg-gray-800 transition-all hover:scale-105 hover:shadow-md"
         >
           Get Started
           <ArrowRight size={20} className="ml-2" />
         </button>
       </div>
-    </div>
+    </section>
   );
 };
 
@@ -133,29 +131,29 @@ const Features = () => {
     {
       title: "Intuitive Design",
       description: "Clean and modern interface that puts user experience first",
+      icon: "✨",
     },
     {
       title: "Powerful Tools",
       description: "Advanced features to help you achieve your goals faster",
+      icon: "⚡",
     },
     {
       title: "Seamless Integration",
       description: "Works perfectly with your existing workflow and tools",
+      icon: "🔗",
     },
   ];
+
   return (
-    <section
-      id="features"
-      className="py-24 bg-gray-100 border-t-4 border-orange-500"
-      style={{ minHeight: "400px" }}
-    >
-      <div className="container mx-auto px-4">
+    <section id="features" className="py-20 bg-gray-100">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <span className="inline-block px-4 py-1.5 mb-6 text-sm font-semibold bg-orange-100 text-orange-700 rounded-full">
+          <span className="inline-block px-4 py-1.5 mb-4 text-sm font-semibold bg-orange-100 text-orange-700 rounded-full">
             Features
           </span>
-          <h2 className="font-display text-3xl md:text-4xl font-bold mb-4 text-gray-800">
-            Everything you need
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-800 font-display">
+            Everything You Need
           </h2>
           <p className="text-gray-700 max-w-2xl mx-auto">
             Our platform provides all the tools and features you need to succeed
@@ -164,11 +162,11 @@ const Features = () => {
         <div className="grid md:grid-cols-3 gap-8">
           {features.map((feature, index) => (
             <div
-              key={feature.title}
-              className="p-6 rounded-2xl bg-white shadow-lg hover:shadow-xl transition-shadow"
-              style={{ animationDelay: `${index * 0.1}s` }}
+              key={index}
+              className="p-8 rounded-2xl bg-white shadow-lg hover:shadow-xl transition-all"
             >
-              <h3 className="font-display text-xl font-semibold mb-3 text-gray-900">
+              <div className="text-3xl mb-4">{feature.icon}</div>
+              <h3 className="text-xl font-semibold mb-3 text-gray-900">
                 {feature.title}
               </h3>
               <p className="text-gray-700">{feature.description}</p>
@@ -180,18 +178,131 @@ const Features = () => {
   );
 };
 
+// ------------------------ Feedback ------------------------
+const FeedbackForm = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    // Simulate form submission
+    setTimeout(() => {
+      setIsSubmitting(false);
+      toast.success("Thank you for your feedback!");
+      setFormData({ name: "", email: "", message: "" });
+    }, 1000);
+  };
+
+  return (
+    <section className="py-20 bg-white">
+      <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold mb-4 text-gray-800 font-display">
+            We'd Love Your Feedback
+          </h2>
+          <p className="text-gray-600">
+            Your input helps us improve our platform
+          </p>
+        </div>
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-6 bg-gray-50 p-8 rounded-xl shadow-sm"
+        >
+          <div>
+            <label
+              htmlFor="name"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              Name <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              name="name"
+              id="name"
+              required
+              value={formData.name}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              Email <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="email"
+              name="email"
+              id="email"
+              required
+              value={formData.email}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="message"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              Message <span className="text-red-500">*</span>
+            </label>
+            <textarea
+              name="message"
+              id="message"
+              rows="4"
+              required
+              value={formData.message}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
+            ></textarea>
+          </div>
+          <div className="pt-2">
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full flex justify-center items-center px-6 py-3 bg-gray-900 text-white rounded-md hover:bg-gray-800 transition-colors disabled:opacity-70"
+            >
+              {isSubmitting ? "Submitting..." : "Submit Feedback"}
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+  );
+};
+
 // ------------------------ Footer ------------------------
 const Footer = () => {
   return (
-    <footer
-      className="bg-gray-900 text-white py-12 mt-24 border-t-4 border-orange-600"
-      style={{ fontSize: "1rem" }}
-    >
-      <div className="container mx-auto px-4 text-center">
-        <p className="mb-2 font-semibold">
-          Code <b>Together</b>, Create <b>Together</b>
-        </p>
-        <p className="text-sm opacity-80">&copy; 2025 CCE. All rights reserved.</p>
+    <footer className="bg-gray-900 text-white py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center">
+          <div className="flex justify-center mb-6">
+            <MonitorCog className="text-white" size={28} />
+          </div>
+          <p className="text-xl font-semibold mb-4">
+            Code <span className="text-orange-400">Together</span>, Create{" "}
+            <span className="text-orange-400">Together</span>
+          </p>
+          <p className="text-gray-400 text-sm">
+            &copy; {new Date().getFullYear()} CCE. All rights reserved.
+          </p>
+        </div>
       </div>
     </footer>
   );
@@ -200,10 +311,11 @@ const Footer = () => {
 // ------------------------ Home ------------------------
 const Home = () => {
   return (
-    <div>
+    <div className="overflow-x-hidden">
       <Navigation />
       <Hero />
       <Features />
+      <FeedbackForm />
       <Footer />
       <Toaster position="top-center" reverseOrder={false} />
     </div>

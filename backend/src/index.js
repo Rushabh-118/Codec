@@ -8,6 +8,7 @@ import apiRoutes from "./routes/apiRoutes.js";
 import editor from "./controllers/socketController.js";
 import authRoutes from "./routes/authRoutes.js";
 import path from "path";
+import feedbackRoutes from "./routes/feedbackRoutes.js";
 
 dotenv.config();
 
@@ -23,6 +24,7 @@ app.use(express.json());
 // API Routes
 app.use("/api", apiRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/feedback", feedbackRoutes);
 
 const server = http.createServer(app);
 

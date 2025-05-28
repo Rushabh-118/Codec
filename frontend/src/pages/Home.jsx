@@ -95,7 +95,7 @@ export const Navigation = () => {
                 <span className="text-sm text-gray-700 dark:text-gray-300">
                   Welcome,{" "}
                   <span className="font-semibold text-[#F83002]">
-                    {user.email}
+                    {user.email.split("@")[0]}
                   </span>
                 </span>
                 <button
@@ -613,3 +613,20 @@ const Home = () => {
 };
 
 export default Home;
+
+
+//{user ? (
+//  <div className="flex items-center gap-3">
+//    <span className="text-sm text-gray-700 dark:text-gray-300">
+ //     Welcome,{" "}
+  //    <span className="font-semibold text-[#F83002]"></span>
+    //    {user.name || "User"} {/* Changed from user.email.split("@")[0] */}
+   //   </span>
+ ///   </span>
+   // <button
+    //  onClick={handleLogout}
+    //  className="text-sm text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+//    >
+//      Logout
+//    </button>
+//  </div>

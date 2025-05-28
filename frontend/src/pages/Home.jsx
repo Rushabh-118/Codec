@@ -61,7 +61,7 @@ export const Navigation = () => {
               }
               className="text-2xl font-bold font-display text-black dark:text-white"
             >
-              Co<span className="text-[#F83002]">dac</span>
+              Co<span className="text-[#F83002]">deC</span>
             </h1>
           </Link>
 
@@ -100,7 +100,7 @@ export const Navigation = () => {
                 </span>
                 <button
                   onClick={handleLogout}
-                  className="text-sm text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+                  className="px-4 py-2 rounded hover:bg-orange-500 text-white bg-blue-600 transition-colors"
                 >
                   Logout
                 </button>
@@ -418,7 +418,10 @@ const FeedbackForm = () => {
 
 // ------------------------ Testimonials ------------------------
 const Testimonials = () => (
-  <section id="testimonials" className="py-20 bg-gradient-to-br from-gray-100 to-white dark:from-gray-800 dark:to-gray-900">
+  <section
+    id="testimonials"
+    className="py-20 bg-gradient-to-br from-gray-100 to-white dark:from-gray-800 dark:to-gray-900"
+  >
     <div className="max-w-5xl mx-auto text-center px-4">
       <h2 className="text-4xl font-bold text-gray-800 dark:text-white mb-12">
         What Our Users Say
@@ -433,11 +436,19 @@ const Testimonials = () => (
             key={i}
             className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg hover:shadow-xl transition duration-300"
           >
-            <svg className="w-8 h-8 text-indigo-500 mb-4" fill="currentColor" viewBox="0 0 24 24">
+            <svg
+              className="w-8 h-8 text-indigo-500 mb-4"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
               <path d="M7 17h3l2-5V7H7v5h2v5zm7 0h3l2-5V7h-5v5h2v5z" />
             </svg>
-            <p className="text-lg text-gray-700 dark:text-gray-300 italic mb-2">{testimonial.quote}</p>
-            <span className="text-sm font-medium text-gray-500 dark:text-gray-400">- {testimonial.name}</span>
+            <p className="text-lg text-gray-700 dark:text-gray-300 italic mb-2">
+              {testimonial.quote}
+            </p>
+            <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
+              - {testimonial.name}
+            </span>
           </div>
         ))}
       </div>
@@ -483,7 +494,10 @@ const Pricing = () => (
             </h3>
             <p className="text-4xl font-bold mb-6 text-indigo-600 dark:text-indigo-400">
               ${tier.price}
-              <span className="text-sm font-normal text-gray-500 dark:text-gray-400"> /mo</span>
+              <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
+                {" "}
+                /mo
+              </span>
             </p>
             <ul className="text-left space-y-3 text-gray-700 dark:text-gray-300">
               {tier.features.map((f, j) => (
@@ -549,17 +563,14 @@ const CTA = () => {
           🚀 Ready to Code Together?
         </h2>
         <p className="text-lg text-gray-700 dark:text-gray-300 mb-8">
-          Build real-time collaborative coding experiences with your team — fast, easy, and powerful.
+          Build real-time collaborative coding experiences with your team —
+          fast, easy, and powerful.
         </p>
         <button
           onClick={() => navigate("/api/create-room")}
           className="inline-flex items-center gap-2 bg-orange-600 hover:bg-orange-700 text-white font-semibold px-8 py-3 rounded-full shadow-lg transition-all duration-300"
         >
-          <svg
-            className="w-5 h-5"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-          >
+          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
             <path d="M10.293 15.707a1 1 0 010-1.414L13.586 11H4a1 1 0 110-2h9.586l-3.293-3.293a1 1 0 111.414-1.414l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0z" />
           </svg>
           Start Coding
@@ -614,18 +625,17 @@ const Home = () => {
 
 export default Home;
 
-
 //{user ? (
 //  <div className="flex items-center gap-3">
 //    <span className="text-sm text-gray-700 dark:text-gray-300">
- //     Welcome,{" "}
-  //    <span className="font-semibold text-[#F83002]"></span>
-    //    {user.name || "User"} {/* Changed from user.email.split("@")[0] */}
-   //   </span>
- ///   </span>
-   // <button
-    //  onClick={handleLogout}
-    //  className="text-sm text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+//     Welcome,{" "}
+//    <span className="font-semibold text-[#F83002]"></span>
+//    {user.name || "User"} {/* Changed from user.email.split("@")[0] */}
+//   </span>
+///   </span>
+// <button
+//  onClick={handleLogout}
+//  className="text-sm text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
 //    >
 //      Logout
 //    </button>

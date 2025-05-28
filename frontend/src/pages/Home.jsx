@@ -2,7 +2,7 @@ import { ArrowRight, MonitorCog } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Toaster, toast } from "react-hot-toast";
-import picture from "../assets/3911318.jpg"; 
+import picture from "../assets/3911318.jpg";
 
 // ------------------------ Navigation ------------------------
 export const Navigation = () => {
@@ -51,57 +51,52 @@ export const Navigation = () => {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
             <MonitorCog className="text-[#F83002]" size={24} />
-            <h1 className="text-2xl font-bold font-display text-black dark:text-white">
-              Co<span className="text-[#F83002]" onClick={() =>
-                  document.getElementById("hero")?.scrollIntoView({ behavior: "smooth" })
-                }>dac</span>
+            <h1
+              onClick={() =>
+                document
+                  .getElementById("hero")
+                  ?.scrollIntoView({ behavior: "smooth" })
+              }
+              className="text-2xl font-bold font-display text-black dark:text-white"
+            >
+              Co<span className="text-[#F83002]">dac</span>
             </h1>
           </Link>
 
-          {/* Navigation links */}
           <ul className="flex items-center gap-6">
-            <li>
-              <button
-                onClick={() =>
-                  document.getElementById("features")?.scrollIntoView({ behavior: "smooth" })
-                }
-                className="text-xl text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
-              >
-                Features
-              </button>
-            </li>
-            <li>
-              <button
-                onClick={() =>
-                  document.getElementById("Feedback")?.scrollIntoView({ behavior: "smooth" })
-                }
-                className="text-xl text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
-              >
-                Feedback
-              </button>
-            </li>
-            <li>
-              <button
-                onClick={() =>
-                  document.getElementById("footer")?.scrollIntoView({ behavior: "smooth" })
-                }
-                className="text-xl text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
-              >
-                Footer
-              </button>
-            </li>
+            {[
+              "features",
+              "Feedback",
+              "testimonials",
+              "pricing",
+              "faq",
+              "footer",
+            ].map((section) => (
+              <li key={section}>
+                <button
+                  onClick={() =>
+                    document
+                      .getElementById(section)
+                      ?.scrollIntoView({ behavior: "smooth" })
+                  }
+                  className="text-xl text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+                >
+                  {section.charAt(0).toUpperCase() + section.slice(1)}
+                </button>
+              </li>
+            ))}
           </ul>
 
-          {/* Right side controls */}
           <div className="flex items-center gap-4">
-            {/* Auth controls */}
             {user ? (
               <div className="flex items-center gap-3">
                 <span className="text-sm text-gray-700 dark:text-gray-300">
-                  Welcome, <span className="font-semibold text-[#F83002]">{user.email}</span>
+                  Welcome,{" "}
+                  <span className="font-semibold text-[#F83002]">
+                    {user.email}
+                  </span>
                 </span>
                 <button
                   onClick={handleLogout}
@@ -127,7 +122,6 @@ export const Navigation = () => {
               </>
             )}
 
-            {/* Dark mode toggle (new version with icons) */}
             <button
               onClick={() => setDarkMode(!darkMode)}
               className="w-10 h-10 rounded-full flex items-center justify-center bg-gray-200 dark:bg-gray-700 transition-colors duration-300 relative group"
@@ -166,7 +160,7 @@ export const Navigation = () => {
       </div>
     </nav>
   );
-};;
+};
 
 // ------------------------ Hero ------------------------
 const Hero = () => {
@@ -188,27 +182,36 @@ const Hero = () => {
   };
 
   return (
-    <section id="hero" className="min-h-[110vh] flex items-center justify-center bg-gradient-to-b from-gray-50 to-white pt-16 pb-24 dark:from-gray-900 dark:to-gray-800">
+    <section
+      id="hero"
+      className="min-h-[110vh] flex items-center justify-center bg-gradient-to-b from-gray-50 to-white pt-16 pb-24 dark:from-gray-900 dark:to-gray-800"
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex flex-col md:flex-row items-center md:items-start gap-12">
         {/* Left Image */}
         <div className="w-full md:w-1/2 flex justify-center md:justify-start">
-        <img
-          src={picture} // Replace with your image URL or import
-          alt="Hero"
-          loading="lazy"
-          className="max-w-full h-auto rounded-lg shadow-lg"
-        />
-      </div>
+          <img
+            src={picture} // Replace with your image URL or import
+            alt="Hero"
+            loading="lazy"
+            className="max-w-full h-auto rounded-lg shadow-lg"
+          />
+        </div>
         {/* Right Content */}
         <div className="w-full md:w-1/2 text-center md:text-left px-4 md:px-0">
-          <span className="inline-block px-4 py-1.5 mb-4 text-sm font-semibold bg-gray-100 rounded-full dark:bg-gray-700 dark:text-gray-200">
+          <span className="inline-block px-4 py-1.5 mb-4 text-sm font-semibold bg-black rounded-full dark:bg-gray-700 dark:text-gray-200">
             Build Faster. Collaborate Better.
           </span>
-          <h1 className="text-4xl md:text-6xl font-bold mb-4 font-display leading-tight dark:text-white">
-            Create Beautiful <br /> Digital Experiences
+          <h1 className="text-4xl md:text-6xl font-bold mb-4 font-display leading-tight">
+            <span className="block dark:hidden text-black">
+              Create Beautiful <br /> Digital Experiences
+            </span>
+            <span className="hidden dark:block text-white">
+              Explore Stunning <br /> Night Interfaces
+            </span>
           </h1>
           <p className="text-gray-600 text-lg md:text-xl mb-6 max-w-2xl dark:text-gray-300">
-            Transform your ideas into reality with our powerful and intuitive platform.
+            Transform your ideas into reality with our powerful and intuitive
+            platform.
           </p>
 
           <div className="flex flex-wrap justify-center md:justify-start gap-4 mb-6">
@@ -238,7 +241,6 @@ const Hero = () => {
     </section>
   );
 };
-
 
 // ------------------------ Features ------------------------
 const Features = () => {
@@ -284,7 +286,9 @@ const Features = () => {
               <h3 className="text-xl font-semibold mb-3 text-gray-900 dark:text-white">
                 {feature.title}
               </h3>
-              <p className="text-gray-700 dark:text-gray-300">{feature.description}</p>
+              <p className="text-gray-700 dark:text-gray-300">
+                {feature.description}
+              </p>
             </div>
           ))}
         </div>
@@ -295,7 +299,11 @@ const Features = () => {
 
 // ------------------------ Feedback ------------------------
 const FeedbackForm = () => {
-  const [formData, setFormData] = useState({ name: "", email: "", message: "" });
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e) => {
@@ -408,10 +416,166 @@ const FeedbackForm = () => {
   );
 };
 
+// ------------------------ Testimonials ------------------------
+const Testimonials = () => (
+  <section id="testimonials" className="py-20 bg-gradient-to-br from-gray-100 to-white dark:from-gray-800 dark:to-gray-900">
+    <div className="max-w-5xl mx-auto text-center px-4">
+      <h2 className="text-4xl font-bold text-gray-800 dark:text-white mb-12">
+        What Our Users Say
+      </h2>
+      <div className="grid md:grid-cols-3 gap-8">
+        {[
+          { quote: '"Amazing tool!"', name: "User 1" },
+          { quote: '"Super easy to use!"', name: "User 2" },
+          { quote: '"Helped our team a lot."', name: "User 3" },
+        ].map((testimonial, i) => (
+          <div
+            key={i}
+            className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg hover:shadow-xl transition duration-300"
+          >
+            <svg className="w-8 h-8 text-indigo-500 mb-4" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M7 17h3l2-5V7H7v5h2v5zm7 0h3l2-5V7h-5v5h2v5z" />
+            </svg>
+            <p className="text-lg text-gray-700 dark:text-gray-300 italic mb-2">{testimonial.quote}</p>
+            <span className="text-sm font-medium text-gray-500 dark:text-gray-400">- {testimonial.name}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+);
+
+// ------------------------ Pricing ------------------------
+const Pricing = () => (
+  <section id="pricing" className="py-20 bg-white dark:bg-gray-900">
+    <div className="max-w-6xl mx-auto text-center px-4">
+      <h2 className="text-4xl font-bold text-gray-800 dark:text-white mb-12">
+        Simple & Transparent Pricing
+      </h2>
+      <div className="grid md:grid-cols-3 gap-8">
+        {[
+          { plan: "Free", price: "0", features: ["1 Room", "Basic Support"] },
+          {
+            plan: "Pro",
+            price: "9.99",
+            features: ["Unlimited Rooms", "Priority Support"],
+            popular: true,
+          },
+          {
+            plan: "Team",
+            price: "29.99",
+            features: ["Collaboration", "Analytics", "Team Roles"],
+          },
+        ].map((tier, i) => (
+          <div
+            key={i}
+            className={`relative bg-gray-50 dark:bg-gray-800 p-8 rounded-2xl shadow-md transition hover:shadow-xl ${
+              tier.popular ? "border-4 border-indigo-500" : ""
+            }`}
+          >
+            {tier.popular && (
+              <span className="absolute top-4 right-4 bg-indigo-500 text-white text-xs px-2 py-1 rounded-full uppercase font-bold">
+                Popular
+              </span>
+            )}
+            <h3 className="text-2xl font-semibold mb-2 text-gray-900 dark:text-white">
+              {tier.plan}
+            </h3>
+            <p className="text-4xl font-bold mb-6 text-indigo-600 dark:text-indigo-400">
+              ${tier.price}
+              <span className="text-sm font-normal text-gray-500 dark:text-gray-400"> /mo</span>
+            </p>
+            <ul className="text-left space-y-3 text-gray-700 dark:text-gray-300">
+              {tier.features.map((f, j) => (
+                <li key={j} className="flex items-center gap-2">
+                  <span className="text-green-500">✔</span> {f}
+                </li>
+              ))}
+            </ul>
+            <button className="mt-6 w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg transition">
+              Choose Plan
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+);
+
+// ------------------------ FAQ ------------------------
+const FAQ = () => (
+  <section id="faq" className="py-20 bg-gray-100 dark:bg-gray-900">
+    <div className="max-w-5xl mx-auto">
+      <h2 className="text-3xl font-bold text-gray-800 dark:text-white text-center mb-8">
+        Frequently Asked Questions
+      </h2>
+      <div className="space-y-6">
+        {[
+          {
+            q: "Is it free to use?",
+            a: "Yes, we offer a free tier for all users.",
+          },
+          {
+            q: "Can I invite friends?",
+            a: "Absolutely! Collaboration is at the core of our platform.",
+          },
+          {
+            q: "Is my code safe?",
+            a: "Yes, all sessions are encrypted and secure.",
+          },
+        ].map((item, i) => (
+          <div
+            key={i}
+            className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow"
+          >
+            <h4 className="text-lg font-semibold text-gray-900 dark:text-white">
+              {item.q}
+            </h4>
+            <p className="text-gray-600 dark:text-gray-300">{item.a}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+);
+
+// ------------------------ CTA ------------------------
+const CTA = () => {
+  const navigate = useNavigate();
+  return (
+    <section className="py-20 bg-gradient-to-r from-white via-blue-100 to-orange-100 dark:from-black dark:via-gray-900 dark:to-orange-900 transition-colors">
+      <div className="max-w-3xl mx-auto text-center px-6">
+        <h2 className="text-4xl font-extrabold mb-4 text-gray-900 dark:text-white tracking-tight">
+          🚀 Ready to Code Together?
+        </h2>
+        <p className="text-lg text-gray-700 dark:text-gray-300 mb-8">
+          Build real-time collaborative coding experiences with your team — fast, easy, and powerful.
+        </p>
+        <button
+          onClick={() => navigate("/api/create-room")}
+          className="inline-flex items-center gap-2 bg-orange-600 hover:bg-orange-700 text-white font-semibold px-8 py-3 rounded-full shadow-lg transition-all duration-300"
+        >
+          <svg
+            className="w-5 h-5"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path d="M10.293 15.707a1 1 0 010-1.414L13.586 11H4a1 1 0 110-2h9.586l-3.293-3.293a1 1 0 111.414-1.414l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0z" />
+          </svg>
+          Start Coding
+        </button>
+      </div>
+    </section>
+  );
+};
+
 // ------------------------ Footer ------------------------
 const Footer = () => {
   return (
-    <footer id="footer" className="bg-gray-900 text-white py-12 dark:bg-gray-800">
+    <footer
+      id="footer"
+      className="bg-gray-900 text-white py-12 dark:bg-gray-800"
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <div className="flex justify-center mb-6">
@@ -438,6 +602,10 @@ const Home = () => {
       <Hero />
       <Features />
       <FeedbackForm />
+      <Testimonials />
+      <Pricing />
+      <FAQ />
+      <CTA />
       <Footer />
       <Toaster position="top-center" reverseOrder={false} />
     </div>

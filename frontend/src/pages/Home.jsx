@@ -54,7 +54,7 @@ export const Navigation = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
             <MonitorCog className="text-[#F83002]" size={24} />
-            <h1 className="text-2xl font-bold font-display dark:text-white">
+            <h1 className="text-2xl font-bold font-display text-black dark:text-white">
               Co<span className="text-[#F83002]" onClick={() =>
                   document.getElementById("hero")?.scrollIntoView({ behavior: "smooth" })
                 }>dac</span>

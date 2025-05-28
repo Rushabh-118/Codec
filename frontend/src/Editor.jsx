@@ -7,13 +7,13 @@ import { Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import {v4 as uuid} from "uuid";
 
-const socket = import.meta.env.MODE==="development"?io("http://localhost:5000"):io("https://project-codac.onrender.com");
+const socket = import.meta.env.MODE==="development"?io("http://localhost:5001"):io("https://project-codac.onrender.com");
 
 const Editor1 = () => {
   const [joined, setJoined] = useState(false);
   const [roomId, setRoomId] = useState("");
   const [userName, setUserName] = useState("");
-  const [language, setLanguage] = useState("");
+  const [language, setLanguage] = useState("javascript");
   const [code, setCode] = useState("// start code here");
   const [copySuccess, setCopySuccess] = useState("");
   const [users, setUsers] = useState([]);
@@ -184,7 +184,6 @@ const Editor1 = () => {
           <option value="go">Go</option>
           <option value="ruby">Ruby</option>
           <option value="rust">Rust</option>
-          <option value="kotlin">Kotlin</option>
         </select>
         <Link to="/">
           <button className="leave-button" onClick={leaveRoom}>

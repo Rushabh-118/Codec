@@ -15,10 +15,12 @@ dotenv.config();
 const __dirname = path.resolve();
 
 const app = express();
+
 app.use(cors({
-  origin: "http://localhost:5173", // React port
-  credentials: true
+  origin: "http://localhost:5173",
+  credentials: true,
 }));
+
 app.use(express.json());
 
 // API Routes
@@ -31,26 +33,26 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: "http://localhost:5173",
-    withCredentials: true,
+    credentials: true,   // corrected option
   },
 });
 
-// Handle WebSocket events
+// Attach socket events
 editor(io);
 
 const PORT = process.env.PORT || 5001;
 
-// Connect to MongoDB then start server
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
-    console.log("MongoDB connected successfully!"); // <-- added this line
+    console.log("MongoDB connected successfully!");
 
-    const serverInstance = app.listen(PORT, () => {
+    // IMPORTANT: start 'server', not 'app'
+    server.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
     });
 
-    serverInstance.on("error", (err) => {
+    server.on("error", (err) => {
       if (err.code === "EADDRINUSE") {
         console.error(`Port ${PORT} is already in use. Exiting...`);
         process.exit(1);

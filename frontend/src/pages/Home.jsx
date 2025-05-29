@@ -635,6 +635,21 @@ const FAQ = () => (
 // ------------------------ CTA ------------------------
 const CTA = () => {
   const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) setUser(JSON.parse(storedUser));
+  }, []);
+
+  const handleGetStarted = () => {
+    if (user) {
+      navigate("/api/create-room");
+    } else {
+      toast.error("Please log in to continue");
+      navigate("/login");
+    }
+  };
   return (
     <section className="py-20 bg-gradient-to-r from-white via-blue-100 to-orange-100 dark:from-black dark:via-gray-900 dark:to-orange-900 transition-colors">
       <div className="max-w-3xl mx-auto text-center px-6">
@@ -646,7 +661,7 @@ const CTA = () => {
           fast, easy, and powerful.
         </p>
         <button
-          onClick={() => navigate("/api/create-room")}
+          onClick={handleGetStarted}
           className="inline-flex items-center gap-2 bg-orange-600 hover:bg-orange-700 text-white font-semibold px-8 py-3 rounded-full shadow-lg transition-all duration-300"
         >
           <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">

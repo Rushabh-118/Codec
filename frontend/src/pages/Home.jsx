@@ -3,8 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Toaster, toast } from "react-hot-toast";
 import { loadStripe } from "@stripe/stripe-js";
-import picture from "../assets/3911318.jpg";
-
+import picture from "../assets/hero_image.png"; // Replace with your image path
 // ------------------------ Navigation ------------------------
 export const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -194,7 +193,7 @@ const Hero = () => {
             src={picture} // Replace with your image URL or import
             alt="Hero"
             loading="lazy"
-            className="max-w-full h-auto rounded-lg shadow-lg"
+            className="max-w-full h-auto transition-transform duration-500 hover:scale-105"
           />
         </div>
         {/* Right Content */}

@@ -55,7 +55,7 @@ const Signup = () => {
           placeholder="Full Name"
           value={form.name}
           onChange={handleChange}
-          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-900"
+          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-900 text-black"
           required
         />
         <input
@@ -64,7 +64,7 @@ const Signup = () => {
           placeholder="Email"
           value={form.email}
           onChange={handleChange}
-          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-900"
+          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-900 text-black"
           required
         />
         <input
@@ -73,7 +73,7 @@ const Signup = () => {
           placeholder="Password"
           value={form.password}
           onChange={handleChange}
-          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-900"
+          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-900 text-black" 
           required
         />
 

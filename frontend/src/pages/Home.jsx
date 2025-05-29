@@ -497,51 +497,53 @@ const Pricing = () => {
   };
 
   return (
-    <section id="pricing" className="py-20 bg-white dark:bg-gray-900">
-      <div className="max-w-6xl mx-auto text-center px-4">
-        <h2 className="text-4xl font-bold text-gray-800 dark:text-white mb-12">
-          Simple & Transparent Pricing (INR)
-        </h2>
-        <div className="grid md:grid-cols-3 gap-8">
-          {[
-            { 
-              plan: "Free", 
-              price: 0, 
-              features: ["1 Room", "Basic Support"],
-              description: "Perfect for individuals"
-            },
-            {
-              plan: "Pro",
-              price: 799,
-              features: ["Unlimited Rooms", "Priority Support", "Advanced Tools"],
-              popular: true,
-              description: "For professional developers"
-            },
-            {
-              plan: "Team",
-              price: 2499,
-              features: ["Unlimited Rooms", "Team Collaboration", "Analytics Dashboard", "Admin Controls"],
-              description: "Best for teams & organizations"
-            },
-          ].map((tier, i) => (
-            <div
-              key={i}
-              className={`relative bg-gray-50 dark:bg-gray-800 p-8 rounded-2xl shadow-md transition hover:shadow-xl ${
-                tier.popular ? "border-4 border-indigo-500 transform scale-[1.02]" : ""
-              }`}
-            >
-              {tier.popular && (
-                <span className="absolute top-4 right-4 bg-indigo-500 text-white text-xs px-2 py-1 rounded-full uppercase font-bold">
-                  Popular
-                </span>
-              )}
+  <section id="pricing" className="py-20 bg-white dark:bg-gray-900">
+    <div className="max-w-6xl mx-auto text-center px-4">
+      <h2 className="text-4xl font-bold text-gray-800 dark:text-white mb-12">
+        Simple & Transparent Pricing (INR)
+      </h2>
+      <div className="grid md:grid-cols-3 gap-8">
+        {[
+          {
+            plan: "Free",
+            price: 0,
+            features: ["1 Room", "Basic Support"],
+            description: "Perfect for individuals"
+          },
+          {
+            plan: "Pro",
+            price: 799,
+            features: ["Unlimited Rooms", "Priority Support", "Advanced Tools"],
+            popular: true,
+            description: "For professional developers"
+          },
+          {
+            plan: "Team",
+            price: 2499,
+            features: ["Unlimited Rooms", "Team Collaboration", "Analytics Dashboard", "Admin Controls"],
+            description: "Best for teams & organizations"
+          },
+        ].map((tier, i) => (
+          <div
+            key={i}
+            className={`relative bg-gray-50 dark:bg-gray-800 p-8 rounded-2xl shadow-md transition hover:shadow-xl flex flex-col justify-between ${
+              tier.popular ? "border-4 border-indigo-500 transform scale-[1.02]" : ""
+            }`}
+          >
+            {tier.popular && (
+              <span className="absolute top-4 right-4 bg-indigo-500 text-white text-xs px-2 py-1 rounded-full uppercase font-bold">
+                Popular
+              </span>
+            )}
+
+            <div>
               <h3 className="text-2xl font-semibold mb-2 text-gray-900 dark:text-white">
                 {tier.plan}
               </h3>
-              
+
               <div className="mb-4">
                 <p className="text-4xl font-bold mb-1 text-indigo-600 dark:text-indigo-400">
-                  ₹{tier.price === 0 ? "0" : tier.price.toLocaleString('en-IN')}
+                  ₹{tier.price.toLocaleString('en-IN')}
                   <span className="text-sm font-normal text-gray-500 dark:text-gray-400"> /mo</span>
                 </p>
                 {tier.price > 0 && (
@@ -550,41 +552,44 @@ const Pricing = () => {
                   </p>
                 )}
               </div>
-              
+
               <p className="text-gray-600 dark:text-gray-300 mb-6">
                 {tier.description}
               </p>
-              
+
               <ul className="text-left space-y-3 text-gray-700 dark:text-gray-300 mb-8">
                 {tier.features.map((f, j) => (
                   <li key={j} className="flex items-start gap-2">
-                    <span className="text-green-500 mt-1">✔</span> 
+                    <span className="text-green-500 mt-1">✔</span>
                     <span>{f}</span>
                   </li>
                 ))}
               </ul>
-              
-              <button
-                onClick={() => handleCheckout(tier.plan)}
-                className={`mt-auto w-full py-3 rounded-lg transition font-medium ${
-                  tier.popular 
-                    ? "bg-indigo-600 hover:bg-indigo-700 text-white" 
-                    : "bg-gray-200 hover:bg-gray-300 text-gray-800 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white"
-                }`}
-              >
-                {tier.price === 0 ? "Get Started" : "Subscribe Now"}
-              </button>
             </div>
-          ))}
-        </div>
-        
-        <div className="mt-12 text-center text-gray-600 dark:text-gray-300">
-          <p>All prices in Indian Rupees (INR). Enterprise plans available.</p>
-          <p className="mt-2 text-sm">Need help choosing? <a href="#" className="text-indigo-600 hover:underline">Contact us</a></p>
-        </div>
+
+            <button
+              onClick={() => handleCheckout(tier.plan)}
+              className={`mt-auto w-full py-3 rounded-lg transition font-medium ${
+                tier.popular
+                  ? "bg-indigo-600 hover:bg-indigo-700 text-white"
+                  : "bg-gray-200 hover:bg-gray-300 text-gray-800 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white"
+              }`}
+            >
+              {tier.price === 0 ? "Get Started" : "Subscribe Now"}
+            </button>
+          </div>
+        ))}
       </div>
-    </section>
-  );
+
+      <div className="mt-12 text-center text-gray-600 dark:text-gray-300">
+        <p>All prices in Indian Rupees (INR). Enterprise plans available.</p>
+        <p className="mt-2 text-sm">
+          Need help choosing? <a href="#" className="text-indigo-600 hover:underline">Contact us</a>
+        </p>
+      </div>
+    </div>
+  </section>
+);
 };
 
 // ------------------------ FAQ ------------------------

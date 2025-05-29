@@ -2,8 +2,20 @@ import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
+
+function isStrongPassword(password) {
+  const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+  return strongPasswordRegex.test(password);
+}
+
 export const signup = async (req, res) => {
   const { name, email, password } = req.body;
+
+  if (!isStrongPassword(password)) {
+    return res.status(400).json({
+      message: "Password must be minimum 8 characters, include uppercase, lowercase, number and special character."
+    });
+  }
 
   try {
     const existingUser = await User.findOne({ email });

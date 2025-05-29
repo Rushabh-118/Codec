@@ -2,6 +2,7 @@ import { ArrowRight, MonitorCog } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Toaster, toast } from "react-hot-toast";
+import { loadStripe } from "@stripe/stripe-js";
 import picture from "../assets/3911318.jpg";
 
 // ------------------------ Navigation ------------------------
@@ -457,64 +458,134 @@ const Testimonials = () => (
 );
 
 // ------------------------ Pricing ------------------------
-const Pricing = () => (
-  <section id="pricing" className="py-20 bg-white dark:bg-gray-900">
-    <div className="max-w-6xl mx-auto text-center px-4">
-      <h2 className="text-4xl font-bold text-gray-800 dark:text-white mb-12">
-        Simple & Transparent Pricing
-      </h2>
-      <div className="grid md:grid-cols-3 gap-8">
-        {[
-          { plan: "Free", price: "0", features: ["1 Room", "Basic Support"] },
-          {
-            plan: "Pro",
-            price: "9.99",
-            features: ["Unlimited Rooms", "Priority Support"],
-            popular: true,
-          },
-          {
-            plan: "Team",
-            price: "29.99",
-            features: ["Collaboration", "Analytics", "Team Roles"],
-          },
-        ].map((tier, i) => (
-          <div
-            key={i}
-            className={`relative bg-gray-50 dark:bg-gray-800 p-8 rounded-2xl shadow-md transition hover:shadow-xl ${
-              tier.popular ? "border-4 border-indigo-500" : ""
-            }`}
-          >
-            {tier.popular && (
-              <span className="absolute top-4 right-4 bg-indigo-500 text-white text-xs px-2 py-1 rounded-full uppercase font-bold">
-                Popular
-              </span>
-            )}
-            <h3 className="text-2xl font-semibold mb-2 text-gray-900 dark:text-white">
-              {tier.plan}
-            </h3>
-            <p className="text-4xl font-bold mb-6 text-indigo-600 dark:text-indigo-400">
-              ${tier.price}
-              <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
-                {" "}
-                /mo
-              </span>
-            </p>
-            <ul className="text-left space-y-3 text-gray-700 dark:text-gray-300">
-              {tier.features.map((f, j) => (
-                <li key={j} className="flex items-center gap-2">
-                  <span className="text-green-500">✔</span> {f}
-                </li>
-              ))}
-            </ul>
-            <button className="mt-6 w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg transition">
-              Choose Plan
-            </button>
-          </div>
-        ))}
+
+const Pricing = () => {
+  // Initialize stripePromise OUTSIDE the handler
+  const stripePromise = loadStripe("pk_test_51Qir0GSAr3AIYJYDvsWQeUu1nqEzqEWY5HYBkWxeijRYjVzw02BMpWy3j1xQbN5WYVyZi8FUZT6NIav7WiP9Q5Fp005ZV3WYa6");
+
+  const handleCheckout = async (plan) => {
+    if (plan === "Free") {
+      toast.success("Free plan selected! No payment required.");
+      return;
+    }
+    
+    try {
+      const res = await fetch("http://localhost:5001/create-checkout-session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ plan }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to create checkout session");
+      }
+
+      const data = await res.json();
+      const stripe = await stripePromise;
+      
+      // Add redirect to Stripe checkout
+      const result = await stripe.redirectToCheckout({
+        sessionId: data.sessionId
+      });
+
+      if (result.error) {
+        toast.error(result.error.message);
+      }
+    } catch (error) {
+      toast.error("Payment failed: " + error.message);
+    }
+  };
+
+  return (
+    <section id="pricing" className="py-20 bg-white dark:bg-gray-900">
+      <div className="max-w-6xl mx-auto text-center px-4">
+        <h2 className="text-4xl font-bold text-gray-800 dark:text-white mb-12">
+          Simple & Transparent Pricing (INR)
+        </h2>
+        <div className="grid md:grid-cols-3 gap-8">
+          {[
+            { 
+              plan: "Free", 
+              price: 0, 
+              features: ["1 Room", "Basic Support"],
+              description: "Perfect for individuals"
+            },
+            {
+              plan: "Pro",
+              price: 799,
+              features: ["Unlimited Rooms", "Priority Support", "Advanced Tools"],
+              popular: true,
+              description: "For professional developers"
+            },
+            {
+              plan: "Team",
+              price: 2499,
+              features: ["Unlimited Rooms", "Team Collaboration", "Analytics Dashboard", "Admin Controls"],
+              description: "Best for teams & organizations"
+            },
+          ].map((tier, i) => (
+            <div
+              key={i}
+              className={`relative bg-gray-50 dark:bg-gray-800 p-8 rounded-2xl shadow-md transition hover:shadow-xl ${
+                tier.popular ? "border-4 border-indigo-500 transform scale-[1.02]" : ""
+              }`}
+            >
+              {tier.popular && (
+                <span className="absolute top-4 right-4 bg-indigo-500 text-white text-xs px-2 py-1 rounded-full uppercase font-bold">
+                  Popular
+                </span>
+              )}
+              <h3 className="text-2xl font-semibold mb-2 text-gray-900 dark:text-white">
+                {tier.plan}
+              </h3>
+              
+              <div className="mb-4">
+                <p className="text-4xl font-bold mb-1 text-indigo-600 dark:text-indigo-400">
+                  ₹{tier.price === 0 ? "0" : tier.price.toLocaleString('en-IN')}
+                  <span className="text-sm font-normal text-gray-500 dark:text-gray-400"> /mo</span>
+                </p>
+                {tier.price > 0 && (
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    + GST as applicable
+                  </p>
+                )}
+              </div>
+              
+              <p className="text-gray-600 dark:text-gray-300 mb-6">
+                {tier.description}
+              </p>
+              
+              <ul className="text-left space-y-3 text-gray-700 dark:text-gray-300 mb-8">
+                {tier.features.map((f, j) => (
+                  <li key={j} className="flex items-start gap-2">
+                    <span className="text-green-500 mt-1">✔</span> 
+                    <span>{f}</span>
+                  </li>
+                ))}
+              </ul>
+              
+              <button
+                onClick={() => handleCheckout(tier.plan)}
+                className={`mt-auto w-full py-3 rounded-lg transition font-medium ${
+                  tier.popular 
+                    ? "bg-indigo-600 hover:bg-indigo-700 text-white" 
+                    : "bg-gray-200 hover:bg-gray-300 text-gray-800 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white"
+                }`}
+              >
+                {tier.price === 0 ? "Get Started" : "Subscribe Now"}
+              </button>
+            </div>
+          ))}
+        </div>
+        
+        <div className="mt-12 text-center text-gray-600 dark:text-gray-300">
+          <p>All prices in Indian Rupees (INR). Enterprise plans available.</p>
+          <p className="mt-2 text-sm">Need help choosing? <a href="#" className="text-indigo-600 hover:underline">Contact us</a></p>
+        </div>
       </div>
-    </div>
-  </section>
-);
+    </section>
+  );
+};
 
 // ------------------------ FAQ ------------------------
 const FAQ = () => (
@@ -625,18 +696,3 @@ const Home = () => {
 
 export default Home;
 
-//{user ? (
-//  <div className="flex items-center gap-3">
-//    <span className="text-sm text-gray-700 dark:text-gray-300">
-//     Welcome,{" "}
-//    <span className="font-semibold text-[#F83002]"></span>
-//    {user.name || "User"} {/* Changed from user.email.split("@")[0] */}
-//   </span>
-///   </span>
-// <button
-//  onClick={handleLogout}
-//  className="text-sm text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
-//    >
-//      Logout
-//    </button>
-//  </div>

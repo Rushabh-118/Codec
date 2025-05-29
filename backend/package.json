@@ -24,7 +24,8 @@
     "lucide-react": "^0.476.0",
     "mongoose": "^8.15.0",
     "react-hot-toast": "^2.5.2",
-    "socket.io": "^4.8.1"
+    "socket.io": "^4.8.1",
+    "stripe": "^18.2.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.9"

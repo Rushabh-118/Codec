@@ -72,7 +72,6 @@ export const Navigation = () => {
               "testimonials",
               "pricing",
               "faq",
-              "footer",
             ].map((section) => (
               <li key={section}>
                 <button

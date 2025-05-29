@@ -584,7 +584,11 @@ const Pricing = () => {
       <div className="mt-12 text-center text-gray-600 dark:text-gray-300">
         <p>All prices in Indian Rupees (INR). Enterprise plans available.</p>
         <p className="mt-2 text-sm">
-          Need help choosing? <a href="#" className="text-indigo-600 hover:underline">Contact us</a>
+          Need help choosing? <button onClick={() =>
+                document
+                  .getElementById("Feedback")
+                  ?.scrollIntoView({ behavior: "smooth" })
+              } className="text-indigo-600 hover:underline">Contact us</button>
         </p>
       </div>
     </div>

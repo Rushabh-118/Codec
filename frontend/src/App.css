@@ -23,13 +23,13 @@ input, select, textarea, button {
   background-color: #1e1e1e;
   padding: 2rem;
   border-radius: 12px;
-  box-shadow: 0 0 15px rgba(255, 165, 0, 0.3); /* Orange glow */
+  box-shadow: 0 0 15px rgb(57, 53, 168); 
   width: 300px;
   text-align: center;
 }
 
 .join-form h1 {
-  color: #ffa500; /* Orange */
+  color: rgb(57, 53, 168);
   margin-bottom: 1rem;
 }
 
@@ -44,7 +44,7 @@ input, select, textarea, button {
 }
 
 .join-form button {
-  background-color: #ffa500;
+  background-color: rgb(57, 53, 168);
   color: #121212;
   border: none;
   padding: 0.6rem 1rem;
@@ -56,7 +56,7 @@ input, select, textarea, button {
 }
 
 .join-form button:hover {
-  background-color: #ff8c00;
+  background-color: rgb(57, 53, 168);
 }
 
 /* Editor Page */
@@ -149,9 +149,8 @@ input, select, textarea, button {
 
 .run-btn {
   margin-top: 1rem;
-  background-color: rgb(57, 53, 168);
-  color: #121212;
-  border: none;
+  color: white;
+  border: 1px solid blue;
   padding: 0.7rem;
   font-weight: bold;
   border-radius: 6px;
@@ -159,5 +158,5 @@ input, select, textarea, button {
 }
 
 .run-btn:hover {
-  background-color: #ff8c00;
+  background-color: blue;
 }

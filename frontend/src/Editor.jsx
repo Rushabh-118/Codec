@@ -3,7 +3,6 @@ import "./App.css";
 import io from "socket.io-client";
 import Editor from "@monaco-editor/react";
 import { Link } from "react-router-dom";
-// import toast from "react-hot-toast";
 import { toast, ToastContainer } from "react-toastify";
 import {v4 as uuid} from "uuid";
 
@@ -21,6 +20,8 @@ const Editor1 = () => {
   const [outPut, setOutPut] = useState("");
   const [version, setVersion] = useState("*");
   const [userInput, setUserInput] = useState("");
+  const [isTypingLocked, setIsTypingLocked] = useState(false);
+  const [currentTypingUser, setCurrentTypingUser] = useState("");
 
   useEffect(() => {
     socket.on("userJoined", (users) => {
@@ -44,12 +45,24 @@ const Editor1 = () => {
       setOutPut(response.run.output);
     });
 
+    // Listen for typing lock events
+    socket.on("typingLocked", ({ user, isLocked }) => {
+      setIsTypingLocked(isLocked);
+      setCurrentTypingUser(isLocked ? user : "");
+      if (isLocked) {
+        toast.info(`${user.slice(0, 8)}... has locked the editor`);
+      } else {
+        toast.info("Editor is now unlocked");
+      }
+    });
+
     return () => {
       socket.off("userJoined");
       socket.off("codeUpdate");
       socket.off("userTyping");
       socket.off("languageUpdate");
       socket.off("codeResponse");
+      socket.off("typingLocked");
     };
   }, []);
 
@@ -68,11 +81,11 @@ const Editor1 = () => {
   useEffect(() => {
     // Listen for toast messages from backend
     socket.on("toastMessage", ({ type, message }) => {
-      toast[type](message); // Dynamically trigger toast based on type (success, error, info, etc.)
+      toast[type](message);
     });
 
     return () => {
-      socket.off("toastMessage"); // Cleanup event listener
+      socket.off("toastMessage");
     };
   }, []);
 
@@ -101,9 +114,17 @@ const Editor1 = () => {
   };
 
   const handleCodeChange = (newCode) => {
+    if (isTypingLocked && currentTypingUser !== userName) {
+      toast.error("Editor is locked by another user");
+      return;
+    }
     setCode(newCode);
     socket.emit("codeChange", { roomId, code: newCode });
     socket.emit("typing", { roomId, userName });
+  };
+
+  const toggleTypingLock = () => {
+    socket.emit("toggleTypingLock", { roomId, userName });
   };
 
   const handleLanguageChange = (e) => {
@@ -169,6 +190,11 @@ const Editor1 = () => {
           ))}
         </ul>
         <p className="typing-indicator">{typing}</p>
+        {isTypingLocked && (
+          <p className="typing-lock-indicator">
+            Editor locked by: {currentTypingUser.slice(0, 8)}...
+          </p>
+        )}
         <select
           className="language-selector"
           value={language}
@@ -185,6 +211,16 @@ const Editor1 = () => {
           <option value="ruby">Ruby</option>
           <option value="rust">Rust</option>
         </select>
+        <button 
+          className={`lock-button ${isTypingLocked ? 'locked' : ''}`}
+          onClick={toggleTypingLock}
+        >
+          {isTypingLocked && currentTypingUser === userName 
+            ? 'Unlock Editor' 
+            : isTypingLocked 
+              ? 'Editor Locked' 
+              : 'Lock Editor'}
+        </button>
         <Link to="/">
           <button className="leave-button" onClick={leaveRoom}>
             Leave Room
@@ -203,6 +239,7 @@ const Editor1 = () => {
           options={{
             minimap: { enabled: false },
             fontSize: 14,
+            readOnly: isTypingLocked && currentTypingUser !== userName
           }}
         />
         <textarea
@@ -221,7 +258,6 @@ const Editor1 = () => {
           placeholder="Output will appear here ..."
         />
       </div>
-      {/* Toast notification container */}
       <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );

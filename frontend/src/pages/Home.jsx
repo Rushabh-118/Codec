@@ -814,7 +814,7 @@ const FeedbackForm = () => {
               required
               value={formData.name}
               onChange={handleChange}
-              className="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+              className="w-full px-4 py-3 border border-gray-300 text-black rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               whileFocus={{ scale: 1.01, borderColor: "#f97316" }}
             />
           </motion.div>
@@ -833,7 +833,7 @@ const FeedbackForm = () => {
               required
               value={formData.email}
               onChange={handleChange}
-              className="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+              className="w-full px-4 py-3 border border-gray-300 text-black rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               whileFocus={{ scale: 1.01, borderColor: "#f97316" }}
             />
           </motion.div>
@@ -852,7 +852,7 @@ const FeedbackForm = () => {
               required
               value={formData.message}
               onChange={handleChange}
-              className="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+              className="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition text-black dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               whileFocus={{ scale: 1.01, borderColor: "#f97316" }}
             ></motion.textarea>
           </motion.div>

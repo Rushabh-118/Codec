@@ -78,13 +78,13 @@ input, select, textarea, button {
 
 .room-info h2 {
   font-size: 1rem;
-  color: #ffa500;
+  color: rgb(57, 53, 168);
 }
 
 .copy-button {
   background-color: transparent;
-  color: #ffa500;
-  border: 1px solid #ffa500;
+  color: rgb(57, 53, 168);
+  border: 1px solid rgb(57, 53, 168);
   padding: 0.3rem 0.5rem;
   border-radius: 4px;
   cursor: pointer;
@@ -92,7 +92,7 @@ input, select, textarea, button {
 }
 
 .copy-button:hover {
-  background-color: #ffa500;
+  background-color: blue;
   color: #121212;
 }
 
@@ -149,7 +149,7 @@ input, select, textarea, button {
 
 .run-btn {
   margin-top: 1rem;
-  background-color: #ffa500;
+  background-color: rgb(57, 53, 168);
   color: #121212;
   border: none;
   padding: 0.7rem;

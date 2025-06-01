@@ -114,10 +114,6 @@ const Editor1 = () => {
   };
 
   const handleCodeChange = (newCode) => {
-    // if (isTypingLocked && currentTypingUser !== userName) {
-    //   toast.error("Editor is locked by another user");
-    //   return;
-    // }
     setCode(newCode);
     socket.emit("codeChange", { roomId, code: newCode });
     socket.emit("typing", { roomId, userName });
@@ -136,12 +132,13 @@ const Editor1 = () => {
 
   const runCode = () => {
     socket.emit("compileCode", { code, roomId, language, version, userInput });
-    toast.success("Code compiled and executed!");
+    toast.info("Running code...");
   };
 
   const createRoomId = () => {
-    const roomId = uuid();
+    const roomId = uuid().slice(0, 10);
     setRoomId(roomId);
+    toast.success(`New room created: ${roomId}`);
   }
 
   if (!joined) {
@@ -175,20 +172,22 @@ const Editor1 = () => {
     <div className="editor-container">
       <div className="sidebar">
         <div className="room-info">
-          <h2>Code Room: {roomId}</h2>
-          <button onClick={copyRoomId} className="copy-button">
-            Copy Id
+          <h2>Room: {roomId}</h2>
+          <button onClick={copyRoomId} className="icon-button" title="Copy Room ID">
+            📋
           </button>
-          {copySuccess && (
-            <span className="copy-success">{toast.success(copySuccess)}</span>
-          )}
+          {copySuccess && <span className="copy-success">{copySuccess}</span>}
         </div>
-        <h3>Users in Room:</h3>
-        <ul>
-          {users.map((user, index) => (
-            <li key={index}>{user.slice(0, 8)}...</li>
-          ))}
-        </ul>
+        <div className="user-list">
+          <h3>Online Users ({users.length})</h3>
+          <ul>
+            {users.map((user, index) => (
+              <li key={index}>
+                {user} {user === userName && "(You)"}
+              </li>
+            ))}
+          </ul>
+        </div>
         <p className="typing-indicator">{typing}</p>
         {isTypingLocked && (
           <p className="typing-lock-indicator">
@@ -244,7 +243,7 @@ const Editor1 = () => {
         />
         <textarea
           className="user-input"
-          placeholder="Enter input here..."
+          placeholder="Enter input for your program here..."
           value={userInput}
           onChange={(e) => setUserInput(e.target.value)}
         />
@@ -255,10 +254,10 @@ const Editor1 = () => {
           className="output-console"
           value={outPut}
           readOnly
-          placeholder="Output will appear here ..."
+          placeholder="Output will appear here..."
         />
       </div>
-      <ToastContainer position="top-right" autoClose={3000} />
+      <ToastContainer position="top-right" autoClose={2000} />
     </div>
   );
 };

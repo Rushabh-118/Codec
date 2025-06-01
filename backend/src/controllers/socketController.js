@@ -42,7 +42,7 @@ const editor = (io) => {
           code: "// start code here",
           typingLock: null,
           typingTimeout: null,
-          output: ""
+          output: "",
         });
       }
 
@@ -59,14 +59,14 @@ const editor = (io) => {
         code: room.code,
         users: Array.from(room.users),
         lockedBy: room.typingLock,
-        output: room.output
+        output: room.output,
       });
 
       // Notify others
       io.to(roomId).emit("userJoined", Array.from(room.users));
       io.to(roomId).emit("toastMessage", {
         type: "success",
-        message: `${userName} joined the room!`
+        message: `${userName} joined the room!`,
       });
     });
 
@@ -75,17 +75,17 @@ const editor = (io) => {
       if (!validateRoomUser()) return;
 
       const room = rooms.get(currentRoom);
-      
+
       if (isLocked) {
         // If lock is already taken by someone else
         if (room.typingLock && room.typingLock !== currentUser) {
           socket.emit("toastMessage", {
             type: "warning",
-            message: `${room.typingLock} already has typing control`
+            message: `${room.typingLock} already has typing control`,
           });
           return;
         }
-        
+
         // Acquire lock
         room.typingLock = currentUser;
         setupLockTimeout();
@@ -97,9 +97,9 @@ const editor = (io) => {
         }
       }
 
-      io.to(currentRoom).emit("typingLocked", { 
-        user: room.typingLock, 
-        isLocked: !!room.typingLock 
+      io.to(currentRoom).emit("typingLocked", {
+        user: room.typingLock,
+        isLocked: !!room.typingLock,
       });
     });
 
@@ -107,17 +107,17 @@ const editor = (io) => {
     const setupLockTimeout = () => {
       const room = rooms.get(currentRoom);
       clearLockTimeout();
-      
+
       room.typingTimeout = setTimeout(() => {
         if (room.typingLock === currentUser) {
           room.typingLock = null;
-          io.to(currentRoom).emit("typingLocked", { 
-            user: null, 
-            isLocked: false 
+          io.to(currentRoom).emit("typingLocked", {
+            user: null,
+            isLocked: false,
           });
           io.to(currentRoom).emit("toastMessage", {
             type: "info",
-            message: "Typing lock released due to inactivity"
+            message: "Typing lock released due to inactivity",
           });
         }
       }, 10000);
@@ -134,36 +134,35 @@ const editor = (io) => {
 
     // Code changes
     socket.on("codeChange", ({ code }) => {
-  if (!validateRoomUser()) return;
+      if (!validateRoomUser()) return;
 
-  const room = rooms.get(currentRoom);
+      const room = rooms.get(currentRoom);
 
-  // Initialize warnedUsers map if not present
-  if (!room.warnedUsers) room.warnedUsers = new Map();
+      // Initialize warnedUsers map if not present
+      if (!room.warnedUsers) room.warnedUsers = new Map();
 
-  // Check typing lock
-  if (room.typingLock && room.typingLock !== currentUser) {
-    // Send warning only once
-    if (!room.warnedUsers.get(currentUser)) {
-      socket.emit("toastMessage", {
-        type: "warning",
-        message: `You can't edit while ${room.typingLock} is typing`,
-      });
-      room.warnedUsers.set(currentUser, true);
-    }
-    return;
-  }
+      // Check typing lock
+      if (room.typingLock && room.typingLock !== currentUser) {
+        // Send warning only once
+        if (!room.warnedUsers.get(currentUser)) {
+          socket.emit("toastMessage", {
+            type: "warning",
+            message: `You can't edit while ${room.typingLock} is typing`,
+          });
+          room.warnedUsers.set(currentUser, true);
+        }
+        return;
+      }
 
-  // If no lock exists, acquire it
-  if (!room.typingLock) {
-    room.typingLock = currentUser;
-    room.warnedUsers = new Map(); // Clear previous warnings
-    io.to(currentRoom).emit("typingLocked", {
-      user: currentUser,
-      isLocked: true,
-    });
-  }
-
+      // If no lock exists, acquire it
+      if (!room.typingLock) {
+        room.typingLock = currentUser;
+        room.warnedUsers = new Map(); // Clear previous warnings
+        io.to(currentRoom).emit("typingLocked", {
+          user: currentUser,
+          isLocked: true,
+        });
+      }
 
       // Update code and reset timeout
       room.code = code;
@@ -176,14 +175,14 @@ const editor = (io) => {
       if (!validateRoomUser()) return;
 
       const room = rooms.get(currentRoom);
-      
+
       // Release lock if held
       if (room.typingLock === currentUser) {
         clearLockTimeout();
         room.typingLock = null;
-        io.to(currentRoom).emit("typingLocked", { 
-          user: null, 
-          isLocked: false 
+        io.to(currentRoom).emit("typingLocked", {
+          user: null,
+          isLocked: false,
         });
       }
 
@@ -192,7 +191,7 @@ const editor = (io) => {
       io.to(currentRoom).emit("userJoined", Array.from(room.users));
       io.to(currentRoom).emit("toastMessage", {
         type: "info",
-        message: `${currentUser} left the room!`
+        message: `${currentUser} left the room!`,
       });
 
       // Clean up empty rooms
@@ -218,7 +217,7 @@ const editor = (io) => {
       io.to(currentRoom).emit("languageUpdate", language);
       io.to(currentRoom).emit("toastMessage", {
         type: "info",
-        message: `Language changed to ${language}`
+        message: `Language changed to ${language}`,
       });
     });
 
@@ -242,14 +241,17 @@ const editor = (io) => {
         io.to(currentRoom).emit("codeResponse", response.data);
         io.to(currentRoom).emit("toastMessage", {
           type: "success",
-          message: "Code compiled successfully!"
+          message: "Code compiled successfully!",
         });
       } catch (error) {
         console.error("Compilation error:", error);
-        io.to(currentRoom).emit("codeError", error.response?.data?.message || "Compilation failed");
+        io.to(currentRoom).emit(
+          "codeError",
+          error.response?.data?.message || "Compilation failed"
+        );
         io.to(currentRoom).emit("toastMessage", {
           type: "error",
-          message: "Compilation failed!"
+          message: "Compilation failed!",
         });
       }
     });
@@ -259,14 +261,14 @@ const editor = (io) => {
       if (!validateRoomUser()) return;
 
       const room = rooms.get(currentRoom);
-      
+
       // Release lock if held
       if (room.typingLock === currentUser) {
         clearLockTimeout();
         room.typingLock = null;
-        io.to(currentRoom).emit("typingLocked", { 
-          user: null, 
-          isLocked: false 
+        io.to(currentRoom).emit("typingLocked", {
+          user: null,
+          isLocked: false,
         });
       }
 
@@ -275,7 +277,7 @@ const editor = (io) => {
       io.to(currentRoom).emit("userJoined", Array.from(room.users));
       io.to(currentRoom).emit("toastMessage", {
         type: "warning",
-        message: `${currentUser} disconnected!`
+        message: `${currentUser} disconnected!`,
       });
 
       // Clean up empty rooms

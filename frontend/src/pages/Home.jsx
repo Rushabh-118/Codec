@@ -1578,9 +1578,7 @@ const Footer = () => {
               {["twitter", "github", "linkedin", "discord"].map((social, i) => (
                 <motion.a
                   key={i}
-                  href="#"
                   variants={itemVariants}
-                  whileHover={{ y: -5, scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   className="w-10 h-10 bg-gray-800 dark:bg-gray-700 rounded-full flex items-center justify-center text-gray-300 hover:text-white transition-colors"
                 >

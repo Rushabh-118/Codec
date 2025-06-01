@@ -114,10 +114,10 @@ const Editor1 = () => {
   };
 
   const handleCodeChange = (newCode) => {
-    if (isTypingLocked && currentTypingUser !== userName) {
-      toast.error("Editor is locked by another user");
-      return;
-    }
+    // if (isTypingLocked && currentTypingUser !== userName) {
+    //   toast.error("Editor is locked by another user");
+    //   return;
+    // }
     setCode(newCode);
     socket.emit("codeChange", { roomId, code: newCode });
     socket.emit("typing", { roomId, userName });
@@ -154,7 +154,7 @@ const Editor1 = () => {
             placeholder="Room Id"
             value={roomId}
             onChange={(e) => setRoomId(e.target.value)}
-          />
+          />  
           <button onClick={createRoomId}>
             create Room Id
           </button>

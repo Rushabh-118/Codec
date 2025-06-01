@@ -134,27 +134,36 @@ const editor = (io) => {
 
     // Code changes
     socket.on("codeChange", ({ code }) => {
-      if (!validateRoomUser()) return;
-      
-      const room = rooms.get(currentRoom);
-      
-      // Check typing lock
-      if (room.typingLock && room.typingLock !== currentUser) {
-        socket.emit("toastMessage", {
-          type: "warning",
-          message: `You can't edit while ${room.typingLock} is typing`
-        });
-        return;
-      }
+  if (!validateRoomUser()) return;
 
-      // If no lock exists, acquire it
-      if (!room.typingLock) {
-        room.typingLock = currentUser;
-        io.to(currentRoom).emit("typingLocked", { 
-          user: currentUser, 
-          isLocked: true 
-        });
-      }
+  const room = rooms.get(currentRoom);
+
+  // Initialize warnedUsers map if not present
+  if (!room.warnedUsers) room.warnedUsers = new Map();
+
+  // Check typing lock
+  if (room.typingLock && room.typingLock !== currentUser) {
+    // Send warning only once
+    if (!room.warnedUsers.get(currentUser)) {
+      socket.emit("toastMessage", {
+        type: "warning",
+        message: `You can't edit while ${room.typingLock} is typing`,
+      });
+      room.warnedUsers.set(currentUser, true);
+    }
+    return;
+  }
+
+  // If no lock exists, acquire it
+  if (!room.typingLock) {
+    room.typingLock = currentUser;
+    room.warnedUsers = new Map(); // Clear previous warnings
+    io.to(currentRoom).emit("typingLocked", {
+      user: currentUser,
+      isLocked: true,
+    });
+  }
+
 
       // Update code and reset timeout
       room.code = code;

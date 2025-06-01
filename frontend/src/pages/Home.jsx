@@ -278,9 +278,7 @@ export const Navigation = () => {
                 </span>
                 <motion.button
                   onClick={handleLogout}
-                  whileHover={{ scale: 1.05, y: -2 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="px-4 py-2 rounded hover:bg-orange-500 text-white bg-blue-600 transition-colors"
+                  className="px-4 py-2 rounded hover:bg-slate-900 text-white bg-blue-600 transition-colors"
                 >
                   Logout
                 </motion.button>

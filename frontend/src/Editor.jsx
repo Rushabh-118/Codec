@@ -4,16 +4,31 @@ import io from "socket.io-client";
 import Editor from "@monaco-editor/react";
 import { Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
-import {v4 as uuid} from "uuid";
+import { v4 as uuid } from "uuid";
 
-const socket = import.meta.env.MODE==="development"?io("http://localhost:5001"):io("https://minor-codec.onrender.com/");
+const socket = import.meta.env.MODE === "development" 
+  ? io("http://localhost:5001") 
+  : io("https://minor-codec.onrender.com/");
+
+// Default code templates for each language
+const DEFAULT_CODE = {
+  javascript: "// Start coding here\n",
+  python: "# Start coding here\n",
+  java: "public class Main {\n  public static void main(String[] args) {\n    // Start coding here\n  }\n}",
+  cpp: "#include <iostream>\nusing namespace std;\n\nint main() {\n  // Start coding here\n  return 0;\n}",
+  c: "#include <stdio.h>\n\nint main() {\n  // Start coding here\n  return 0;\n}",
+  php: "<?php\n\n// Start coding here\n\n?>",
+  go: "package main\n\nimport \"fmt\"\n\nfunc main() {\n  // Start coding here\n}",
+  ruby: "# Start coding here\n",
+  rust: "fn main() {\n  // Start coding here\n}"
+};
 
 const Editor1 = () => {
   const [joined, setJoined] = useState(false);
   const [roomId, setRoomId] = useState("");
   const [userName, setUserName] = useState("");
   const [language, setLanguage] = useState("javascript");
-  const [code, setCode] = useState("// start code here");
+  const [code, setCode] = useState(DEFAULT_CODE.javascript);
   const [copySuccess, setCopySuccess] = useState("");
   const [users, setUsers] = useState([]);
   const [typing, setTyping] = useState("");
@@ -22,6 +37,59 @@ const Editor1 = () => {
   const [userInput, setUserInput] = useState("");
   const [isTypingLocked, setIsTypingLocked] = useState(false);
   const [currentTypingUser, setCurrentTypingUser] = useState("");
+
+  // Configure Monaco Editor with full IntelliSense support
+  const handleEditorDidMount = (editor, monaco) => {
+    // Configure editor with all IntelliSense features
+    editor.updateOptions({
+      suggest: {
+        preview: true,
+        showStatusBar: true,
+        showIcons: true,
+        showMethods: true,
+        showFunctions: true,
+        showConstructors: true,
+        showFields: true,
+        showVariables: true,
+        showClasses: true,
+        showStructs: true,
+        showInterfaces: true,
+        showModules: true,
+        showProperties: true,
+        showEvents: true,
+        showOperators: true,
+        showUnits: true,
+        showValues: true,
+        showConstants: true,
+        showEnums: true,
+        showEnumMembers: true,
+        showKeywords: true,
+        showWords: true,
+        showColors: true,
+        showFiles: true,
+        showReferences: true,
+        showFolders: true,
+        showTypeParameters: true,
+        showSnippets: true
+      },
+      quickSuggestions: {
+        other: true,
+        comments: true,
+        strings: true
+      },
+      parameterHints: { enabled: true },
+      autoClosingBrackets: "always",
+      autoClosingQuotes: "always",
+      autoSurround: "languageDefined",
+      suggestOnTriggerCharacters: true,
+      acceptSuggestionOnEnter: "on",
+      wordBasedSuggestions: true,
+      suggestSelection: "first",
+      tabCompletion: "on",
+      snippetSuggestions: "bottom",
+      inlayHints: { enabled: "on" }
+    });
+  };
 
   useEffect(() => {
     socket.on("userJoined", (users) => {
@@ -39,13 +107,13 @@ const Editor1 = () => {
 
     socket.on("languageUpdate", (newLanguage) => {
       setLanguage(newLanguage);
+      setCode(DEFAULT_CODE[newLanguage] || DEFAULT_CODE.javascript);
     });
 
     socket.on("codeResponse", (response) => {
       setOutPut(response.run.output);
     });
 
-    // Listen for typing lock events
     socket.on("typingLocked", ({ user, isLocked }) => {
       setIsTypingLocked(isLocked);
       setCurrentTypingUser(isLocked ? user : "");
@@ -79,7 +147,6 @@ const Editor1 = () => {
   }, []);
 
   useEffect(() => {
-    // Listen for toast messages from backend
     socket.on("toastMessage", ({ type, message }) => {
       toast[type](message);
     });
@@ -102,9 +169,9 @@ const Editor1 = () => {
     setJoined(false);
     setRoomId("");
     setUserName("");
-    setCode("// start code here");
+    setCode(DEFAULT_CODE.javascript);
     setLanguage("javascript");
-    toast.success("You have leave the room");
+    toast.success("You have left the room");
   };
 
   const copyRoomId = () => {
@@ -126,6 +193,7 @@ const Editor1 = () => {
   const handleLanguageChange = (e) => {
     const newLanguage = e.target.value;
     setLanguage(newLanguage);
+    setCode(DEFAULT_CODE[newLanguage] || DEFAULT_CODE.javascript);
     socket.emit("languageChange", { roomId, language: newLanguage });
     toast.success("Language changed!");
   };
@@ -139,7 +207,7 @@ const Editor1 = () => {
     const roomId = uuid().slice(0, 10);
     setRoomId(roomId);
     toast.success(`New room created: ${roomId}`);
-  }
+  };
 
   if (!joined) {
     return (
@@ -168,6 +236,7 @@ const Editor1 = () => {
       </div>
     );
   }
+
   return (
     <div className="editor-container">
       <div className="sidebar">
@@ -204,7 +273,6 @@ const Editor1 = () => {
           <option value="java">Java</option>
           <option value="cpp">C++</option>
           <option value="c">C</option>
-          <option value="csharp">C#</option>
           <option value="php">PHP</option>
           <option value="go">Go</option>
           <option value="ruby">Ruby</option>
@@ -220,7 +288,7 @@ const Editor1 = () => {
               ? 'Editor Locked' 
               : 'Lock Editor'}
         </button>
-        <Link to="/">
+        <Link to="/api/create-room">
           <button className="leave-button" onClick={leaveRoom}>
             Leave Room
           </button>
@@ -235,10 +303,57 @@ const Editor1 = () => {
           value={code}
           onChange={handleCodeChange}
           theme="vs-dark"
+          onMount={handleEditorDidMount}
           options={{
             minimap: { enabled: false },
             fontSize: 14,
-            readOnly: isTypingLocked && currentTypingUser !== userName
+            readOnly: isTypingLocked && currentTypingUser !== userName,
+            suggest: {
+              preview: true,
+              showStatusBar: true,
+              showIcons: true,
+              showMethods: true,
+              showFunctions: true,
+              showConstructors: true,
+              showFields: true,
+              showVariables: true,
+              showClasses: true,
+              showStructs: true,
+              showInterfaces: true,
+              showModules: true,
+              showProperties: true,
+              showEvents: true,
+              showOperators: true,
+              showUnits: true,
+              showValues: true,
+              showConstants: true,
+              showEnums: true,
+              showEnumMembers: true,
+              showKeywords: true,
+              showWords: true,
+              showColors: true,
+              showFiles: true,
+              showReferences: true,
+              showFolders: true,
+              showTypeParameters: true,
+              showSnippets: true
+            },
+            quickSuggestions: {
+              other: true,
+              comments: true,
+              strings: true
+            },
+            parameterHints: { enabled: true },
+            autoClosingBrackets: "always",
+            autoClosingQuotes: "always",
+            autoSurround: "languageDefined",
+            suggestOnTriggerCharacters: true,
+            acceptSuggestionOnEnter: "on",
+            wordBasedSuggestions: true,
+            suggestSelection: "first",
+            tabCompletion: "on",
+            snippetSuggestions: "bottom",
+            inlayHints: { enabled: "on" }
           }}
         />
         <textarea

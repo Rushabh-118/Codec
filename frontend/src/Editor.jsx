@@ -5,6 +5,7 @@ import Editor from "@monaco-editor/react";
 import { Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import { v4 as uuid } from "uuid";
+import { saveAs } from 'file-saver';
 
 const socket = import.meta.env.MODE === "development" 
   ? io("http://localhost:5001") 
@@ -209,6 +210,25 @@ const Editor1 = () => {
     toast.success(`New room created: ${roomId}`);
   };
 
+  const downloadCode = () => {
+    const extensions = {
+      javascript: 'js',
+      python: 'py',
+      java: 'java',
+      cpp: 'cpp',
+      c: 'c',
+      php: 'php',
+      go: 'go',
+      ruby: 'rb',
+      rust: 'rs'
+    };
+    
+    const extension = extensions[language] || 'txt';
+    const blob = new Blob([code], { type: 'text/plain;charset=utf-8' });
+    saveAs(blob, `code-${roomId || 'snippet'}.${extension}`);
+    toast.success('Code downloaded!');
+  };
+
   if (!joined) {
     return (
       <div className="join-container">
@@ -287,6 +307,9 @@ const Editor1 = () => {
             : isTypingLocked 
               ? 'Editor Locked' 
               : 'Lock Editor'}
+        </button>
+        <button className="download-button" onClick={downloadCode}>
+          Download Code
         </button>
         <Link to="/api/create-room">
           <button className="leave-button" onClick={leaveRoom}>

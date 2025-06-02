@@ -160,3 +160,20 @@ input, select, textarea, button {
 .run-btn:hover {
   background-color: blue;
 }
+
+.download-button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  margin: 10px 0;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+  width: 100%;
+}
+
+.download-button:hover {
+  background-color: #45a049;
+}

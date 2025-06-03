@@ -115,7 +115,7 @@ const letterAnimation = {
   },
 };
 
-// Skeleton Loading Components (unchanged)
+// Skeleton Loading Components
 const SkeletonNav = () => (
   <nav className="fixed w-full z-50 bg-white/10 backdrop-blur-md shadow-md dark:bg-gray-800/10">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -169,6 +169,77 @@ const SkeletonHero = () => (
     </div>
   </section>
 );
+
+// Ad Component
+const AdComponent = ({ userPlan }) => {
+  const [currentAdIndex, setCurrentAdIndex] = useState(0);
+  const [showAd, setShowAd] = useState(false);
+
+  const ads = [
+    {
+      id: 1,
+      content: "🚀 Upgrade to Pro for unlimited rooms and premium features!",
+      cta: "Upgrade Now",
+      link: "#pricing",
+      bg: "bg-gradient-to-r from-blue-500 to-blue-700",
+    },
+    {
+      id: 2,
+      content: "👥 Need team collaboration? Check out our Team plan!",
+      cta: "Learn More",
+      link: "#pricing",
+      bg: "bg-gradient-to-r from-purple-500 to-indigo-700",
+    }
+  ];
+
+  useEffect(() => {
+      const adInterval = setInterval(() => {
+        setShowAd(true);
+        
+        // Hide the ad after 8 seconds
+        setTimeout(() => {
+          setShowAd(false);
+        }, 5000);
+        
+        // Rotate to next ad
+        setCurrentAdIndex((prev) => (prev + 1) % ads.length);
+      }, 10000); // Show a new ad every 10 seconds
+
+      return () => clearInterval(adInterval);
+    }, []);
+
+  const currentAd = ads[currentAdIndex];
+
+  return (
+    <AnimatePresence>
+      {showAd && (
+        <motion.div
+          initial={{ y: 100, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: 100, opacity: 0 }}
+          transition={{ type: "spring", damping: 25 }}
+          className={`fixed bottom-4 right-4 ${currentAd.bg} text-white rounded-xl shadow-xl p-4 max-w-xs z-50`}
+        >
+          <div className="flex items-start justify-between gap-2">
+            <p className="text-sm">{currentAd.content}</p>
+            <button 
+              onClick={() => setShowAd(false)}
+              className="text-white/70 hover:text-white"
+            >
+              ✕
+            </button>
+          </div>
+          <a
+            href={currentAd.link}
+            className="mt-2 inline-block text-xs font-semibold bg-white/20 hover:bg-white/30 px-3 py-1 rounded-full transition-colors"
+          >
+            {currentAd.cta}
+          </a>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+};
 
 // ------------------------ Navigation ------------------------
 export const Navigation = () => {
@@ -1061,6 +1132,14 @@ const Pricing = () => {
 
       if (result.error) {
         toast.error(result.error.message);
+      } else {
+        // Update user plan in local storage
+        const storedUser = localStorage.getItem("user");
+        if (storedUser) {
+          const user = JSON.parse(storedUser);
+          user.plan = plan;
+          localStorage.setItem("user", JSON.stringify(user));
+        }
       }
     } catch (error) {
       toast.error("Payment failed: " + error.message);
@@ -1642,8 +1721,17 @@ const Footer = () => {
 // ------------------------ Home ------------------------
 const Home = () => {
   const [isLoading, setIsLoading] = useState(true);
+  const [userPlan, setUserPlan] = useState("Free"); // Default to Free
 
   useEffect(() => {
+    // Check if user is logged in and their plan
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      const user = JSON.parse(storedUser);
+      // You'll need to modify your backend to include plan info in the user object
+      setUserPlan(user.plan || "Free");
+    }
+
     // Simulate loading delay
     const timer = setTimeout(() => {
       setIsLoading(false);
@@ -1672,6 +1760,7 @@ const Home = () => {
       <FAQ />
       <CTA />
       <Footer />
+      <AdComponent userPlan={userPlan} />
       <Toaster position="top-center" reverseOrder={false} />
     </div>
   );

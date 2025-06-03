@@ -423,10 +423,6 @@ const Hero = () => {
               ease: [0.16, 1, 0.3, 1],
               delay: 0.4,
             }}
-            whileHover={{
-              scale: 1.02,
-              rotate: -1,
-            }}
             className="relative"
           >
             <motion.img

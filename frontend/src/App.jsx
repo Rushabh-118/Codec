@@ -6,6 +6,7 @@ import Editor1 from "./Editor";
 import Home from "./pages/Home";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
+import ProtectedRoute from "./middleware/protectedRoute";
 
 // Loader component
 const Loader = () => (
@@ -25,7 +26,8 @@ const Success = () => {
 
   return (
     <div className="text-center text-green-600 p-10">
-      Payment Successful! 🎉<br />
+      Payment Successful! 🎉
+      <br />
       Redirecting to Home...
       <Loader />
     </div>
@@ -56,10 +58,30 @@ const App = () => {
     <div>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/api/create-room" element={<Editor1 />} />
-        <Route path="/api/editor" element={<Editor1 />} />
+        <Route
+          path="/login"
+          element={<Login />}
+        />
+        <Route
+          path="/signup"
+          element={<Signup />}
+        />
+        <Route
+          path="/api/create-room"
+          element={
+            <ProtectedRoute>
+              <Editor1 />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/api/editor"
+          element={
+            <ProtectedRoute>
+              <Editor1 />
+            </ProtectedRoute>
+          }
+        />
         <Route path="/success" element={<Success />} />
         <Route path="/cancel" element={<Cancel />} />
       </Routes>

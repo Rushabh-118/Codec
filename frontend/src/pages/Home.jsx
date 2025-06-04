@@ -338,7 +338,7 @@ export const Navigation = () => {
               className="text-2xl font-bold font-display text-black dark:text-white"
               whileHover={{ scale: 1.05 }}
             >
-              Co<span className="text-[#F83002]">deC</span>
+              Code<span className="text-[#F83002]">C</span>
             </motion.h1>
           </Link>
 
@@ -347,7 +347,7 @@ export const Navigation = () => {
               (section) => (
                 <motion.li
                   key={section}
-                  whileHover={{ scale: 1.1 }}
+                  whileHover={{ scale: 1.2 }}
                   whileTap={{ scale: 0.95 }}
                 >
                   <button
@@ -1664,10 +1664,10 @@ const Footer = () => {
           <motion.div variants={itemVariants} className="md:col-span-2">
             <div className="flex items-center gap-3 mb-6">
               <motion.div whileHover={{ rotate: 15, scale: 1.1 }}>
-                <MonitorCog className="text-white" size={28} />
+                <MonitorCog className="text-[#F83002]" size={28} />
               </motion.div>
               <h3 className="text-2xl font-bold">
-                Code<span className="text-orange-400">Collab</span>
+                Code<span className="text-[#F83002]">Collab</span>
               </h3>
             </div>
             <p className="text-gray-400 dark:text-gray-300 mb-6">

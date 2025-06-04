@@ -199,7 +199,7 @@ const AdComponent = () => {
       title: "🎉 Limited Time Offer",
       content: "Get 20% off your first year! Offer ends soon!",
       cta: "Claim Discount",
-      link: "#promo",
+      link: "#pricing",
       bg: "bg-gradient-to-r from-red-500 to-pink-600",
       icon: "⏳",
     }
@@ -211,10 +211,10 @@ const AdComponent = () => {
       
       setTimeout(() => {
         setShowAd(false);
-      }, 5000); // Show for 8 seconds
+      }, 5000); // Show for 5 seconds
       
       setCurrentAdIndex((prev) => (prev + 1) % ads.length);
-    }, 10000); // Rotate every 15 seconds
+    }, 10000); // Rotate every 10 seconds
 
     return () => clearInterval(adInterval);
   }, [ads.length]);

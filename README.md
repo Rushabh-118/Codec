@@ -38,8 +38,8 @@ A real-time collaborative code editor built using the MERN stack with Socket.IO 
 ### Clone the repository
 
 ```bash
-git clone https://github.com/your-username/code-collab-editor.git
-cd code-collab-editor
+git clone https://github.com/Rushabh-118/minor_Codec.git
+cd minor_Codec
 ```
 
 ### install packages

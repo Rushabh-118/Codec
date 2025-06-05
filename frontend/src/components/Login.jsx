@@ -92,7 +92,7 @@ const Login = () => {
       localStorage.setItem('token', token);
       localStorage.setItem('user', JSON.stringify(user));
       toast.success('Welcome back! Redirecting...');
-      setTimeout(() => navigate('/'), 1200);
+      setTimeout(() => navigate('/api/create-room'), 1200);
     } catch (error) {
       toast.error(error.response?.data?.message || 'Login failed');
     } finally {

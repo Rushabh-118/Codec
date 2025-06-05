@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import "./App.css";
 import io from "socket.io-client";
 import Editor from "@monaco-editor/react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import { v4 as uuid } from "uuid";
 import { saveAs } from 'file-saver';
@@ -165,6 +165,11 @@ const Editor1 = () => {
     }
   };
 
+  const leave = () => {
+    Navigate("/");
+  };
+
+
   const leaveRoom = () => {
     socket.emit("leaveRoom");
     setJoined(false);
@@ -252,6 +257,10 @@ const Editor1 = () => {
           <Link to="/api/editor">
             <button onClick={joinRoom}>Join Room</button>
           </Link>
+          <Link to="/">
+            <button>Back To Home</button>
+          </Link>
+
         </div>
       </div>
     );

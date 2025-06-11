@@ -371,7 +371,7 @@ export const Navigation = () => {
                 <span className="text-sm text-gray-700 dark:text-gray-300">
                   Welcome,{" "}
                   <span className="font-semibold text-[#F83002]">
-                    {user.email.split("@")[0]}
+                    {user.name ? user.name : user.email.split("@")[0]}
                   </span>
                 </span>
                 <motion.button

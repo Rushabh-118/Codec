@@ -5,11 +5,12 @@ import Editor from "@monaco-editor/react";
 import { Link, Navigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import { v4 as uuid } from "uuid";
-import { saveAs } from 'file-saver';
+import { saveAs } from "file-saver";
 
-const socket = import.meta.env.MODE === "development" 
-  ? io("http://localhost:5001") 
-  : io("https://minor-codec.onrender.com/");
+const socket =
+  import.meta.env.MODE === "development"
+    ? io("http://localhost:5001")
+    : io("https://minor-codec.onrender.com/");
 
 // Default code templates for each language
 const DEFAULT_CODE = {
@@ -19,9 +20,9 @@ const DEFAULT_CODE = {
   cpp: "#include <iostream>\nusing namespace std;\n\nint main() {\n  // Start coding here\n  return 0;\n}",
   c: "#include <stdio.h>\n\nint main() {\n  // Start coding here\n  return 0;\n}",
   php: "<?php\n\n// Start coding here\n\n?>",
-  go: "package main\n\nimport \"fmt\"\n\nfunc main() {\n  // Start coding here\n}",
+  go: 'package main\n\nimport "fmt"\n\nfunc main() {\n  // Start coding here\n}',
   ruby: "# Start coding here\n",
-  rust: "fn main() {\n  // Start coding here\n}"
+  rust: "fn main() {\n  // Start coding here\n}",
 };
 
 const Editor1 = () => {
@@ -71,12 +72,12 @@ const Editor1 = () => {
         showReferences: true,
         showFolders: true,
         showTypeParameters: true,
-        showSnippets: true
+        showSnippets: true,
       },
       quickSuggestions: {
         other: true,
         comments: true,
-        strings: true
+        strings: true,
       },
       parameterHints: { enabled: true },
       autoClosingBrackets: "always",
@@ -88,7 +89,7 @@ const Editor1 = () => {
       suggestSelection: "first",
       tabCompletion: "on",
       snippetSuggestions: "bottom",
-      inlayHints: { enabled: "on" }
+      inlayHints: { enabled: "on" },
     });
   };
 
@@ -169,7 +170,6 @@ const Editor1 = () => {
     Navigate("/");
   };
 
-
   const leaveRoom = () => {
     socket.emit("leaveRoom");
     setJoined(false);
@@ -217,50 +217,93 @@ const Editor1 = () => {
 
   const downloadCode = () => {
     const extensions = {
-      javascript: 'js',
-      python: 'py',
-      java: 'java',
-      cpp: 'cpp',
-      c: 'c',
-      php: 'php',
-      go: 'go',
-      ruby: 'rb',
-      rust: 'rs'
+      javascript: "js",
+      python: "py",
+      java: "java",
+      cpp: "cpp",
+      c: "c",
+      php: "php",
+      go: "go",
+      ruby: "rb",
+      rust: "rs",
     };
-    
-    const extension = extensions[language] || 'txt';
-    const blob = new Blob([code], { type: 'text/plain;charset=utf-8' });
-    saveAs(blob, `code-${roomId || 'snippet'}.${extension}`);
-    toast.success('Code downloaded!');
+
+    const extension = extensions[language] || "txt";
+    const blob = new Blob([code], { type: "text/plain;charset=utf-8" });
+    saveAs(blob, `code-${roomId || "snippet"}.${extension}`);
+    toast.success("Code downloaded!");
   };
 
   if (!joined) {
     return (
-      <div className="join-container">
-        <div className="join-form">
-          <h1>Join Code Room</h1>
-          <input
-            type="text"
-            placeholder="Room Id"
-            value={roomId}
-            onChange={(e) => setRoomId(e.target.value)}
-          />  
-          <button onClick={createRoomId}>
-            create Room Id
-          </button>
-          <input
-            type="text"
-            placeholder="Your Name"
-            value={userName}
-            onChange={(e) => setUserName(e.target.value)}
-          />
-          <Link to="/api/editor">
-            <button onClick={joinRoom}>Join Room</button>
-          </Link>
-          <Link to="/">
-            <button>Back To Home</button>
-          </Link>
+      <div className="flex items-center justify-center min-h-screen bg-gray-50 px-4">
+        <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-xl shadow-sm transition-all duration-300 hover:shadow-md">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold text-gray-900">Join Code Room</h1>
+            <p className="mt-1 text-gray-500">Collaborate in real-time</p>
+          </div>
 
+          <div className="space-y-5">
+            {/* Room ID Field */}
+            <div className="relative">
+              <input
+                type="text"
+                id="roomId"
+                value={roomId}
+                onChange={(e) => setRoomId(e.target.value)}
+                className="peer w-full px-4 py-2 border-0 text-black border-b-2 border-gray-300 bg-gray-50 rounded-t-lg focus:ring-0 focus:border-indigo-600"
+                placeholder="Enter Room ID...!"
+              />
+            </div>
+
+            {/* Name Field */}
+            <div className="relative mt-6">
+              <input
+                type="text"
+                id="userName"
+                value={userName}
+                onChange={(e) => setUserName(e.target.value)}
+                className="peer w-full text-black px-4 py-2 border-0 border-b-2 border-gray-300 bg-gray-50 rounded-t-lg focus:ring-0 focus:border-indigo-600"
+                placeholder="Enter Your Name...!"
+              />
+
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex space-x-3 pt-2">
+              <button
+                onClick={createRoomId}
+                className="flex-1 px-4 py-2.5 text-sm font-medium text-indigo-600 border border-indigo-600 rounded-lg
+                    hover:bg-indigo-50 transition-colors duration-200 active:scale-[0.98]"
+              >
+                Create Room
+              </button>
+
+              <Link to="/api/editor" className="flex-1">
+                <button
+                  onClick={joinRoom}
+                  className="w-full px-4 py-2.5 text-sm font-medium text-white bg-indigo-600 rounded-lg
+                      hover:bg-indigo-700 transition-colors duration-200 active:scale-[0.98]
+                      disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={!roomId || !userName}
+                >
+                  Join Now
+                </button>
+              </Link>
+            </div>
+
+            {/* Hidden Back Button (appears on card hover) */}
+            <div className="relative h-10 transition-opacity duration-300 opacity-0 hover:opacity-100">
+              <Link to="/">
+                <button
+                  className="absolute bottom-0 left-0 w-full px-4 py-2 text-sm text-gray-500 rounded-lg
+                            hover:text-gray-700 hover:bg-gray-100 transition-all duration-200"
+                >
+                  ← Back to Home
+                </button>
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -271,7 +314,11 @@ const Editor1 = () => {
       <div className="sidebar">
         <div className="room-info">
           <h2>Room: {roomId}</h2>
-          <button onClick={copyRoomId} className="icon-button" title="Copy Room ID">
+          <button
+            onClick={copyRoomId}
+            className="icon-button"
+            title="Copy Room ID"
+          >
             📋
           </button>
           {copySuccess && <span className="copy-success">{copySuccess}</span>}
@@ -307,15 +354,15 @@ const Editor1 = () => {
           <option value="ruby">Ruby</option>
           <option value="rust">Rust</option>
         </select>
-        <button 
-          className={`lock-button ${isTypingLocked ? 'locked' : ''}`}
+        <button
+          className={`lock-button ${isTypingLocked ? "locked" : ""}`}
           onClick={toggleTypingLock}
         >
-          {isTypingLocked && currentTypingUser === userName 
-            ? 'Unlock Editor' 
-            : isTypingLocked 
-              ? 'Editor Locked' 
-              : 'Lock Editor'}
+          {isTypingLocked && currentTypingUser === userName
+            ? "Unlock Editor"
+            : isTypingLocked
+            ? "Editor Locked"
+            : "Lock Editor"}
         </button>
         <button className="download-button" onClick={downloadCode}>
           Download Code
@@ -368,12 +415,12 @@ const Editor1 = () => {
               showReferences: true,
               showFolders: true,
               showTypeParameters: true,
-              showSnippets: true
+              showSnippets: true,
             },
             quickSuggestions: {
               other: true,
               comments: true,
-              strings: true
+              strings: true,
             },
             parameterHints: { enabled: true },
             autoClosingBrackets: "always",
@@ -385,7 +432,7 @@ const Editor1 = () => {
             suggestSelection: "first",
             tabCompletion: "on",
             snippetSuggestions: "bottom",
-            inlayHints: { enabled: "on" }
+            inlayHints: { enabled: "on" },
           }}
         />
         <textarea

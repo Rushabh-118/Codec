@@ -393,7 +393,7 @@ export const Navigation = () => {
                 >
                   <Link
                     to="/login"
-                    className="text-sm text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+                    className="text-sm text-gray-700 font-bold dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
                   >
                     Login
                   </Link>
@@ -404,7 +404,7 @@ export const Navigation = () => {
                 >
                   <Link
                     to="/signup"
-                    className="px-4 py-2 bg-gray-900 text-white text-sm rounded-full hover:bg-gray-800 transition-colors"
+                    className="px-4 py-2 bg-gray-900 dark:bg-white font-bold dark:text-black dark:font-bold text-white text-sm rounded-full hover:bg-gray-800 transition-colors"
                   >
                     Sign Up
                   </Link>

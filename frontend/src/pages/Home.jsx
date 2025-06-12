@@ -347,7 +347,7 @@ export const Navigation = () => {
           </Link>
 
           <ul className="flex items-center gap-6">
-            {["features", "Feedback", "testimonials", "pricing", "faq"].map(
+            {["features", "testimonials", "pricing", "faq", "Feedback"].map(
               (section) => (
                 <motion.li
                   key={section}
@@ -1827,11 +1827,11 @@ const Home = () => {
       <Navigation />
       <Hero />
       <Features />
-      <FeedbackForm />
       <Testimonials />
+      <CTA />
       <Pricing />
       <FAQ />
-      <CTA />
+      <FeedbackForm />
       <Footer />
       <AdComponent />
       <Toaster position="top-center" reverseOrder={false} />

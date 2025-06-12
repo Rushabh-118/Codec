@@ -236,11 +236,14 @@ const Editor1 = () => {
 
   if (!joined) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-50 px-4">
-        <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-xl shadow-sm transition-all duration-300 hover:shadow-md relative">
-          {/* Back Button (Top Right) */}
-          <Link to="/" className="absolute top-4 right-4">
-            <button className="p-2 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100 transition-colors duration-200">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+  <div className="w-full max-w-6xl">
+    <div className="flex flex-col lg:flex-row gap-8 bg-white rounded-xl shadow-lg overflow-hidden">
+      {/* Left Side - Features */}
+      <div className="lg:w-1/2 p-8 bg-indigo-50">
+        <div className="h-full flex flex-col">
+          <Link to="/" className="self-start mb-6">
+            <button className="p-2 text-indigo-600 hover:text-white rounded-full hover:bg-indigo-600 transition-colors duration-200">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-5 w-5"
@@ -255,14 +258,61 @@ const Editor1 = () => {
               </svg>
             </button>
           </Link>
+          
+          <div className="flex-grow">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Code Collaboration Made Simple</h1>
+            <p className="text-lg text-gray-600 mb-8">Real-time editing with your team</p>
+            
+            <div className="space-y-6">
+              <div className="flex items-start">
+                <div className="bg-white p-3 rounded-lg mr-4 shadow-sm">
+                  <svg className="h-6 w-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-900">Real-time Sync</h3>
+                  <p className="text-gray-600">See changes instantly as you code together</p>
+                </div>
+              </div>
+              
+              <div className="flex items-start">
+                <div className="bg-white p-3 rounded-lg mr-4 shadow-sm">
+                  <svg className="h-6 w-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-900">Multi-language Support</h3>
+                  <p className="text-gray-600">Supports all major programming languages</p>
+                </div>
+              </div>
+              
+              <div className="flex items-start">
+                <div className="bg-white p-3 rounded-lg mr-4 shadow-sm">
+                  <svg className="h-6 w-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-900">Secure Rooms</h3>
+                  <p className="text-gray-600">End-to-end encrypted collaboration</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-          <div className="text-center">
+      {/* Right Side - Room Form */}
+      <div className="lg:w-1/2 p-8 flex items-center justify-center">
+        <div className="w-full max-w-md">
+          <div className="text-center mb-8">
             <h1 className="text-2xl font-bold text-gray-900">Join Code Room</h1>
             <p className="mt-1 text-gray-500">Collaborate in real-time</p>
           </div>
 
           <div className="space-y-5">
-            {/* Room ID Field */}
             <div className="relative">
               <input
                 type="text"
@@ -274,7 +324,6 @@ const Editor1 = () => {
               />
             </div>
 
-            {/* Name Field */}
             <div className="relative mt-6">
               <input
                 type="text"
@@ -286,12 +335,11 @@ const Editor1 = () => {
               />
             </div>
 
-            {/* Action Buttons */}
             <div className="flex space-x-3 pt-2">
               <button
                 onClick={createRoomId}
                 className="flex-1 px-4 py-2.5 text-sm font-medium text-indigo-600 border border-indigo-600 rounded-lg
-              hover:bg-indigo-50 transition-colors duration-200 active:scale-[0.98]"
+                  hover:bg-indigo-50 transition-colors duration-200 active:scale-[0.98]"
               >
                 Create Room
               </button>
@@ -300,8 +348,8 @@ const Editor1 = () => {
                 <button
                   onClick={joinRoom}
                   className="w-full px-4 py-2.5 text-sm font-medium text-white bg-indigo-600 rounded-lg
-                hover:bg-indigo-700 transition-colors duration-200 active:scale-[0.98]
-                disabled:opacity-50 disabled:cursor-not-allowed"
+                    hover:bg-indigo-700 transition-colors duration-200 active:scale-[0.98]
+                    disabled:opacity-50 disabled:cursor-not-allowed"
                   disabled={!roomId || !userName}
                 >
                   Join Now
@@ -311,6 +359,9 @@ const Editor1 = () => {
           </div>
         </div>
       </div>
+    </div>
+  </div>
+</div>
     );
   }
 

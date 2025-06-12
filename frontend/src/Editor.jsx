@@ -237,7 +237,25 @@ const Editor1 = () => {
   if (!joined) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-50 px-4">
-        <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-xl shadow-sm transition-all duration-300 hover:shadow-md">
+        <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-xl shadow-sm transition-all duration-300 hover:shadow-md relative">
+          {/* Back Button (Top Right) */}
+          <Link to="/" className="absolute top-4 right-4">
+            <button className="p-2 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100 transition-colors duration-200">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </button>
+          </Link>
+
           <div className="text-center">
             <h1 className="text-2xl font-bold text-gray-900">Join Code Room</h1>
             <p className="mt-1 text-gray-500">Collaborate in real-time</p>
@@ -266,7 +284,6 @@ const Editor1 = () => {
                 className="peer w-full text-black px-4 py-2 border-0 border-b-2 border-gray-300 bg-gray-50 rounded-t-lg focus:ring-0 focus:border-indigo-600"
                 placeholder="Enter Your Name...!"
               />
-
             </div>
 
             {/* Action Buttons */}
@@ -274,7 +291,7 @@ const Editor1 = () => {
               <button
                 onClick={createRoomId}
                 className="flex-1 px-4 py-2.5 text-sm font-medium text-indigo-600 border border-indigo-600 rounded-lg
-                    hover:bg-indigo-50 transition-colors duration-200 active:scale-[0.98]"
+              hover:bg-indigo-50 transition-colors duration-200 active:scale-[0.98]"
               >
                 Create Room
               </button>
@@ -283,23 +300,11 @@ const Editor1 = () => {
                 <button
                   onClick={joinRoom}
                   className="w-full px-4 py-2.5 text-sm font-medium text-white bg-indigo-600 rounded-lg
-                      hover:bg-indigo-700 transition-colors duration-200 active:scale-[0.98]
-                      disabled:opacity-50 disabled:cursor-not-allowed"
+                hover:bg-indigo-700 transition-colors duration-200 active:scale-[0.98]
+                disabled:opacity-50 disabled:cursor-not-allowed"
                   disabled={!roomId || !userName}
                 >
                   Join Now
-                </button>
-              </Link>
-            </div>
-
-            {/* Hidden Back Button (appears on card hover) */}
-            <div className="relative h-10 transition-opacity duration-300 opacity-0 hover:opacity-100">
-              <Link to="/">
-                <button
-                  className="absolute bottom-0 left-0 w-full px-4 py-2 text-sm text-gray-500 rounded-lg
-                            hover:text-gray-700 hover:bg-gray-100 transition-all duration-200"
-                >
-                  ← Back to Home
                 </button>
               </Link>
             </div>

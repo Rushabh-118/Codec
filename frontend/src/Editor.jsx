@@ -237,131 +237,179 @@ const Editor1 = () => {
   if (!joined) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-  <div className="w-full max-w-6xl">
-    <div className="flex flex-col lg:flex-row gap-8 bg-white rounded-xl shadow-lg overflow-hidden">
-      {/* Left Side - Features */}
-      <div className="lg:w-1/2 p-8 bg-indigo-50">
-        <div className="h-full flex flex-col">
-          <Link to="/" className="self-start mb-6">
-            <button className="p-2 text-indigo-600 hover:text-white rounded-full hover:bg-indigo-600 transition-colors duration-200">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </button>
-          </Link>
-          
-          <div className="flex-grow">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Code Collaboration Made Simple</h1>
-            <p className="text-lg text-gray-600 mb-8">Real-time editing with your team</p>
-            
-            <div className="space-y-6">
-              <div className="flex items-start">
-                <div className="bg-white p-3 rounded-lg mr-4 shadow-sm">
-                  <svg className="h-6 w-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="font-semibold text-gray-900">Real-time Sync</h3>
-                  <p className="text-gray-600">See changes instantly as you code together</p>
-                </div>
-              </div>
-              
-              <div className="flex items-start">
-                <div className="bg-white p-3 rounded-lg mr-4 shadow-sm">
-                  <svg className="h-6 w-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="font-semibold text-gray-900">Multi-language Support</h3>
-                  <p className="text-gray-600">Supports all major programming languages</p>
-                </div>
-              </div>
-              
-              <div className="flex items-start">
-                <div className="bg-white p-3 rounded-lg mr-4 shadow-sm">
-                  <svg className="h-6 w-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="font-semibold text-gray-900">Secure Rooms</h3>
-                  <p className="text-gray-600">End-to-end encrypted collaboration</p>
+        <div className="w-full max-w-6xl">
+          <div className="flex flex-col lg:flex-row gap-8 bg-white rounded-xl shadow-lg overflow-hidden">
+            {/* Left Side - Features */}
+            <div className="lg:w-1/2 p-8 bg-indigo-50">
+              <div className="h-full flex flex-col">
+                <Link to="/" className="self-start mb-6">
+                  <button className="p-2 text-indigo-600 hover:text-white rounded-full hover:bg-indigo-600 transition-colors duration-200">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </button>
+                </Link>
+
+                <div className="flex-grow">
+                  <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                    Code Collaboration Made Simple
+                  </h1>
+                  <p className="text-lg text-gray-600 mb-8">
+                    Real-time editing with your team
+                  </p>
+
+                  <div className="space-y-6">
+                    <div className="flex items-start">
+                      <div className="bg-white p-3 rounded-lg mr-4 shadow-sm">
+                        <svg
+                          className="h-6 w-6 text-indigo-600"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M13 10V3L4 14h7v7l9-11h-7z"
+                          />
+                        </svg>
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-gray-900">
+                          Real-time Sync
+                        </h3>
+                        <p className="text-gray-600">
+                          See changes instantly as you code together
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start">
+                      <div className="bg-white p-3 rounded-lg mr-4 shadow-sm">
+                        <svg
+                          className="h-6 w-6 text-indigo-600"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                          />
+                        </svg>
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-gray-900">
+                          Multi-language Support
+                        </h3>
+                        <p className="text-gray-600">
+                          Supports all major programming languages
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start">
+                      <div className="bg-white p-3 rounded-lg mr-4 shadow-sm">
+                        <svg
+                          className="h-6 w-6 text-indigo-600"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                          />
+                        </svg>
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-gray-900">
+                          Secure Rooms
+                        </h3>
+                        <p className="text-gray-600">
+                          End-to-end encrypted collaboration
+                        </p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
 
-      {/* Right Side - Room Form */}
-      <div className="lg:w-1/2 p-8 flex items-center justify-center">
-        <div className="w-full max-w-md">
-          <div className="text-center mb-8">
-            <h1 className="text-2xl font-bold text-gray-900">Join Code Room</h1>
-            <p className="mt-1 text-gray-500">Collaborate in real-time</p>
-          </div>
+            {/* Right Side - Room Form */}
+            <div className="lg:w-1/2 p-8 flex items-center justify-center">
+              <div className="w-full max-w-md">
+                <div className="text-center mb-8">
+                  <h1 className="text-2xl font-bold text-gray-900">
+                    Join Code Room
+                  </h1>
+                  <p className="mt-1 text-gray-500">Collaborate in real-time</p>
+                </div>
 
-          <div className="space-y-5">
-            <div className="relative">
-              <input
-                type="text"
-                id="roomId"
-                value={roomId}
-                onChange={(e) => setRoomId(e.target.value)}
-                className="peer w-full px-4 py-2 border-0 text-black border-b-2 border-gray-300 bg-gray-50 rounded-t-lg focus:ring-0 focus:border-indigo-600"
-                placeholder="Enter Room ID...!"
-              />
-            </div>
+                <div className="space-y-5">
+                  <div className="relative">
+                    <input
+                      type="text"
+                      id="roomId"
+                      value={roomId}
+                      onChange={(e) => setRoomId(e.target.value)}
+                      className="peer w-full px-4 py-2 border-0 text-black border-b-2 border-gray-300 bg-gray-50 rounded-t-lg focus:ring-0 focus:border-indigo-600"
+                      placeholder="Enter Room ID...!"
+                    />
+                  </div>
 
-            <div className="relative mt-6">
-              <input
-                type="text"
-                id="userName"
-                value={userName}
-                onChange={(e) => setUserName(e.target.value)}
-                className="peer w-full text-black px-4 py-2 border-0 border-b-2 border-gray-300 bg-gray-50 rounded-t-lg focus:ring-0 focus:border-indigo-600"
-                placeholder="Enter Your Name...!"
-              />
-            </div>
+                  <div className="relative mt-6">
+                    <input
+                      type="text"
+                      id="userName"
+                      value={userName}
+                      onChange={(e) => setUserName(e.target.value)}
+                      className="peer w-full text-black px-4 py-2 border-0 border-b-2 border-gray-300 bg-gray-50 rounded-t-lg focus:ring-0 focus:border-indigo-600"
+                      placeholder="Enter Your Name...!"
+                    />
+                  </div>
 
-            <div className="flex space-x-3 pt-2">
-              <button
-                onClick={createRoomId}
-                className="flex-1 px-4 py-2.5 text-sm font-medium text-indigo-600 border border-indigo-600 rounded-lg
+                  <div className="flex space-x-3 pt-2">
+                    <button
+                      onClick={createRoomId}
+                      className="flex-1 px-4 py-2.5 text-sm font-medium text-indigo-600 border border-indigo-600 rounded-lg
                   hover:bg-indigo-50 transition-colors duration-200 active:scale-[0.98]"
-              >
-                Create Room
-              </button>
+                    >
+                      Create Room
+                    </button>
 
-              <Link to="/api/editor" className="flex-1">
-                <button
-                  onClick={joinRoom}
-                  className="w-full px-4 py-2.5 text-sm font-medium text-white bg-indigo-600 rounded-lg
+                    <Link to="/api/editor" className="flex-1">
+                      <button
+                        onClick={joinRoom}
+                        className="w-full px-4 py-2.5 text-sm font-medium text-white bg-indigo-600 rounded-lg
                     hover:bg-indigo-700 transition-colors duration-200 active:scale-[0.98]
                     disabled:opacity-50 disabled:cursor-not-allowed"
-                  disabled={!roomId || !userName}
-                >
-                  Join Now
-                </button>
-              </Link>
+                        disabled={!roomId || !userName}
+                      >
+                        Join Now
+                      </button>
+                    </Link>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
-</div>
     );
   }
 

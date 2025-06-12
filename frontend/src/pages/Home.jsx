@@ -741,6 +741,9 @@ const Features = () => {
     },
   ];
 
+  // Duplicate features for infinite loop
+  const duplicatedFeatures = [...features, ...features, ...features];
+
   return (
     <motion.section
       id="features"
@@ -772,32 +775,71 @@ const Features = () => {
           </motion.p>
         </motion.div>
 
+        {/* Infinite Scrolling Features */}
+        <div className="relative overflow-x-hidden py-8">
+          <div className="absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-gray-100 to-transparent dark:from-gray-900 z-10" />
+          <div className="absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-gray-100 to-transparent dark:from-gray-900 z-10" />
+          
+          <motion.div
+            className="flex gap-8 w-max"
+            animate={{
+              x: ["0%", "-100%"],
+            }}
+            transition={{
+              x: {
+                repeat: Infinity,
+                duration: 60,
+                ease: "linear",
+              },
+            }}
+          >
+            {duplicatedFeatures.map((feature, index) => (
+              <motion.div
+                key={`${index}-${feature.title}`}
+                variants={slideUpVariants}
+                custom={feature.delay}
+                initial="hidden"
+                animate="visible"
+                whileHover={{
+                  y: -10,
+                  scale: 1.03,
+                  boxShadow: "0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04)",
+                }}
+                className="w-80 p-8 rounded-2xl bg-white shadow-lg hover:shadow-xl transition-all dark:bg-gray-800 flex-shrink-0"
+              >
+                <motion.div
+                  className={`w-16 h-16 ${feature.color} ${feature.textColor} rounded-full flex items-center justify-center text-2xl mb-6`}
+                  whileHover={{ rotate: 15, scale: 1.1 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
+                  {feature.icon}
+                </motion.div>
+                <h3 className="text-xl font-semibold mb-3 text-gray-900 dark:text-white">
+                  {feature.title}
+                </h3>
+                <p className="text-gray-700 dark:text-gray-300">
+                  {feature.description}
+                </p>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+
+        {/* Static Grid Layout (Hidden by default) */}
         <motion.div
-          variants={containerVariants}
-          className="grid md:grid-cols-3 gap-8"
+          variants={fadeInVariants}
+          className="hidden grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
         >
           {features.map((feature, index) => (
             <motion.div
               key={index}
               variants={slideUpVariants}
               custom={feature.delay}
-              initial="hidden"
-              animate="visible"
-              whileHover={{
-                y: -10,
-                scale: 1.03,
-                boxShadow:
-                  "0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04)",
-              }}
               className="p-8 rounded-2xl bg-white shadow-lg hover:shadow-xl transition-all dark:bg-gray-800"
             >
-              <motion.div
-                className={`w-16 h-16 ${feature.color} ${feature.textColor} rounded-full flex items-center justify-center text-2xl mb-6`}
-                whileHover={{ rotate: 15, scale: 1.1 }}
-                transition={{ type: "spring", stiffness: 300 }}
-              >
+              <div className={`w-16 h-16 ${feature.color} ${feature.textColor} rounded-full flex items-center justify-center text-2xl mb-6`}>
                 {feature.icon}
-              </motion.div>
+              </div>
               <h3 className="text-xl font-semibold mb-3 text-gray-900 dark:text-white">
                 {feature.title}
               </h3>

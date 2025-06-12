@@ -179,7 +179,8 @@ const AdComponent = () => {
     {
       id: 1,
       title: "🚀 Pro Plan Unleashed",
-      content: "Unlock unlimited rooms and all premium features with our Pro plan!",
+      content:
+        "Unlock unlimited rooms and all premium features with our Pro plan!",
       cta: "Upgrade Now",
       link: "#pricing",
       bg: "bg-gradient-to-r from-blue-500 to-blue-700",
@@ -188,7 +189,8 @@ const AdComponent = () => {
     {
       id: 2,
       title: "👥 Team Collaboration",
-      content: "Boost your team's productivity with shared workspaces and real-time collaboration!",
+      content:
+        "Boost your team's productivity with shared workspaces and real-time collaboration!",
       cta: "Explore Team Plan",
       link: "#pricing",
       bg: "bg-gradient-to-r from-purple-500 to-indigo-700",
@@ -202,17 +204,17 @@ const AdComponent = () => {
       link: "#pricing",
       bg: "bg-gradient-to-r from-red-500 to-pink-600",
       icon: "⏳",
-    }
+    },
   ];
 
   useEffect(() => {
     const adInterval = setInterval(() => {
       setShowAd(true);
-      
+
       setTimeout(() => {
         setShowAd(false);
       }, 5000); // Show for 5 seconds
-      
+
       setCurrentAdIndex((prev) => (prev + 1) % ads.length);
     }, 10000); // Rotate every 10 seconds
 
@@ -236,7 +238,7 @@ const AdComponent = () => {
             <div className="flex-1">
               <div className="flex justify-between items-start">
                 <h3 className="text-xl font-bold mb-2">{currentAd.title}</h3>
-                <button 
+                <button
                   onClick={() => setShowAd(false)}
                   className="text-white/70 hover:text-white text-lg"
                 >
@@ -253,9 +255,11 @@ const AdComponent = () => {
                 </a>
                 <div className="flex space-x-1">
                   {ads.map((_, index) => (
-                    <div 
+                    <div
                       key={index}
-                      className={`w-2 h-2 rounded-full ${index === currentAdIndex ? 'bg-white' : 'bg-white/30'}`}
+                      className={`w-2 h-2 rounded-full ${
+                        index === currentAdIndex ? "bg-white" : "bg-white/30"
+                      }`}
                     />
                   ))}
                 </div>
@@ -741,7 +745,6 @@ const Features = () => {
     },
   ];
 
-  // Duplicate features for infinite loop
   const duplicatedFeatures = [...features, ...features, ...features];
 
   return (
@@ -775,11 +778,10 @@ const Features = () => {
           </motion.p>
         </motion.div>
 
-        {/* Infinite Scrolling Features */}
         <div className="relative overflow-x-hidden py-8">
           <div className="absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-gray-100 to-transparent dark:from-gray-900 z-10" />
           <div className="absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-gray-100 to-transparent dark:from-gray-900 z-10" />
-          
+
           <motion.div
             className="flex gap-8 w-max"
             animate={{
@@ -803,7 +805,8 @@ const Features = () => {
                 whileHover={{
                   y: -10,
                   scale: 1.03,
-                  boxShadow: "0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04)",
+                  boxShadow:
+                    "0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04)",
                 }}
                 className="w-80 p-8 rounded-2xl bg-white shadow-lg hover:shadow-xl transition-all dark:bg-gray-800 flex-shrink-0"
               >
@@ -825,7 +828,6 @@ const Features = () => {
           </motion.div>
         </div>
 
-        {/* Static Grid Layout (Hidden by default) */}
         <motion.div
           variants={fadeInVariants}
           className="hidden grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
@@ -837,7 +839,9 @@ const Features = () => {
               custom={feature.delay}
               className="p-8 rounded-2xl bg-white shadow-lg hover:shadow-xl transition-all dark:bg-gray-800"
             >
-              <div className={`w-16 h-16 ${feature.color} ${feature.textColor} rounded-full flex items-center justify-center text-2xl mb-6`}>
+              <div
+                className={`w-16 h-16 ${feature.color} ${feature.textColor} rounded-full flex items-center justify-center text-2xl mb-6`}
+              >
                 {feature.icon}
               </div>
               <h3 className="text-xl font-semibold mb-3 text-gray-900 dark:text-white">
@@ -1829,7 +1833,7 @@ const Home = () => {
       <FAQ />
       <CTA />
       <Footer />
-      <AdComponent/>
+      <AdComponent />
       <Toaster position="top-center" reverseOrder={false} />
     </div>
   );

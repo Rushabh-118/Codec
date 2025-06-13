@@ -1164,6 +1164,15 @@ const Pricing = () => {
     }
   }, [controls, inView]);
 
+  useEffect(() => {
+    // On mount, update selectedPlan from user in localStorage
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      const user = JSON.parse(storedUser);
+      setSelectedPlan(user.plan || "Free");
+    }
+  }, []);
+
   const stripePromise = loadStripe(
     "pk_test_51Qir0GSAr3AIYJYDvsWQeUu1nqEzqEWY5HYBkWxeijRYjVzw02BMpWy3j1xQbN5WYVyZi8FUZT6NIav7WiP9Q5Fp005ZV3WYa6"
   );
@@ -1171,14 +1180,26 @@ const Pricing = () => {
   const handleCheckout = async (plan) => {
     setSelectedPlan(plan);
 
+    const storedUser = localStorage.getItem("user");
+    let userId = null;
+    if (storedUser) {
+      const user = JSON.parse(storedUser);
+      userId = user._id;
+    }
+
     if (plan === "Free") {
       toast.success("Free plan selected! No payment required.");
-      const storedUser = localStorage.getItem("user");
-      if (storedUser) {
+      if (userId) {
+        // Update plan in DB
+        await fetch("http://localhost:5001/api/user/plan", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId, plan }),
+        });
+        // Update local user
         const user = JSON.parse(storedUser);
         user.plan = plan;
         localStorage.setItem("user", JSON.stringify(user));
-        // Dispatch both storage event and custom event
         window.dispatchEvent(new Event("storage"));
         window.dispatchEvent(new Event("userPlanUpdated"));
       }
@@ -1201,6 +1222,14 @@ const Pricing = () => {
 
       // Store the selected plan in sessionStorage for use after redirect
       sessionStorage.setItem("lastSelectedPlan", plan);
+      // Update plan in DB after payment success (should be handled on backend webhook ideally)
+      if (userId) {
+        await fetch("http://localhost:5001/api/user/plan", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId, plan }),
+        });
+      }
 
       const result = await stripe.redirectToCheckout({
         sessionId: data.sessionId,

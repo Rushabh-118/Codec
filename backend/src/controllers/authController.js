@@ -30,6 +30,7 @@ export const signup = async (req, res) => {
       name,
       email,
       password: hashedPassword,
+      plan: "Free", // Set default plan
     });
 
     await newUser.save();
@@ -40,6 +41,7 @@ export const signup = async (req, res) => {
         _id: newUser._id,
         username: newUser.username,
         email: newUser.email,
+        plan: newUser.plan, // Return plan
       }
     });
   } catch (error) {
@@ -68,7 +70,12 @@ export const login = async (req, res) => {
     if (!token) {
       return res.status(400).json({ message: "token not generated" });
     }
-    res.status(200).json({ user, token });
+    res.status(200).json({ user: {
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      plan: user.plan // Return plan on login
+    }, token });
   } catch (err) {
     res.status(500).json({ message: "Login failed", error: err.message });
   }

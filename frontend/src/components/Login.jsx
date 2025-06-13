@@ -90,7 +90,8 @@ const Login = () => {
       const res = await axios.post('http://localhost:5001/api/auth/login', form);
       const { token, user } = res.data;
       localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify(user));
+      // On successful login, store user with plan in localStorage
+      localStorage.setItem("user", JSON.stringify(user));
       toast.success('Welcome back! Redirecting...');
       setTimeout(() => navigate('/api/create-room'), 1200);
     } catch (error) {

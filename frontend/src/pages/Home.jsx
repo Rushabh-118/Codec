@@ -290,6 +290,15 @@ export const Navigation = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
   const handleStorageChange = () => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {

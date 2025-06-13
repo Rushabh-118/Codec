@@ -208,17 +208,24 @@ const AdComponent = () => {
   ];
 
   useEffect(() => {
-    const adInterval = setInterval(() => {
-      setShowAd(true);
+    // Get user from localStorage
+    const storedUser = localStorage.getItem('user');
+    const user = storedUser ? JSON.parse(storedUser) : { plan: 'Free' };
 
-      setTimeout(() => {
-        setShowAd(false);
-      }, 5000); // Show for 5 seconds
+    // Only show ads for free users
+    if (user.plan === 'Free') {
+      const adInterval = setInterval(() => {
+        setShowAd(true);
 
-      setCurrentAdIndex((prev) => (prev + 1) % ads.length);
-    }, 10000); // Rotate every 10 seconds
+        setTimeout(() => {
+          setShowAd(false);
+        }, 5000); // Show for 5 seconds
 
-    return () => clearInterval(adInterval);
+        setCurrentAdIndex((prev) => (prev + 1) % ads.length);
+      }, 8000); // Rotate every 8 seconds
+
+      return () => clearInterval(adInterval);
+    }
   }, [ads.length]);
 
   const currentAd = ads[currentAdIndex];

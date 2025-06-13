@@ -19,6 +19,20 @@ const Loader = () => (
 const Success = () => {
   const navigate = useNavigate();
   useEffect(() => {
+    // Update user plan in localStorage and dispatch events
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      const user = JSON.parse(storedUser);
+      // Try to get the last selected plan from sessionStorage (set before redirect)
+      const lastPlan = sessionStorage.getItem("lastSelectedPlan");
+      if (lastPlan && (lastPlan === "Pro" || lastPlan === "Team")) {
+        user.plan = lastPlan;
+        localStorage.setItem("user", JSON.stringify(user));
+        window.dispatchEvent(new Event("storage"));
+        window.dispatchEvent(new Event("userPlanUpdated"));
+        sessionStorage.removeItem("lastSelectedPlan");
+      }
+    }
     toast.success("Payment Successful! 🎉");
     const timer = setTimeout(() => navigate("/"), 2000);
     return () => clearTimeout(timer);

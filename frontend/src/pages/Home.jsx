@@ -276,20 +276,36 @@ const AdComponent = () => {
 export const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [user, setUser] = useState(null);
+  const [userPlan, setUserPlan] = useState("Free");
   const [darkMode, setDarkMode] = useState(() => {
     return localStorage.getItem("theme") === "dark";
   });
   const navigate = useNavigate();
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", handleScroll);
-
+  const handleStorageChange = () => {
     const storedUser = localStorage.getItem("user");
-    if (storedUser) setUser(JSON.parse(storedUser));
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+      setUser(parsedUser);
+      setUserPlan(parsedUser.plan || "Free");
+    }
+  };
 
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  // Listen for storage changes
+  window.addEventListener("storage", handleStorageChange);
+  
+  // Also listen for your custom event
+  window.addEventListener("userPlanUpdated", handleStorageChange);
+
+  // Initial load
+  handleStorageChange();
+
+  return () => {
+    window.removeEventListener("storage", handleStorageChange);
+    window.removeEventListener("userPlanUpdated", handleStorageChange);
+  };
+}, []);
 
   useEffect(() => {
     if (darkMode) {
@@ -305,19 +321,27 @@ export const Navigation = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     setUser(null);
+    setUserPlan("Free");
     toast.success("Logged out successfully");
     navigate("/");
+  };
+
+  const getPlanBadgeStyle = (plan) => {
+    switch (plan) {
+      case "Pro":
+        return "bg-gradient-to-r from-blue-500 to-blue-600 text-white";
+      case "Team":
+        return "bg-gradient-to-r from-purple-500 to-indigo-600 text-white";
+      default:
+        return "bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200";
+    }
   };
 
   return (
     <motion.nav
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      transition={{
-        type: "spring",
-        stiffness: 100,
-        damping: 10,
-      }}
+      transition={{ type: "spring", stiffness: 100, damping: 10 }}
       className={`fixed w-full z-50 transition-all duration-300 ${
         isScrolled
           ? "bg-white/10 backdrop-blur-md shadow-md dark:bg-gray-800/10"
@@ -327,18 +351,11 @@ export const Navigation = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <Link to="/" className="flex items-center gap-2">
-            <motion.div
-              whileHover={{ rotate: 15, scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-            >
+            <motion.div whileHover={{ rotate: 15, scale: 1.1 }} whileTap={{ scale: 0.9 }}>
               <MonitorCog className="text-[#F83002]" size={24} />
             </motion.div>
             <motion.h1
-              onClick={() =>
-                document
-                  .getElementById("hero")
-                  ?.scrollIntoView({ behavior: "smooth" })
-              }
+              onClick={() => document.getElementById("hero")?.scrollIntoView({ behavior: "smooth" })}
               className="text-2xl font-bold font-display text-black dark:text-white"
               whileHover={{ scale: 1.05 }}
             >
@@ -347,35 +364,31 @@ export const Navigation = () => {
           </Link>
 
           <ul className="flex items-center gap-6">
-            {["features", "testimonials", "pricing", "faq", "Feedback"].map(
-              (section) => (
-                <motion.li
-                  key={section}
-                  whileHover={{ scale: 1.2 }}
-                  whileTap={{ scale: 0.95 }}
+            {["features", "testimonials", "pricing", "faq", "Feedback"].map((section) => (
+              <motion.li key={section} whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.95 }}>
+                <button
+                  onClick={() => document.getElementById(section)?.scrollIntoView({ behavior: "smooth" })}
+                  className="text-xl text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
                 >
-                  <button
-                    onClick={() =>
-                      document
-                        .getElementById(section)
-                        ?.scrollIntoView({ behavior: "smooth" })
-                    }
-                    className="text-xl text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
-                  >
-                    {section.charAt(0).toUpperCase() + section.slice(1)}
-                  </button>
-                </motion.li>
-              )
-            )}
+                  {section.charAt(0).toUpperCase() + section.slice(1)}
+                </button>
+              </motion.li>
+            ))}
           </ul>
 
           <div className="flex items-center gap-4">
             {user ? (
               <div className="flex items-center gap-3">
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  className={`px-3 py-1 text-xs font-bold rounded-full ${getPlanBadgeStyle(userPlan)}`}
+                >
+                  {userPlan}
+                </motion.div>
                 <span className="text-sm text-gray-700 dark:text-gray-300">
                   Welcome,{" "}
                   <span className="font-semibold text-[#F83002]">
-                    {user.name ? user.name : user.email.split("@")[0]}
+                    {user.name ? user.name : user.email?.split("@")[0]}
                   </span>
                 </span>
                 <motion.button
@@ -387,10 +400,7 @@ export const Navigation = () => {
               </div>
             ) : (
               <>
-                <motion.div
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                >
+                <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
                   <Link
                     to="/login"
                     className="text-sm text-gray-700 font-bold dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
@@ -398,13 +408,10 @@ export const Navigation = () => {
                     Login
                   </Link>
                 </motion.div>
-                <motion.div
-                  whileHover={{ scale: 1.1, y: -2 }}
-                  whileTap={{ scale: 0.95 }}
-                >
+                <motion.div whileHover={{ scale: 1.1, y: -2 }} whileTap={{ scale: 0.95 }}>
                   <Link
                     to="/signup"
-                    className="px-4 py-2 bg-gray-900 dark:bg-white font-bold dark:text-black dark:font-bold text-white text-sm rounded-full hover:bg-gray-800 transition-colors"
+                    className="px-4 py-2 bg-gray-900 dark:bg-white font-bold dark:text-black text-white text-sm rounded-full hover:bg-gray-800 transition-colors"
                   >
                     Sign Up
                   </Link>
@@ -429,27 +436,11 @@ export const Navigation = () => {
                 className="absolute inset-0 flex items-center justify-center"
               >
                 {darkMode ? (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6 text-yellow-400"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M12 3v1m0 16v1m8.66-8.66h-1M4.34 12H3m15.07 6.07l-.71-.71M6.34 6.34l-.71-.71m12.02 0l-.71.71M6.34 17.66l-.71.71M12 5a7 7 0 100 14 7 7 0 000-14z"
-                    />
+                  <svg className="h-6 w-6 text-yellow-400" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v1m0 16v1m8.66-8.66h-1M4.34 12H3m15.07 6.07l-.71-.71M6.34 6.34l-.71-.71m12.02 0l-.71.71M6.34 17.66l-.71.71M12 5a7 7 0 100 14 7 7 0 000-14z" />
                   </svg>
                 ) : (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6 text-gray-800 dark:text-gray-100"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
+                  <svg className="h-6 w-6 text-gray-800 dark:text-gray-100" viewBox="0 0 20 20" fill="currentColor">
                     <path d="M17.293 13.293a8 8 0 01-10.586-10.586 8 8 0 1010.586 10.586z" />
                   </svg>
                 )}
@@ -1182,6 +1173,15 @@ const Pricing = () => {
 
     if (plan === "Free") {
       toast.success("Free plan selected! No payment required.");
+      const storedUser = localStorage.getItem("user");
+      if (storedUser) {
+        const user = JSON.parse(storedUser);
+        user.plan = plan;
+        localStorage.setItem("user", JSON.stringify(user));
+        // Dispatch both storage event and custom event
+        window.dispatchEvent(new Event("storage"));
+        window.dispatchEvent(new Event("userPlanUpdated"));
+      }
       return;
     }
 
@@ -1199,24 +1199,18 @@ const Pricing = () => {
       const data = await res.json();
       const stripe = await stripePromise;
 
+      // Store the selected plan in sessionStorage for use after redirect
+      sessionStorage.setItem("lastSelectedPlan", plan);
+
       const result = await stripe.redirectToCheckout({
         sessionId: data.sessionId,
       });
 
       if (result.error) {
         toast.error(result.error.message);
-      } else {
-        // Update user plan in local storage
-        const storedUser = localStorage.getItem("user");
-        if (storedUser) {
-          const user = JSON.parse(storedUser);
-          user.plan = plan;
-          localStorage.setItem("user", JSON.stringify(user));
-        }
       }
     } catch (error) {
       toast.error("Payment failed: " + error.message);
-    } finally {
       setSelectedPlan(null);
     }
   };
@@ -1801,7 +1795,6 @@ const Home = () => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       const user = JSON.parse(storedUser);
-      // You'll need to modify your backend to include plan info in the user object
       setUserPlan(user.plan || "Free");
     }
 

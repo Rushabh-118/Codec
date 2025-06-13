@@ -40,6 +40,10 @@ const Editor1 = () => {
   const [isTypingLocked, setIsTypingLocked] = useState(false);
   const [currentTypingUser, setCurrentTypingUser] = useState("");
 
+  // Track if user already created a room (for Free plan restriction)
+  const [roomCreated, setRoomCreated] = useState(false);
+  const [userPlan, setUserPlan] = useState("Free");
+
   // Configure Monaco Editor with full IntelliSense support
   const handleEditorDidMount = (editor, monaco) => {
     // Configure editor with all IntelliSense features
@@ -158,6 +162,19 @@ const Editor1 = () => {
     };
   }, []);
 
+  useEffect(() => {
+    // Get user plan from localStorage
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      const user = JSON.parse(storedUser);
+      setUserPlan(user.plan || "Free");
+    }
+    // Check if user already created a room today (persisted in localStorage with date)
+    const createdDate = localStorage.getItem("roomCreatedDate");
+    const today = new Date().toISOString().slice(0, 10);
+    setRoomCreated(createdDate === today);
+  }, []);
+
   const joinRoom = () => {
     if (roomId && userName) {
       socket.emit("join", { roomId, userName });
@@ -210,9 +227,18 @@ const Editor1 = () => {
   };
 
   const createRoomId = () => {
+    if (userPlan === "Free" && roomCreated) {
+      toast.notify("Free plan users can only create one room per day. Upgrade Pro or Team Plan for unlimited rooms.");
+      return;
+    }
     const roomId = uuid().slice(0, 10);
     setRoomId(roomId);
     toast.success(`New room created: ${roomId}`);
+    if (userPlan === "Free") {
+      setRoomCreated(true);
+      const today = new Date().toISOString().slice(0, 10);
+      localStorage.setItem("roomCreatedDate", today);
+    }
   };
 
   const downloadCode = () => {
@@ -369,6 +395,7 @@ const Editor1 = () => {
                       onChange={(e) => setRoomId(e.target.value)}
                       className="peer w-full px-4 py-2 border-0 text-black border-b-2 border-gray-300 bg-gray-50 rounded-t-lg focus:ring-0 focus:border-indigo-600"
                       placeholder="Enter Room ID...!"
+                      disabled={userPlan === "Free" && roomCreated}
                     />
                   </div>
 
@@ -380,6 +407,7 @@ const Editor1 = () => {
                       onChange={(e) => setUserName(e.target.value)}
                       className="peer w-full text-black px-4 py-2 border-0 border-b-2 border-gray-300 bg-gray-50 rounded-t-lg focus:ring-0 focus:border-indigo-600"
                       placeholder="Enter Your Name...!"
+                      disabled={userPlan === "Free" && roomCreated}
                     />
                   </div>
 
@@ -388,6 +416,7 @@ const Editor1 = () => {
                       onClick={createRoomId}
                       className="flex-1 px-4 py-2.5 text-sm font-medium text-indigo-600 border border-indigo-600 rounded-lg
                   hover:bg-indigo-50 transition-colors duration-200 active:scale-[0.98]"
+                      disabled={userPlan === "Free" && roomCreated}
                     >
                       Create Room
                     </button>

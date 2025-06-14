@@ -177,3 +177,33 @@ input, select, textarea, button {
 .download-button:hover {
   background-color: #45a049;
 }
+
+/* Dark mode styles */
+.dark {
+  --bg-color: #1a202c;
+  --sidebar-bg: #1f2937;
+  --text-color: #f3f4f6;
+  --border-color: #374151;
+  --input-bg: #1f2937;
+  --button-bg: #374151;
+  --button-text: #f3f4f6;
+  --output-bg: #111827;
+}
+
+/* Light mode styles */
+:root {
+  --bg-color: #f7fafc;
+  --sidebar-bg: #f3f4f6;
+  --text-color: #111827;
+  --border-color: #e5e7eb;
+  --input-bg: #ffffff;
+  --button-bg: #e5e7eb;
+  --button-text: #111827;
+  --output-bg: #f3f4f6;
+}
+
+/* Toast container dark mode */
+.Toastify__toast-container--dark {
+  background: #1f2937;
+  color: #f3f4f6;
+}

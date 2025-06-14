@@ -6,7 +6,7 @@ import { Link, Navigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import { v4 as uuid } from "uuid";
 import { saveAs } from "file-saver";
-import { FiCopy } from "react-icons/fi";
+import { FiCopy, FiSun, FiMoon } from "react-icons/fi";
 
 const socket =
   import.meta.env.MODE === "development"
@@ -40,21 +40,44 @@ const Editor1 = () => {
   const [userInput, setUserInput] = useState("");
   const [isTypingLocked, setIsTypingLocked] = useState(false);
   const [currentTypingUser, setCurrentTypingUser] = useState("");
+  const [darkMode, setDarkMode] = useState(() => {
+    // Check localStorage for saved theme preference
+    const savedTheme = localStorage.getItem("theme");
+    return savedTheme === "dark" || (!savedTheme && window.matchMedia("(prefers-color-scheme: dark)").matches);
+  });
 
   // Track if user already created a room (for Free plan restriction)
   const [roomCreated, setRoomCreated] = useState(false);
   const [userPlan, setUserPlan] = useState("Free");
 
   // Sidebar resizable state
-  const [sidebarWidth, setSidebarWidth] = useState(260); // default width in px
+  const [sidebarWidth, setSidebarWidth] = useState(260);
   const [resizingSidebar, setResizingSidebar] = useState(false);
   const sidebarRef = useRef(null);
   const startSidebarX = useRef(0);
   const startSidebarWidth = useRef(260);
 
+  // Toggle dark mode and save preference
+  const toggleDarkMode = () => {
+    const newMode = !darkMode;
+    setDarkMode(newMode);
+    localStorage.setItem("theme", newMode ? "dark" : "light");
+  };
+
+  // Apply dark mode class to body when darkMode changes
+  useEffect(() => {
+    if (darkMode) {
+      document.body.classList.add("dark");
+      document.body.style.backgroundColor = "#1a202c";
+    } else {
+      document.body.classList.remove("dark");
+      document.body.style.backgroundColor = "#f7fafc";
+    }
+  }, [darkMode]);
+
   // Configure Monaco Editor with full IntelliSense support
   const handleEditorDidMount = (editor, monaco) => {
-    // Configure editor with all IntelliSense features
+    monaco.editor.setTheme(darkMode ? "vs-dark" : "vs");
     editor.updateOptions({
       suggest: {
         preview: true,
@@ -236,7 +259,7 @@ const Editor1 = () => {
 
   const createRoomId = () => {
     if (userPlan === "Free" && roomCreated) {
-      toast.notify("Free plan users can only create one room per day. Upgrade Pro or Team Plan for unlimited rooms.");
+      toast.error("Free plan users can only create one room per day. Upgrade to Pro or Team Plan for unlimited rooms.");
       return;
     }
     const roomId = uuid().slice(0, 10);
@@ -275,15 +298,18 @@ const Editor1 = () => {
     startSidebarWidth.current = sidebarWidth;
     document.body.style.userSelect = "none";
   };
+
   const handleSidebarMouseMove = (e) => {
     if (!resizingSidebar) return;
     const dx = e.clientX - startSidebarX.current;
     setSidebarWidth(Math.max(180, Math.min(500, startSidebarWidth.current + dx)));
   };
+
   const handleSidebarMouseUp = () => {
     setResizingSidebar(false);
     document.body.style.userSelect = "auto";
   };
+
   useEffect(() => {
     if (resizingSidebar) {
       window.addEventListener("mousemove", handleSidebarMouseMove);
@@ -300,14 +326,14 @@ const Editor1 = () => {
 
   if (!joined) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+      <div className={`min-h-screen ${darkMode ? 'bg-gray-900' : 'bg-gray-50'} flex items-center justify-center p-4`}>
         <div className="w-full max-w-6xl">
-          <div className="flex flex-col lg:flex-row gap-8 bg-white rounded-xl shadow-lg overflow-hidden">
+          <div className={`flex flex-col lg:flex-row gap-8 rounded-xl shadow-lg overflow-hidden ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
             {/* Left Side - Features */}
-            <div className="lg:w-1/2 p-8 bg-indigo-50">
+            <div className={`lg:w-1/2 p-8 ${darkMode ? 'bg-gray-700' : 'bg-indigo-50'}`}>
               <div className="h-full flex flex-col">
                 <Link to="/" className="self-start mb-6">
-                  <button className="p-2 text-indigo-600 hover:text-white rounded-full hover:bg-indigo-600 transition-colors duration-200">
+                  <button className={`p-2 rounded-full transition-colors duration-200 ${darkMode ? 'text-indigo-300 hover:bg-gray-600' : 'text-indigo-600 hover:bg-indigo-600 hover:text-white'}`}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       className="h-5 w-5"
@@ -324,16 +350,16 @@ const Editor1 = () => {
                 </Link>
 
                 <div className="flex-grow">
-                  <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                  <h1 className={`text-3xl font-bold mb-2 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
                     Code Collaboration Made Simple
                   </h1>
-                  <p className="text-lg text-gray-600 mb-8">
+                  <p className={`text-lg mb-8 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                     Real-time editing with your team
                   </p>
 
                   <div className="space-y-6">
                     <div className="flex items-start">
-                      <div className="bg-white p-3 rounded-lg mr-4 shadow-sm">
+                      <div className={`p-3 rounded-lg mr-4 shadow-sm ${darkMode ? 'bg-gray-600' : 'bg-white'}`}>
                         <svg
                           className="h-6 w-6 text-indigo-600"
                           fill="none"
@@ -349,17 +375,17 @@ const Editor1 = () => {
                         </svg>
                       </div>
                       <div>
-                        <h3 className="font-semibold text-gray-900">
+                        <h3 className={`font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
                           Real-time Sync
                         </h3>
-                        <p className="text-gray-600">
+                        <p className={darkMode ? 'text-gray-300' : 'text-gray-600'}>
                           See changes instantly as you code together
                         </p>
                       </div>
                     </div>
 
                     <div className="flex items-start">
-                      <div className="bg-white p-3 rounded-lg mr-4 shadow-sm">
+                      <div className={`p-3 rounded-lg mr-4 shadow-sm ${darkMode ? 'bg-gray-600' : 'bg-white'}`}>
                         <svg
                           className="h-6 w-6 text-indigo-600"
                           fill="none"
@@ -375,17 +401,17 @@ const Editor1 = () => {
                         </svg>
                       </div>
                       <div>
-                        <h3 className="font-semibold text-gray-900">
+                        <h3 className={`font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
                           Multi-language Support
                         </h3>
-                        <p className="text-gray-600">
+                        <p className={darkMode ? 'text-gray-300' : 'text-gray-600'}>
                           Supports all major programming languages
                         </p>
                       </div>
                     </div>
 
                     <div className="flex items-start">
-                      <div className="bg-white p-3 rounded-lg mr-4 shadow-sm">
+                      <div className={`p-3 rounded-lg mr-4 shadow-sm ${darkMode ? 'bg-gray-600' : 'bg-white'}`}>
                         <svg
                           className="h-6 w-6 text-indigo-600"
                           fill="none"
@@ -401,10 +427,10 @@ const Editor1 = () => {
                         </svg>
                       </div>
                       <div>
-                        <h3 className="font-semibold text-gray-900">
+                        <h3 className={`font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
                           Secure Rooms
                         </h3>
-                        <p className="text-gray-600">
+                        <p className={darkMode ? 'text-gray-300' : 'text-gray-600'}>
                           End-to-end encrypted collaboration
                         </p>
                       </div>
@@ -415,13 +441,13 @@ const Editor1 = () => {
             </div>
 
             {/* Right Side - Room Form */}
-            <div className="lg:w-1/2 p-8 flex items-center justify-center">
+            <div className={`lg:w-1/2 p-8 flex items-center justify-center ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
               <div className="w-full max-w-md">
                 <div className="text-center mb-8">
-                  <h1 className="text-2xl font-bold text-gray-900">
+                  <h1 className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
                     Join Code Room
                   </h1>
-                  <p className="mt-1 text-gray-500">Collaborate in real-time</p>
+                  <p className={`mt-1 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>Collaborate in real-time</p>
                 </div>
 
                 <div className="space-y-5">
@@ -431,7 +457,7 @@ const Editor1 = () => {
                       id="roomId"
                       value={roomId}
                       onChange={(e) => setRoomId(e.target.value)}
-                      className="peer w-full px-4 py-2 border-0 text-black border-b-2 border-gray-300 bg-gray-50 rounded-t-lg focus:ring-0 focus:border-indigo-600"
+                      className={`peer w-full px-4 py-2 border-0 border-b-2 rounded-t-lg focus:ring-0 focus:border-indigo-600 ${darkMode ? 'text-white bg-gray-700 border-gray-600 placeholder-gray-400' : 'text-black bg-gray-50 border-gray-300 placeholder-gray-500'}`}
                       placeholder="Enter Room ID...!"
                       disabled={userPlan === "Free" && roomCreated}
                     />
@@ -443,7 +469,7 @@ const Editor1 = () => {
                       id="userName"
                       value={userName}
                       onChange={(e) => setUserName(e.target.value)}
-                      className="peer w-full text-black px-4 py-2 border-0 border-b-2 border-gray-300 bg-gray-50 rounded-t-lg focus:ring-0 focus:border-indigo-600"
+                      className={`peer w-full px-4 py-2 border-0 border-b-2 rounded-t-lg focus:ring-0 focus:border-indigo-600 ${darkMode ? 'text-white bg-gray-700 border-gray-600 placeholder-gray-400' : 'text-black bg-gray-50 border-gray-300 placeholder-gray-500'}`}
                       placeholder="Enter Your Name...!"
                       disabled={userPlan === "Free" && roomCreated}
                     />
@@ -452,8 +478,7 @@ const Editor1 = () => {
                   <div className="flex space-x-3 pt-2">
                     <button
                       onClick={createRoomId}
-                      className="flex-1 px-4 py-2.5 text-sm font-medium text-indigo-600 border border-indigo-600 rounded-lg
-                  hover:bg-indigo-50 transition-colors duration-200 active:scale-[0.98]"
+                      className={`flex-1 px-4 py-2.5 text-sm font-medium rounded-lg transition-colors duration-200 active:scale-[0.98] ${darkMode ? 'text-indigo-300 border border-indigo-300 hover:bg-gray-700' : 'text-indigo-600 border border-indigo-600 hover:bg-indigo-50'}`}
                       disabled={userPlan === "Free" && roomCreated}
                     >
                       Create Room
@@ -462,9 +487,7 @@ const Editor1 = () => {
                     <Link to="/api/editor" className="flex-1">
                       <button
                         onClick={joinRoom}
-                        className="w-full px-4 py-2.5 text-sm font-medium text-white bg-indigo-600 rounded-lg
-                    hover:bg-indigo-700 transition-colors duration-200 active:scale-[0.98]
-                    disabled:opacity-50 disabled:cursor-not-allowed"
+                        className={`w-full px-4 py-2.5 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors duration-200 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed ${darkMode ? 'bg-indigo-700 hover:bg-indigo-800' : ''}`}
                         disabled={!roomId || !userName}
                       >
                         Join Now
@@ -481,44 +504,121 @@ const Editor1 = () => {
   }
 
   return (
-    <div className="editor-container" style={{ display: "flex", height: "100vh" }}>
+    <div className={`editor-container ${darkMode ? 'dark' : ''}`} style={{ display: "flex", height: "100vh" }}>
       <div
         ref={sidebarRef}
-        className="sidebar"
-        style={{ width: sidebarWidth, minWidth: 120, maxWidth: 500, position: "relative", transition: resizingSidebar ? "none" : "width 0.2s" }}
+        className={`sidebar ${darkMode ? 'dark' : ''}`}
+        style={{ 
+          width: sidebarWidth, 
+          minWidth: 180, 
+          maxWidth: 500, 
+          position: "relative", 
+          transition: resizingSidebar ? "none" : "width 0.2s",
+          backgroundColor: darkMode ? '#1f2937' : '#f3f4f6',
+          color: darkMode ? '#f3f4f6' : '#111827'
+        }}
       >
-        <div className="room-info" style={{ display: "flex", alignItems: "center", gap: 0 }}>
-          <h2 style={{ marginRight: 8, whiteSpace: "nowrap" }}>Room: {roomId}</h2>
+        <div className="room-info" style={{ display: "flex", alignItems: "center", gap: 8, padding: '12px 16px', borderBottom: darkMode ? '1px solid #374151' : '1px solid #e5e7eb' }}>
+          <h2 style={{ margin: 0, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>Room: {roomId}</h2>
           <button
             onClick={copyRoomId}
             className="icon-button"
             title="Copy Room ID"
-            style={{ marginLeft: 0, background: "none", border: "none", padding: 0, cursor: "pointer", display: "flex", alignItems: "center" }}
+            style={{ background: "none", border: "none", padding: 0, cursor: "pointer", display: "flex", alignItems: "center", flexShrink: 0 }}
           >
-            <FiCopy size={22} color="#2563eb" style={{ filter: "drop-shadow(0 0 2px #60a5fa)" }} />
+            <FiCopy size={18} color={darkMode ? '#9ca3af' : '#6b7280'} />
           </button>
-          {copySuccess && <span className="copy-success" style={{ marginLeft: 8 }}>{copySuccess}</span>}
+          {copySuccess && <span className="copy-success" style={{ marginLeft: 8, fontSize: 12, color: darkMode ? '#9ca3af' : '#6b7280' }}>{copySuccess}</span>}
         </div>
-        <div className="user-list">
-          <h3>Online Users ({users.length})</h3>
-          <ul>
+
+        {/* Dark mode toggle button */}
+        <button
+          onClick={toggleDarkMode}
+          className="theme-toggle"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '100%',
+            padding: '10px 16px',
+            margin: '12px 0',
+            gap: '8px',
+            background: darkMode ? '#374151' : '#e5e7eb',
+            color: darkMode ? '#f3f4f6' : '#111827',
+            border: 'none',
+            borderRadius: '6px',
+            cursor: 'pointer',
+            transition: 'all 0.2s ease'
+          }}
+        >
+          {darkMode ? (
+            <>
+              <FiSun size={18} />
+              <span>Light Mode</span>
+            </>
+          ) : (
+            <>
+              <FiMoon size={18} />
+              <span>Dark Mode</span>
+            </>
+          )}
+        </button>
+
+        <div className="user-list" style={{ padding: '0 16px', marginBottom: '16px' }}>
+          <h3 style={{ margin: '12px 0 8px', fontSize: '14px', fontWeight: '600' }}>Online Users ({users.length})</h3>
+          <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
             {users.map((user, index) => (
-              <li key={index}>
+              <li 
+                key={index} 
+                style={{
+                  padding: '6px 0',
+                  fontSize: '14px',
+                  color: user === userName ? (darkMode ? '#60a5fa' : '#2563eb') : 'inherit'
+                }}
+              >
                 {user} {user === userName && "(You)"}
               </li>
             ))}
           </ul>
         </div>
-        <p className="typing-indicator">{typing}</p>
+
+        {typing && (
+          <p className="typing-indicator" style={{
+            padding: '0 16px',
+            margin: '8px 0',
+            fontSize: '12px',
+            color: darkMode ? '#9ca3af' : '#6b7280',
+            fontStyle: 'italic'
+          }}>
+            {typing}
+          </p>
+        )}
+
         {isTypingLocked && (
-          <p className="typing-lock-indicator">
+          <p className="typing-lock-indicator" style={{
+            padding: '0 16px',
+            margin: '8px 0',
+            fontSize: '12px',
+            color: darkMode ? '#f87171' : '#dc2626'
+          }}>
             Editor locked by: {currentTypingUser.slice(0, 8)}...
           </p>
         )}
+
         <select
           className="language-selector"
           value={language}
           onChange={handleLanguageChange}
+          style={{
+            width: 'calc(100% - 32px)',
+            margin: '0 16px 12px',
+            padding: '8px 12px',
+            borderRadius: '6px',
+            border: `1px solid ${darkMode ? '#4b5563' : '#d1d5db'}`,
+            background: darkMode ? '#1f2937' : '#ffffff',
+            color: darkMode ? '#f3f4f6' : '#111827',
+            cursor: 'pointer'
+          }}
         >
           <option value="javascript">JavaScript</option>
           <option value="python">Python</option>
@@ -530,9 +630,27 @@ const Editor1 = () => {
           <option value="ruby">Ruby</option>
           <option value="rust">Rust</option>
         </select>
+
         <button
           className={`lock-button ${isTypingLocked ? "locked" : ""}`}
           onClick={toggleTypingLock}
+          style={{
+            width: 'calc(100% - 32px)',
+            margin: '0 16px 12px',
+            padding: '10px',
+            borderRadius: '6px',
+            border: 'none',
+            background: isTypingLocked 
+              ? (darkMode ? '#7f1d1d' : '#fee2e2') 
+              : (darkMode ? '#1e40af' : '#dbeafe'),
+            color: isTypingLocked 
+              ? (darkMode ? '#fca5a5' : '#b91c1c') 
+              : (darkMode ? '#bfdbfe' : '#1e40af'),
+            cursor: 'pointer',
+            fontWeight: '500',
+            transition: 'all 0.2s ease'
+          }}
+          disabled={isTypingLocked && currentTypingUser !== userName}
         >
           {isTypingLocked && currentTypingUser === userName
             ? "Unlock Editor"
@@ -540,14 +658,46 @@ const Editor1 = () => {
             ? "Editor Locked"
             : "Lock Editor"}
         </button>
-        <button className="download-button" onClick={downloadCode}>
+
+        <button 
+          className="download-button" 
+          onClick={downloadCode}
+          style={{
+            width: 'calc(100% - 32px)',
+            margin: '0 16px 12px',
+            padding: '10px',
+            borderRadius: '6px',
+            border: 'none',
+            background: darkMode ? '#374151' : '#e5e7eb',
+            color: darkMode ? '#f3f4f6' : '#111827',
+            cursor: 'pointer',
+            fontWeight: '500',
+            transition: 'all 0.2s ease'
+          }}
+        >
           Download Code
         </button>
-        <Link to="/api/create-room">
-          <button className="leave-button" onClick={leaveRoom}>
+
+        <Link to="/api/create-room" style={{ width: 'calc(100% - 32px)', margin: '0 16px', display: 'block' }}>
+          <button 
+            className="leave-button" 
+            onClick={leaveRoom}
+            style={{
+              width: '100%',
+              padding: '10px',
+              borderRadius: '6px',
+              border: 'none',
+              background: darkMode ? '#7f1d1d' : '#fee2e2',
+              color: darkMode ? '#fca5a5' : '#b91c1c',
+              cursor: 'pointer',
+              fontWeight: '500',
+              transition: 'all 0.2s ease'
+            }}
+          >
             Leave Room
           </button>
         </Link>
+
         <div
           style={{
             position: "absolute",
@@ -557,21 +707,22 @@ const Editor1 = () => {
             height: "100%",
             cursor: "ew-resize",
             zIndex: 10,
-            background: resizingSidebar ? "rgba(37,99,235,0.08)" : "transparent",
-            borderRight: resizingSidebar ? "2px solid #2563eb" : "none",
+            background: resizingSidebar ? (darkMode ? 'rgba(59, 130, 246, 0.2)' : 'rgba(37,99,235,0.08)') : "transparent",
+            borderRight: resizingSidebar ? `2px solid ${darkMode ? '#3b82f6' : '#2563eb'}` : "none",
           }}
           onMouseDown={handleSidebarMouseDown}
           title="Resize sidebar"
         />
       </div>
-      <div className="editor-wrapper" style={{ flex: 1, minWidth: 0 }}>
+
+      <div className="editor-wrapper" style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', backgroundColor: darkMode ? '#1a202c' : '#f7fafc' }}>
         <Editor
           height={"60%"}
           defaultLanguage={language}
           language={language}
           value={code}
           onChange={handleCodeChange}
-          theme="vs-dark"
+          theme={darkMode ? "vs-dark" : "vs"}
           onMount={handleEditorDidMount}
           options={{
             minimap: { enabled: false },
@@ -625,23 +776,64 @@ const Editor1 = () => {
             inlayHints: { enabled: "on" },
           }}
         />
-        <textarea
-          className="user-input"
-          placeholder="Enter input for your program here..."
-          value={userInput}
-          onChange={(e) => setUserInput(e.target.value)}
-        />
-        <button className="run-btn" onClick={runCode}>
-          Execute
-        </button>
-        <textarea
-          className="output-console"
-          value={outPut}
-          readOnly
-          placeholder="Output will appear here..."
-        />
+
+        <div style={{ display: 'flex', flexDirection: 'column', height: '40%' }}>
+          <textarea
+            className="user-input"
+            placeholder="Enter input for your program here..."
+            value={userInput}
+            onChange={(e) => setUserInput(e.target.value)}
+            style={{
+              flex: 1,
+              padding: '12px',
+              border: 'none',
+              borderTop: darkMode ? '1px solid #374151' : '1px solid #e5e7eb',
+              resize: 'none',
+              backgroundColor: darkMode ? '#1f2937' : '#ffffff',
+              color: darkMode ? '#f3f4f6' : '#111827',
+              outline: 'none',
+              fontFamily: 'monospace',
+              fontSize: '14px'
+            }}
+          />
+
+          <button 
+            className="run-btn" 
+            onClick={runCode}
+            style={{
+              padding: '10px',
+              border: 'none',
+              background: darkMode ? '#1e40af' : '#2563eb',
+              color: '#ffffff',
+              cursor: 'pointer',
+              fontWeight: '500',
+              transition: 'all 0.2s ease'
+            }}
+          >
+            Execute
+          </button>
+
+          <textarea
+            className="output-console"
+            value={outPut}
+            readOnly
+            placeholder="Output will appear here..."
+            style={{
+              flex: 2,
+              padding: '12px',
+              border: 'none',
+              borderTop: darkMode ? '1px solid #374151' : '1px solid #e5e7eb',
+              resize: 'none',
+              backgroundColor: darkMode ? '#111827' : '#f3f4f6',
+              color: darkMode ? '#f3f4f6' : '#111827',
+              outline: 'none',
+              fontFamily: 'monospace',
+              fontSize: '14px'
+            }}
+          />
+        </div>
       </div>
-      <ToastContainer position="top-right" autoClose={2000} />
+      <ToastContainer position="top-right" autoClose={2000} theme={darkMode ? "dark" : "light"} />
     </div>
   );
 };

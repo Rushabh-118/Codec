@@ -5,7 +5,7 @@ import { Toaster, toast } from "react-hot-toast";
 import { loadStripe } from "@stripe/stripe-js";
 import { motion, useAnimation, AnimatePresence } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-import picture from "../assets/hero_image.png";
+import picture from "../assets/hero_image.svg";
 
 // Advanced Animation Variants
 const containerVariants = {

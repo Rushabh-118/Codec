@@ -1,6 +1,6 @@
 import { ArrowRight, MonitorCog } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";  
 import { Toaster, toast } from "react-hot-toast";
 import { loadStripe } from "@stripe/stripe-js";
 import { motion, useAnimation, AnimatePresence } from "framer-motion";

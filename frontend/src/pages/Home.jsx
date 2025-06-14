@@ -337,7 +337,6 @@ export const Navigation = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     setUser(null);
-    setUserPlan("Free");
     toast.success("Logged out successfully");
     navigate("/");
   };

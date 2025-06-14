@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import "./App.css";
 import io from "socket.io-client";
 import Editor from "@monaco-editor/react";
@@ -6,6 +6,7 @@ import { Link, Navigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import { v4 as uuid } from "uuid";
 import { saveAs } from "file-saver";
+import { FiCopy } from "react-icons/fi";
 
 const socket =
   import.meta.env.MODE === "development"
@@ -43,6 +44,13 @@ const Editor1 = () => {
   // Track if user already created a room (for Free plan restriction)
   const [roomCreated, setRoomCreated] = useState(false);
   const [userPlan, setUserPlan] = useState("Free");
+
+  // Sidebar resizable state
+  const [sidebarWidth, setSidebarWidth] = useState(260); // default width in px
+  const [resizingSidebar, setResizingSidebar] = useState(false);
+  const sidebarRef = useRef(null);
+  const startSidebarX = useRef(0);
+  const startSidebarWidth = useRef(260);
 
   // Configure Monaco Editor with full IntelliSense support
   const handleEditorDidMount = (editor, monaco) => {
@@ -260,6 +268,36 @@ const Editor1 = () => {
     toast.success("Code downloaded!");
   };
 
+  // Sidebar resize handlers
+  const handleSidebarMouseDown = (e) => {
+    setResizingSidebar(true);
+    startSidebarX.current = e.clientX;
+    startSidebarWidth.current = sidebarWidth;
+    document.body.style.userSelect = "none";
+  };
+  const handleSidebarMouseMove = (e) => {
+    if (!resizingSidebar) return;
+    const dx = e.clientX - startSidebarX.current;
+    setSidebarWidth(Math.max(180, Math.min(500, startSidebarWidth.current + dx)));
+  };
+  const handleSidebarMouseUp = () => {
+    setResizingSidebar(false);
+    document.body.style.userSelect = "auto";
+  };
+  useEffect(() => {
+    if (resizingSidebar) {
+      window.addEventListener("mousemove", handleSidebarMouseMove);
+      window.addEventListener("mouseup", handleSidebarMouseUp);
+    } else {
+      window.removeEventListener("mousemove", handleSidebarMouseMove);
+      window.removeEventListener("mouseup", handleSidebarMouseUp);
+    }
+    return () => {
+      window.removeEventListener("mousemove", handleSidebarMouseMove);
+      window.removeEventListener("mouseup", handleSidebarMouseUp);
+    };
+  }, [resizingSidebar]);
+
   if (!joined) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
@@ -443,18 +481,23 @@ const Editor1 = () => {
   }
 
   return (
-    <div className="editor-container">
-      <div className="sidebar">
-        <div className="room-info">
-          <h2>Room: {roomId}</h2>
+    <div className="editor-container" style={{ display: "flex", height: "100vh" }}>
+      <div
+        ref={sidebarRef}
+        className="sidebar"
+        style={{ width: sidebarWidth, minWidth: 120, maxWidth: 500, position: "relative", transition: resizingSidebar ? "none" : "width 0.2s" }}
+      >
+        <div className="room-info" style={{ display: "flex", alignItems: "center", gap: 0 }}>
+          <h2 style={{ marginRight: 8, whiteSpace: "nowrap" }}>Room: {roomId}</h2>
           <button
             onClick={copyRoomId}
             className="icon-button"
             title="Copy Room ID"
+            style={{ marginLeft: 0, background: "none", border: "none", padding: 0, cursor: "pointer", display: "flex", alignItems: "center" }}
           >
-            📋
+            <FiCopy size={22} color="#2563eb" style={{ filter: "drop-shadow(0 0 2px #60a5fa)" }} />
           </button>
-          {copySuccess && <span className="copy-success">{copySuccess}</span>}
+          {copySuccess && <span className="copy-success" style={{ marginLeft: 8 }}>{copySuccess}</span>}
         </div>
         <div className="user-list">
           <h3>Online Users ({users.length})</h3>
@@ -505,9 +548,23 @@ const Editor1 = () => {
             Leave Room
           </button>
         </Link>
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            right: 0,
+            width: 8,
+            height: "100%",
+            cursor: "ew-resize",
+            zIndex: 10,
+            background: resizingSidebar ? "rgba(37,99,235,0.08)" : "transparent",
+            borderRight: resizingSidebar ? "2px solid #2563eb" : "none",
+          }}
+          onMouseDown={handleSidebarMouseDown}
+          title="Resize sidebar"
+        />
       </div>
-
-      <div className="editor-wrapper">
+      <div className="editor-wrapper" style={{ flex: 1, minWidth: 0 }}>
         <Editor
           height={"60%"}
           defaultLanguage={language}

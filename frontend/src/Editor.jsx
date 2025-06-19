@@ -47,7 +47,7 @@ const Editor1 = () => {
   });
 
   // Track if user already created a room (for Free plan restriction)
-  const [roomCreated, setRoomCreated] = useState(false);
+  const [roomCreatedCount, setRoomCreatedCount] = useState(0);
   const [userPlan, setUserPlan] = useState("Free");
 
   // Sidebar resizable state
@@ -69,6 +69,9 @@ const Editor1 = () => {
   const [showChat, setShowChat] = useState(false);
   const [unreadChatCount, setUnreadChatCount] = useState(0);
   const lastSeenMessageIndex = useRef(-1);
+
+  // Only allow chat for Team users
+  const chatAllowed = userPlan === "Team";
 
   // Toggle dark mode and save preference
   const toggleDarkMode = () => {
@@ -226,10 +229,10 @@ const Editor1 = () => {
       const user = JSON.parse(storedUser);
       setUserPlan(user.plan || "Free");
     }
-    // Check if user already created a room today (persisted in localStorage with date)
-    const createdDate = localStorage.getItem("roomCreatedDate");
+    // Check how many rooms user created today (persisted in localStorage with date)
+    const createdData = JSON.parse(localStorage.getItem("roomCreatedData") || '{}');
     const today = new Date().toISOString().slice(0, 10);
-    setRoomCreated(createdDate === today);
+    setRoomCreatedCount(createdData[today] || 0);
   }, []);
 
   useEffect(() => {
@@ -303,17 +306,19 @@ const Editor1 = () => {
   };
 
   const createRoomId = () => {
-    if (userPlan === "Free" && roomCreated) {
-      toast.error("Free plan users can only create one room per day. Upgrade to Pro or Team Plan for unlimited rooms.");
+    if (userPlan === "Free" && roomCreatedCount >= 3) {
+      toast.error("Free plan users can only create up to 3 rooms per day. Upgrade to Pro or Team Plan for unlimited rooms.");
       return;
     }
     const roomId = uuid().slice(0, 10);
     setRoomId(roomId);
     toast.success(`New room created: ${roomId}`);
     if (userPlan === "Free") {
-      setRoomCreated(true);
       const today = new Date().toISOString().slice(0, 10);
-      localStorage.setItem("roomCreatedDate", today);
+      const createdData = JSON.parse(localStorage.getItem("roomCreatedData") || '{}');
+      createdData[today] = (createdData[today] || 0) + 1;
+      localStorage.setItem("roomCreatedData", JSON.stringify(createdData));
+      setRoomCreatedCount(createdData[today]);
     }
   };
 
@@ -529,7 +534,7 @@ const Editor1 = () => {
                       onChange={(e) => setRoomId(e.target.value)}
                       className={`peer w-full px-4 py-2 border-0 border-b-2 rounded-t-lg focus:ring-0 focus:border-indigo-600 ${darkMode ? 'text-white bg-gray-700 border-gray-600 placeholder-gray-400' : 'text-black bg-gray-50 border-gray-300 placeholder-gray-500'}`}
                       placeholder="Enter Room ID...!"
-                      disabled={userPlan === "Free" && roomCreated}
+                      disabled={userPlan === "Free" && roomCreatedCount >= 3}
                     />
                   </div>
 
@@ -541,7 +546,7 @@ const Editor1 = () => {
                       onChange={(e) => setUserName(e.target.value)}
                       className={`peer w-full px-4 py-2 border-0 border-b-2 rounded-t-lg focus:ring-0 focus:border-indigo-600 ${darkMode ? 'text-white bg-gray-700 border-gray-600 placeholder-gray-400' : 'text-black bg-gray-50 border-gray-300 placeholder-gray-500'}`}
                       placeholder="Enter Your Name...!"
-                      disabled={userPlan === "Free" && roomCreated}
+                      disabled={userPlan === "Free" && roomCreatedCount >= 3}
                     />
                   </div>
 
@@ -549,7 +554,7 @@ const Editor1 = () => {
                     <button
                       onClick={createRoomId}
                       className={`flex-1 px-4 py-2.5 text-sm font-medium rounded-lg transition-colors duration-200 active:scale-[0.98] ${darkMode ? 'text-indigo-300 border border-indigo-300 hover:bg-gray-700' : 'text-indigo-600 border border-indigo-600 hover:bg-indigo-50'}`}
-                      disabled={userPlan === "Free" && roomCreated}
+                      disabled={userPlan === "Free" && roomCreatedCount >= 3}
                     >
                       Create Room
                     </button>
@@ -771,7 +776,7 @@ const Editor1 = () => {
         {/* --- Floating Chat Button and Chat Box --- */}
         <div style={{ position: 'fixed', top: 24, right: 24, zIndex: 1200 }}>
           <button
-            onClick={toggleChat}
+            onClick={chatAllowed ? toggleChat : undefined}
             style={{
               background: darkMode ? '#2563eb' : '#2563eb',
               color: '#fff',
@@ -784,12 +789,14 @@ const Editor1 = () => {
               alignItems: 'center',
               justifyContent: 'center',
               fontSize: 28,
-              cursor: 'pointer',
+              cursor: chatAllowed ? 'pointer' : 'not-allowed',
               marginBottom: 8,
               position: 'relative',
               padding: 0,
+              opacity: chatAllowed ? 1 : 0.6
             }}
-            title={showChat ? 'Close Chat' : 'Open Chat'}
+            title={chatAllowed ? (showChat ? 'Close Chat' : 'Open Chat') : 'Chat is available only for Team users'}
+            disabled={!chatAllowed}
           >
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M21 15.5V6.5C21 5.11929 19.8807 4 18.5 4H5.5C4.11929 4 3 5.11929 3 6.5V17.5C3 18.8807 4.11929 20 5.5 20H18.5C19.8807 20 21 18.8807 21 17.5V15.5Z" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -819,7 +826,7 @@ const Editor1 = () => {
               }}>{unreadChatCount}</span>
             )}
           </button>
-          {showChat && (
+          {showChat && chatAllowed && (
             <div className="chat-bot bg-white dark:bg-gray-800 rounded-lg shadow p-4 flex flex-col h-[40rem] w-[28rem]" style={{marginTop: 8, minWidth: 340, maxWidth: 480}}>
               <div className="flex justify-between items-center mb-2">
                 <span className="font-bold">Room Chat</span>
@@ -902,6 +909,16 @@ const Editor1 = () => {
                   Send
                 </button>
               </div>
+            </div>
+          )}
+          {!chatAllowed && showChat && (
+            <div className="chat-bot bg-white dark:bg-gray-800 rounded-lg shadow p-4 flex flex-col h-[16rem] w-[22rem] items-center justify-center text-center" style={{marginTop: 8, minWidth: 220, maxWidth: 320}}>
+              <span className="font-bold text-lg mb-2">Room Chat</span>
+              <div className="text-gray-700 dark:text-gray-200 mb-2">Chat is available only for <b>Pro</b> or <b>Team</b> plan users.</div>
+              <button
+                className="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                onClick={() => setShowChat(false)}
+              >Close</button>
             </div>
           )}
         </div>

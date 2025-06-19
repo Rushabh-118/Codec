@@ -256,6 +256,16 @@ const editor = (io) => {
       }
     });
 
+    // --- Real-time Chat Events ---
+    socket.on("chatMessage", ({ roomId, message, userName }) => {
+      if (!roomId || !userName || !message) return;
+      const time = new Date().toLocaleTimeString();
+      io.to(roomId).emit("chatMessage", { userName, message, time });
+    });
+    socket.on("clearChat", ({ roomId }) => {
+      io.to(roomId).emit("clearChat");
+    });
+
     // Handle disconnection
     socket.on("disconnect", () => {
       if (!validateRoomUser()) return;

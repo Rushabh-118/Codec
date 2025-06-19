@@ -6,7 +6,7 @@ import { Link, Navigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import { v4 as uuid } from "uuid";
 import { saveAs } from "file-saver";
-import { FiCopy, FiSun, FiMoon } from "react-icons/fi";
+import { FiCopy, FiSun, FiMoon, FiTrash2 } from "react-icons/fi";
 
 const socket =
   import.meta.env.MODE === "development"
@@ -56,6 +56,14 @@ const Editor1 = () => {
   const sidebarRef = useRef(null);
   const startSidebarX = useRef(0);
   const startSidebarWidth = useRef(260);
+
+  // --- Chat State ---
+  const [chatMessages, setChatMessages] = useState([]);
+  const [chatInput, setChatInput] = useState("");
+  const chatEndRef = useRef(null);
+
+  // --- Leader State ---
+  const [leader, setLeader] = useState(null);
 
   // Toggle dark mode and save preference
   const toggleDarkMode = () => {
@@ -161,6 +169,9 @@ const Editor1 = () => {
       }
     });
 
+    socket.on("chatMessage", (msg) => setChatMessages((prev) => [...prev, msg]));
+    socket.on("clearChat", () => setChatMessages([]));
+
     return () => {
       socket.off("userJoined");
       socket.off("codeUpdate");
@@ -168,6 +179,8 @@ const Editor1 = () => {
       socket.off("languageUpdate");
       socket.off("codeResponse");
       socket.off("typingLocked");
+      socket.off("chatMessage");
+      socket.off("clearChat");
     };
   }, []);
 
@@ -323,6 +336,34 @@ const Editor1 = () => {
       window.removeEventListener("mouseup", handleSidebarMouseUp);
     };
   }, [resizingSidebar]);
+
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [chatMessages]);
+
+  const sendChat = () => {
+    if (chatInput.trim()) {
+      socket.emit("chatMessage", { roomId, message: chatInput, userName });
+      setChatInput("");
+    }
+  };
+
+  const clearChat = () => {
+    if (userName === leader) {
+      socket.emit("clearChat", { roomId });
+    } else {
+      toast.warn("Only the leader can clear the chat.");
+    }
+  };
+
+  useEffect(() => {
+    // Update leader when users list changes
+    if (users && users.length > 0) {
+      setLeader(users[0]);
+    } else {
+      setLeader(null);
+    }
+  }, [users]);
 
   if (!joined) {
     return (
@@ -576,7 +617,7 @@ const Editor1 = () => {
                   color: user === userName ? (darkMode ? '#60a5fa' : '#2563eb') : 'inherit'
                 }}
               >
-                {user} {user === userName && "(You)"}
+                {user} {user === userName && "(You)"} {user === leader && <span style={{color:'#f59e42', fontWeight:600, fontSize:12, marginLeft:4}}>(Leader)</span>}
               </li>
             ))}
           </ul>
@@ -697,6 +738,91 @@ const Editor1 = () => {
             Leave Room
           </button>
         </Link>
+
+        {/* --- Real-time Chat Bot UI (moved below Leave Room button) --- */}
+        <div className="chat-bot bg-white dark:bg-gray-800 rounded-lg shadow p-4 flex flex-col h-80" style={{margin: '16px 0 0 0'}}>
+          <div className="flex justify-between items-center mb-2">
+            <span className="font-bold">Room Chat</span>
+            <button
+              onClick={clearChat}
+              className={`text-xs px-2 py-1 rounded flex items-center ${userName === leader ? 'bg-red-500 text-white hover:bg-red-600 cursor-pointer' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`}
+              title={userName === leader ? "Clear Chat" : `Only leader (${leader}) can clear`}
+              disabled={userName !== leader}
+            >
+              <FiTrash2 className="mr-1" /> Clear
+            </button>
+          </div>
+          <div className="flex-1 overflow-y-auto mb-2" style={{fontSize: 14}}>
+            {chatMessages.map((msg, idx) => {
+              const isMe = msg.userName === userName;
+              return (
+                <div
+                  key={idx}
+                  className="mb-1 flex"
+                  style={{ justifyContent: isMe ? 'flex-end' : 'flex-start' }}
+                >
+                  <div
+                    style={{
+                      background: isMe ? (darkMode ? '#2563eb' : '#dbeafe') : (darkMode ? '#374151' : '#f3f4f6'),
+                      color: isMe ? (darkMode ? '#fff' : '#1e3a8a') : (darkMode ? '#f3f4f6' : '#111827'),
+                      borderRadius: '12px',
+                      padding: '6px 12px',
+                      maxWidth: '75%',
+                      minWidth: '80px',
+                      alignSelf: isMe ? 'flex-end' : 'flex-start',
+                      boxShadow: isMe ? '0 2px 8px #2563eb22' : '0 2px 8px #0001',
+                    }}
+                  >
+                    <div style={{ fontWeight: 600, fontSize: 13, marginBottom: 2 }}>
+                      {msg.userName}
+                      {msg.userName === leader && (
+                        <span style={{ color: '#f59e42', fontWeight: 600, fontSize: 11, marginLeft: 4 }}>(Leader)</span>
+                      )}
+                      <span style={{ fontWeight: 400, fontSize: 11, marginLeft: 8, color: isMe ? '#e0e7ef' : '#64748b' }}>{msg.time}</span>
+                    </div>
+                    <div style={{ fontSize: 14 }}>{msg.message}</div>
+                  </div>
+                </div>
+              );
+            })}
+            <div ref={chatEndRef} />
+          </div>
+          <div className="flex" style={{ minWidth: 0 }}>
+            <input
+              type="text"
+              value={chatInput}
+              onChange={(e) => setChatInput(e.target.value)}
+              onKeyDown={e => e.key === "Enter" && sendChat()}
+              className="flex-1 border rounded-l bg-gray-100 dark:bg-gray-700"
+              style={{
+                width: 0,
+                minWidth: 0,
+                flex: '1 1 0%',
+                padding: '8px',
+                fontSize: '14px',
+                borderRight: 'none',
+              }}
+              placeholder="Type a message..."
+            />
+            <button
+              onClick={sendChat}
+              className="bg-blue-500 text-white rounded-r hover:bg-blue-600"
+              style={{
+                flexShrink: 0,
+                padding: '8px 16px',
+                fontSize: '14px',
+                minWidth: 60,
+                border: 'none',
+                height: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              Send
+            </button>
+          </div>
+        </div>
 
         <div
           style={{

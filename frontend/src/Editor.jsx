@@ -814,7 +814,7 @@ const Editor1 = () => {
             )}
           </button>
           {showChat && (
-            <div className="chat-bot bg-white dark:bg-gray-800 rounded-lg shadow p-4 flex flex-col h-80 w-80" style={{marginTop: 8, minWidth: 280, maxWidth: 340}}>
+            <div className="chat-bot bg-white dark:bg-gray-800 rounded-lg shadow p-4 flex flex-col h-[40rem] w-[28rem]" style={{marginTop: 8, minWidth: 340, maxWidth: 480}}>
               <div className="flex justify-between items-center mb-2">
                 <span className="font-bold">Room Chat</span>
                 <button

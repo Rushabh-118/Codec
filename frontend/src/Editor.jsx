@@ -642,18 +642,32 @@ const Editor1 = () => {
         <div className="user-list" style={{ padding: '0 16px', marginBottom: '16px' }}>
           <h3 style={{ margin: '12px 0 8px', fontSize: '14px', fontWeight: '600' }}>Online Users ({users.length})</h3>
           <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-            {users.map((user, index) => (
-              <li 
-                key={index} 
-                style={{
-                  padding: '6px 0',
-                  fontSize: '14px',
-                  color: user === userName ? (darkMode ? '#60a5fa' : '#2563eb') : 'inherit'
-                }}
-              >
-                {user} {user === userName && "(You)"} {user === leader && <span style={{color:'#f59e42', fontWeight:600, fontSize:12, marginLeft:4}}>(Leader)</span>}
-              </li>
-            ))}
+            {users.map((userObj, index) => {
+              // Support both old (string) and new (object) user format
+              const user = typeof userObj === 'string' ? userObj : userObj.name;
+              const plan = typeof userObj === 'string' ? (user === userName ? userPlan : undefined) : userObj.plan;
+              const isMe = user === userName;
+              const isLeader = user === leader;
+              // Only leader can see plans, and only if the member is not Team
+              const showPlan = userName === leader && !isMe && plan && plan !== 'Team';
+              return (
+                <li
+                  key={index}
+                  style={{
+                    padding: '6px 0',
+                    fontSize: '14px',
+                    color: isMe ? (darkMode ? '#60a5fa' : '#2563eb') : 'inherit'
+                  }}
+                >
+                  {user}
+                  {isMe && ` (You, ${userPlan})`}
+                  {isLeader && <span style={{color:'#f59e42', fontWeight:700, fontSize:12, marginLeft:4}}>(Leader)</span>}
+                  {showPlan && (
+                    <span style={{color:'#a3a3a3', fontSize:12, marginLeft:4}}>[Plan: {plan}]</span>
+                  )}
+                </li>
+              );
+            })}
           </ul>
         </div>
 
@@ -747,7 +761,9 @@ const Editor1 = () => {
             color: darkMode ? '#f3f4f6' : '#111827',
             cursor: 'pointer',
             fontWeight: '500',
-            transition: 'all 0.2s ease'
+            transition: 'all 0.2s ease',
+            opacity: !chatAllowed ? 0.6 : 1,
+            cursor: !chatAllowed ? 'not-allowed' : 'pointer'
           }}
         >
           Download Code

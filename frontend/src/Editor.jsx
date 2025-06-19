@@ -878,7 +878,6 @@ const Editor1 = () => {
                   }}
                   placeholder="Type a message..."
                 />
-                
                 <button
                   onClick={sendChat}
                   className="bg-blue-500 text-white rounded-r hover:bg-blue-600"

@@ -777,20 +777,26 @@ const Editor1 = () => {
               color: '#fff',
               border: 'none',
               borderRadius: '50%',
-              width: 48,
-              height: 48,
+              width: 56,
+              height: 56,
               boxShadow: '0 2px 8px #0002',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: 24,
+              fontSize: 28,
               cursor: 'pointer',
               marginBottom: 8,
               position: 'relative',
+              padding: 0,
             }}
             title={showChat ? 'Close Chat' : 'Open Chat'}
           >
-            💬
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M21 15.5V6.5C21 5.11929 19.8807 4 18.5 4H5.5C4.11929 4 3 5.11929 3 6.5V17.5C3 18.8807 4.11929 20 5.5 20H18.5C19.8807 20 21 18.8807 21 17.5V15.5Z" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <circle cx="8" cy="12" r="1.5" fill="#fff"/>
+              <circle cx="12" cy="12" r="1.5" fill="#fff"/>
+              <circle cx="16" cy="12" r="1.5" fill="#fff"/>
+            </svg>
             {unreadChatCount > 0 && !showChat && (
               <span style={{
                 position: 'absolute',

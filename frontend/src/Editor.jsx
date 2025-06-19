@@ -65,6 +65,11 @@ const Editor1 = () => {
   // --- Leader State ---
   const [leader, setLeader] = useState(null);
 
+  // --- Chat Box State ---
+  const [showChat, setShowChat] = useState(false);
+  const [unreadChatCount, setUnreadChatCount] = useState(0);
+  const lastSeenMessageIndex = useRef(-1);
+
   // Toggle dark mode and save preference
   const toggleDarkMode = () => {
     const newMode = !darkMode;
@@ -169,7 +174,15 @@ const Editor1 = () => {
       }
     });
 
-    socket.on("chatMessage", (msg) => setChatMessages((prev) => [...prev, msg]));
+    socket.on("chatMessage", (msg) => {
+      setChatMessages((prev) => [...prev, msg]);
+      
+      // Only increment unread count if chat is closed or if the message isn't from the current user
+      if (!showChat && msg.userName !== userName) {
+        setUnreadChatCount(prev => prev + 1);
+      }
+    });
+
     socket.on("clearChat", () => setChatMessages([]));
 
     return () => {
@@ -182,7 +195,7 @@ const Editor1 = () => {
       socket.off("chatMessage");
       socket.off("clearChat");
     };
-  }, []);
+  }, [showChat, userName]);
 
   useEffect(() => {
     const handleBeforeUnload = () => {
@@ -218,6 +231,25 @@ const Editor1 = () => {
     const today = new Date().toISOString().slice(0, 10);
     setRoomCreated(createdDate === today);
   }, []);
+
+  useEffect(() => {
+    // Update leader when users list changes
+    if (users && users.length > 0) {
+      setLeader(users[0]);
+    } else {
+      setLeader(null);
+    }
+  }, [users]);
+
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    
+    // When chat is opened, reset unread count and update last seen message
+    if (showChat) {
+      setUnreadChatCount(0);
+      lastSeenMessageIndex.current = chatMessages.length - 1;
+    }
+  }, [chatMessages, showChat]);
 
   const joinRoom = () => {
     if (roomId && userName) {
@@ -337,10 +369,6 @@ const Editor1 = () => {
     };
   }, [resizingSidebar]);
 
-  useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [chatMessages]);
-
   const sendChat = () => {
     if (chatInput.trim()) {
       socket.emit("chatMessage", { roomId, message: chatInput, userName });
@@ -356,14 +384,15 @@ const Editor1 = () => {
     }
   };
 
-  useEffect(() => {
-    // Update leader when users list changes
-    if (users && users.length > 0) {
-      setLeader(users[0]);
-    } else {
-      setLeader(null);
-    }
-  }, [users]);
+  const toggleChat = () => {
+    setShowChat(prev => {
+      // When opening chat, reset unread count
+      if (!prev) {
+        setUnreadChatCount(0);
+      }
+      return !prev;
+    });
+  };
 
   if (!joined) {
     return (
@@ -739,89 +768,136 @@ const Editor1 = () => {
           </button>
         </Link>
 
-        {/* --- Real-time Chat Bot UI (moved below Leave Room button) --- */}
-        <div className="chat-bot bg-white dark:bg-gray-800 rounded-lg shadow p-4 flex flex-col h-80" style={{margin: '16px 0 0 0'}}>
-          <div className="flex justify-between items-center mb-2">
-            <span className="font-bold">Room Chat</span>
-            <button
-              onClick={clearChat}
-              className={`text-xs px-2 py-1 rounded flex items-center ${userName === leader ? 'bg-red-500 text-white hover:bg-red-600 cursor-pointer' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`}
-              title={userName === leader ? "Clear Chat" : `Only leader (${leader}) can clear`}
-              disabled={userName !== leader}
-            >
-              <FiTrash2 className="mr-1" /> Clear
-            </button>
-          </div>
-          <div className="flex-1 overflow-y-auto mb-2" style={{fontSize: 14}}>
-            {chatMessages.map((msg, idx) => {
-              const isMe = msg.userName === userName;
-              return (
-                <div
-                  key={idx}
-                  className="mb-1 flex"
-                  style={{ justifyContent: isMe ? 'flex-end' : 'flex-start' }}
-                >
-                  <div
-                    style={{
-                      background: isMe ? (darkMode ? '#2563eb' : '#dbeafe') : (darkMode ? '#374151' : '#f3f4f6'),
-                      color: isMe ? (darkMode ? '#fff' : '#1e3a8a') : (darkMode ? '#f3f4f6' : '#111827'),
-                      borderRadius: '12px',
-                      padding: '6px 12px',
-                      maxWidth: '75%',
-                      minWidth: '80px',
-                      alignSelf: isMe ? 'flex-end' : 'flex-start',
-                      boxShadow: isMe ? '0 2px 8px #2563eb22' : '0 2px 8px #0001',
-                    }}
-                  >
-                    <div style={{ fontWeight: 600, fontSize: 13, marginBottom: 2 }}>
-                      {msg.userName}
-                      {msg.userName === leader && (
-                        <span style={{ color: '#f59e42', fontWeight: 600, fontSize: 11, marginLeft: 4 }}>(Leader)</span>
-                      )}
-                      <span style={{ fontWeight: 400, fontSize: 11, marginLeft: 8, color: isMe ? '#e0e7ef' : '#64748b' }}>{msg.time}</span>
-                    </div>
-                    <div style={{ fontSize: 14 }}>{msg.message}</div>
-                  </div>
-                </div>
-              );
-            })}
-            <div ref={chatEndRef} />
-          </div>
-          <div className="flex" style={{ minWidth: 0 }}>
-            <input
-              type="text"
-              value={chatInput}
-              onChange={(e) => setChatInput(e.target.value)}
-              onKeyDown={e => e.key === "Enter" && sendChat()}
-              className="flex-1 border rounded-l bg-gray-100 dark:bg-gray-700"
-              style={{
-                width: 0,
-                minWidth: 0,
-                flex: '1 1 0%',
-                padding: '8px',
-                fontSize: '14px',
-                borderRight: 'none',
-              }}
-              placeholder="Type a message..."
-            />
-            <button
-              onClick={sendChat}
-              className="bg-blue-500 text-white rounded-r hover:bg-blue-600"
-              style={{
-                flexShrink: 0,
-                padding: '8px 16px',
-                fontSize: '14px',
-                minWidth: 60,
-                border: 'none',
-                height: '100%',
+        {/* --- Floating Chat Button and Chat Box --- */}
+        <div style={{ position: 'fixed', top: 24, right: 24, zIndex: 1200 }}>
+          <button
+            onClick={toggleChat}
+            style={{
+              background: darkMode ? '#2563eb' : '#2563eb',
+              color: '#fff',
+              border: 'none',
+              borderRadius: '50%',
+              width: 48,
+              height: 48,
+              boxShadow: '0 2px 8px #0002',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: 24,
+              cursor: 'pointer',
+              marginBottom: 8,
+              position: 'relative',
+            }}
+            title={showChat ? 'Close Chat' : 'Open Chat'}
+          >
+            💬
+            {unreadChatCount > 0 && !showChat && (
+              <span style={{
+                position: 'absolute',
+                top: -8,
+                right: -8,
+                background: '#ef4444',
+                color: '#fff',
+                borderRadius: '50%',
+                minWidth: 20,
+                height: 20,
+                padding: '0 6px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-              }}
-            >
-              Send
-            </button>
-          </div>
+                fontSize: 13,
+                fontWeight: 700,
+                boxShadow: '0 2px 8px #ef444422',
+                border: '2px solid #fff',
+                zIndex: 2
+              }}>{unreadChatCount}</span>
+            )}
+          </button>
+          {showChat && (
+            <div className="chat-bot bg-white dark:bg-gray-800 rounded-lg shadow p-4 flex flex-col h-80 w-80" style={{marginTop: 8, minWidth: 280, maxWidth: 340}}>
+              <div className="flex justify-between items-center mb-2">
+                <span className="font-bold">Room Chat</span>
+                <button
+                  onClick={clearChat}
+                  className={`text-xs px-2 py-1 rounded flex items-center ${userName === leader ? 'bg-red-500 text-white hover:bg-red-600 cursor-pointer' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`}
+                  title={userName === leader ? "Clear Chat" : `Only leader (${leader}) can clear`}
+                  disabled={userName !== leader}
+                >
+                  <FiTrash2 className="mr-1" /> Clear
+                </button>
+              </div>
+              <div className="flex-1 overflow-y-auto mb-2" style={{fontSize: 14}}>
+                {chatMessages.map((msg, idx) => {
+                  const isMe = msg.userName === userName;
+                  return (
+                    <div
+                      key={idx}
+                      className="mb-1 flex"
+                      style={{ justifyContent: isMe ? 'flex-end' : 'flex-start' }}
+                    >
+                      <div
+                        style={{
+                          background: isMe ? (darkMode ? '#2563eb' : '#dbeafe') : (darkMode ? '#374151' : '#f3f4f6'),
+                          color: isMe ? (darkMode ? '#fff' : '#1e3a8a') : (darkMode ? '#f3f4f6' : '#111827'),
+                          borderRadius: '12px',
+                          padding: '6px 12px',
+                          maxWidth: '75%',
+                          minWidth: '80px',
+                          alignSelf: isMe ? 'flex-end' : 'flex-start',
+                          boxShadow: isMe ? '0 2px 8px #2563eb22' : '0 2px 8px #0001',
+                        }}
+                      >
+                        <div style={{ fontWeight: 600, fontSize: 13, marginBottom: 2 }}>
+                          {msg.userName}
+                          {msg.userName === leader && (
+                            <span style={{ color: '#f59e42', fontWeight: 600, fontSize: 11, marginLeft: 4 }}>(Leader)</span>
+                          )}
+                          <span style={{ fontWeight: 400, fontSize: 11, marginLeft: 8, color: isMe ? '#e0e7ef' : '#64748b' }}>{msg.time}</span>
+                        </div>
+                        <div style={{ fontSize: 14 }}>{msg.message}</div>
+                      </div>
+                    </div>
+                  );
+                })}
+                <div ref={chatEndRef} />
+              </div>
+              <div className="flex" style={{ minWidth: 0 }}>
+                <input
+                  type="text"
+                  value={chatInput}
+                  onChange={(e) => setChatInput(e.target.value)}
+                  onKeyDown={e => e.key === "Enter" && sendChat()}
+                  className="flex-1 border rounded-l bg-gray-100 dark:bg-gray-700"
+                  style={{
+                    width: 0,
+                    minWidth: 0,
+                    flex: '1 1 0%',
+                    padding: '8px',
+                    fontSize: '14px',
+                    borderRight: 'none',
+                  }}
+                  placeholder="Type a message..."
+                />
+                <button
+                  onClick={sendChat}
+                  className="bg-blue-500 text-white rounded-r hover:bg-blue-600"
+                  style={{
+                    flexShrink: 0,
+                    padding: '8px 16px',
+                    fontSize: '14px',
+                    minWidth: 60,
+                    border: 'none',
+                    height: '100%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  Send
+                </button>
+              </div>
+            </div>
+          )}
         </div>
 
         <div

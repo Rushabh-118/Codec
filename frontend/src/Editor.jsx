@@ -593,6 +593,13 @@ const Editor1 = () => {
           color: darkMode ? '#f3f4f6' : '#111827'
         }}
       >
+        <h1
+              onClick={() => document.getElementById("hero")?.scrollIntoView({ behavior: "smooth" })}
+              className="text-4xl font-bold font-display text-black dark:text-white"
+              whileHover={{ scale: 1.05 }}
+              style={{ cursor: "pointer", textAlign: "center", margin: "16px 0" }}>
+              Code<span className="text-[#F83002]">Collab</span>
+            </h1>
         <div className="room-info" style={{ display: "flex", alignItems: "center", gap: 8, padding: '12px 16px', borderBottom: darkMode ? '1px solid #374151' : '1px solid #e5e7eb' }}>
           <h2 style={{ margin: 0, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>Room: {roomId}</h2>
           <button

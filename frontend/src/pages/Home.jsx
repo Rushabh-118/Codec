@@ -1324,7 +1324,7 @@ const Pricing = () => {
                 "Unlimited Rooms",
                 "Team Management",
                 "Analytics Dashboard",
-                "Admin Controls",
+                "In Room Chat",
                 "Dedicated Support",
               ],
               description: "Best for teams & organizations",
@@ -1375,7 +1375,7 @@ const Pricing = () => {
                     </p>
                     {tier.price > 0 && (
                       <p className="text-sm text-gray-500 dark:text-gray-400">
-                        + GST as applicable
+                        GST Included
                       </p>
                     )}
                   </div>

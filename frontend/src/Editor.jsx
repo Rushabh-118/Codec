@@ -821,11 +821,11 @@ const Editor1 = () => {
             title={chatAllowed ? (showChat ? 'Close Chat' : 'Open Chat') : 'Chat is available only for Team users'}
             disabled={!chatAllowed}
           >
+            {/* Use inbuilt message icon */}
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M21 15.5V6.5C21 5.11929 19.8807 4 18.5 4H5.5C4.11929 4 3 5.11929 3 6.5V17.5C3 18.8807 4.11929 20 5.5 20H18.5C19.8807 20 21 18.8807 21 17.5V15.5Z" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              <circle cx="8" cy="12" r="1.5" fill="#fff"/>
-              <circle cx="12" cy="12" r="1.5" fill="#fff"/>
-              <circle cx="16" cy="12" r="1.5" fill="#fff"/>
+              <path d="M21 6.5C21 5.11929 19.8807 4 18.5 4H5.5C4.11929 4 3 5.11929 3 6.5V17.5C3 18.8807 4.11929 20 5.5 20H18.5C19.8807 20 21 18.8807 21 17.5V6.5Z" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M8 10H16" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M8 14H14" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
             {unreadChatCount > 0 && !showChat && (
               <span style={{

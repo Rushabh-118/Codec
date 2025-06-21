@@ -1449,19 +1449,30 @@ const Pricing = () => {
           className="mt-12 text-center text-gray-600 dark:text-gray-300"
         >
           <p>All prices in Indian Rupees (INR). Enterprise plans available.</p>
-          <p className="mt-2 text-sm">
-            Need help choosing?{" "}
-            <button
-              onClick={() =>
-                document
-                  .getElementById("Feedback")
-                  ?.scrollIntoView({ behavior: "smooth" })
-              }
-              className="text-blue-600 hover:underline dark:text-blue-400"
-            >
-              Contact us
-            </button>
-          </p>
+        </motion.div>
+        <motion.div
+          variants={itemVariants}
+          className="mt-8 text-center"
+        >
+          <div className="inline-block bg-gray-100 dark:bg-gray-800 rounded-full px-6 py-4">
+            <p className="text-gray-700 dark:text-gray-300">
+              <span className="font-medium">Need custom solutions?</span>{' '}
+              <button
+                onClick={() => document.getElementById('Feedback')?.scrollIntoView({ behavior: 'smooth' })}
+                className="text-blue-600 hover:underline dark:text-blue-400 font-semibold"
+              >
+                Contact our sales team
+              </button>
+            </p>
+          </div>
+          
+          <div className="mt-8 flex flex-wrap justify-center gap-4 text-sm text-gray-500 dark:text-gray-400">
+            <span>30-day money-back guarantee</span>
+            <span>•</span>
+            <span>No credit card required to start</span>
+            <span>•</span>
+            <span>Cancel anytime</span>
+          </div>
         </motion.div>
       </div>
     </motion.section>

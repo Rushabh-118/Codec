@@ -846,6 +846,9 @@ const Editor1 = () => {
             <div className="chat-bot bg-white dark:bg-gray-800 rounded-lg shadow p-4 flex flex-col h-[40rem] w-[28rem]" style={{marginTop: 8, minWidth: 340, maxWidth: 480}}>
               <div className="flex justify-between items-center mb-2">
                 <span className="font-bold">Room Chat</span>
+                <span style={{ color: '#22c55e', fontWeight: 600, fontSize: 14, marginLeft: 12 }}>
+                  {users.length} online
+                </span>
                 <button
                   onClick={clearChat}
                   className={`text-xs px-2 py-1 rounded flex items-center ${userName === leader ? 'bg-red-500 text-white hover:bg-red-600 cursor-pointer' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`}

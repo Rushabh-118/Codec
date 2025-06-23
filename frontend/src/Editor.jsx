@@ -744,7 +744,7 @@ const Editor1 = () => {
                 color: darkMode ? "#9ca3af" : "#4b5563",
               }}
             >
-              {userPlan} Plan
+              plan :- {userPlan}
             </span>
             <button
               onClick={toggleDarkMode}
@@ -762,113 +762,124 @@ const Editor1 = () => {
               title={darkMode ? "Switch to light mode" : "Switch to dark mode"}
             >
               {darkMode ? <FiSun size={16} /> : <FiMoon size={16} />}
+              {copySuccess && (
+                <span
+                  style={{
+                    marginLeft: "8px",
+                    fontSize: "12px",
+                    color: darkMode ? "#fbbf24" : "#4b5563",
+                  }}
+                > 
+                  {copySuccess}
+                </span>
+              )}
             </button>
           </div>
         </div>
 
-        {/* Room Info Section */}
-        <div
-          style={{
-            padding: "16px",
-            borderBottom: darkMode ? "1px solid #374151" : "1px solid #e5e7eb",
-          }}
-        >
           <div
             style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              marginBottom: "8px",
-            }}
-          >
-            <h3
-              style={{
-                fontSize: "14px",
-                fontWeight: "600",
-                color: darkMode ? "#9ca3af" : "#4b5563",
-                margin: 0,
-              }}
-            >
-              Room Information
-            </h3>
-            <button
-              onClick={copyRoomId}
-              style={{
-                background: "none",
-                border: "none",
-                color: darkMode ? "#9ca3af" : "#6b7280",
-                cursor: "pointer",
-                display: "flex",
-                alignItems: "center",
-                padding: "4px",
-                borderRadius: "4px",
-              }}
-              title="Copy Room ID"
-            >
-              <FiCopy size={14} />
-            </button>
-          </div>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "4px",
+              padding: "16px",
+              borderBottom: darkMode ? "1px solid #374151" : "1px solid #e5e7eb",
             }}
           >
             <div
               style={{
                 display: "flex",
                 alignItems: "center",
-                gap: "4px",
+                justifyContent: "space-between",
+                marginBottom: "8px",
               }}
             >
-              <span
+              <h3
                 style={{
-                  fontSize: "12px",
-                  color: darkMode ? "#9ca3af" : "#6b7280",
+            fontSize: "14px",
+            fontWeight: "600",
+            color: darkMode ? "#9ca3af" : "#4b5563",
+            margin: 0,
                 }}
               >
-                ID:
-              </span>
-              <span
+                Room Information
+              </h3>
+              <button
+                onClick={copyRoomId}
                 style={{
-                  fontSize: "13px",
-                  fontWeight: "500",
-                  color: darkMode ? "#ffffff" : "#111827",
+            background: "none",
+            border: "none",
+            color: darkMode ? "#9ca3af" : "#6b7280",
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            padding: "4px",
+            borderRadius: "4px",
                 }}
+                title="Copy Room ID"
               >
-                {roomId}
-              </span>
+                <FiCopy size={14} />
+              </button>
             </div>
             <div
               style={{
                 display: "flex",
-                alignItems: "center",
+                flexDirection: "column",
                 gap: "4px",
               }}
             >
-              <span
+              <div
                 style={{
-                  fontSize: "12px",
-                  color: darkMode ? "#9ca3af" : "#6b7280",
+            display: "flex",
+            alignItems: "center",
+            gap: "4px",
                 }}
               >
-                Status:
-              </span>
-              <span
+                <span
+            style={{
+              fontSize: "12px",
+              color: darkMode ? "#9ca3af" : "#6b7280",
+            }}
+                >
+            ID:
+                </span>
+                <span
+            style={{
+              fontSize: "13px",
+              fontWeight: "500",
+              color: darkMode ? "#ffffff" : "#111827",
+            }}
+                >
+            {roomId}
+                </span>
+              </div>
+              <div
                 style={{
-                  fontSize: "13px",
-                  fontWeight: "500",
-                  color: "#10b981",
+            display: "flex",
+            alignItems: "center",
+            gap: "4px",
                 }}
               >
-                Active
-              </span>
+                <span
+            style={{
+              fontSize: "12px",
+              color: darkMode ? "#9ca3af" : "#6b7280",
+            }}
+                >
+            Status:
+                </span>
+                <span
+            style={{
+              fontSize: "13px",
+              fontWeight: "500",
+              color: navigator.onLine ? "#10b981" : "#ef4444",
+              transition: "color 0.2s",
+            }}
+                >
+            {navigator.onLine ? "Active" : "Inactive"}
+                </span>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Quick Actions Section */}
+          {/* Quick Actions Section */}
         <div
           style={{
             padding: "16px",
@@ -980,136 +991,137 @@ const Editor1 = () => {
           </div>
         </div>
 
-        {/* Users Section */}
-        <div
-          style={{
-            padding: "16px",
-            borderBottom: darkMode ? "1px solid #374151" : "1px solid #e5e7eb",
-            flex: 1,
-            overflow: "hidden",
+          <div
+            style={{
+              padding: "16px",
+              borderBottom: darkMode ? "1px solid #374151" : "1px solid #e5e7eb",
+              flex: 1,
+              overflow: "hidden",
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                marginBottom: "12px",
+              }}
+            >
+              <h3
+                style={{
+            fontSize: "14px",
+            fontWeight: "600",
+            color: darkMode ? "#9ca3af" : "#4b5563",
+            margin: 0,
+                }}
+              >
+                Online Users ({users.length})
+              </h3>
+              <span
+                style={{
+            fontSize: "12px",
+            color: darkMode ? "#6b7280" : "#9ca3af",
+                }}
+              >
+                {leader ? `Leader: ${leader.slice(0, 8)}...` : ""}
+              </span>
+            </div>
+            <div
+              style={{
+                overflowY: "auto",
+                flex: 1,
+                paddingRight: "4px",
+              }}
+            >
+              <ul
+                style={{
+            listStyle: "none",
+            padding: 0,
+            margin: 0,
             display: "flex",
             flexDirection: "column",
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              marginBottom: "12px",
-            }}
-          >
-            <h3
-              style={{
-                fontSize: "14px",
-                fontWeight: "600",
-                color: darkMode ? "#9ca3af" : "#4b5563",
-                margin: 0,
-              }}
-            >
-              Online Users ({users.length})
-            </h3>
-            <span
-              style={{
-                fontSize: "12px",
-                color: darkMode ? "#6b7280" : "#9ca3af",
-              }}
-            >
-              {leader ? `Leader: ${leader.slice(0, 8)}...` : ""}
-            </span>
-          </div>
-          <div
-            style={{
-              overflowY: "auto",
+            gap: "8px",
+                }}
+              >
+                {users.map((userObj, index) => {
+            const user =
+              typeof userObj === "string" ? userObj : userObj.name;
+            const isMe = user === userName;
+            const isLeader = user === leader;
+            const isOnline = navigator.onLine;
+            return (
+              <li
+                key={index}
+                style={{
+                  padding: "8px",
+                  borderRadius: "6px",
+                  background: isMe
+              ? darkMode
+                ? "rgba(59, 130, 246, 0.2)"
+                : "rgba(37, 99, 235, 0.1)"
+              : darkMode
+              ? "rgba(31, 41, 55, 0.5)"
+              : "rgba(243, 244, 246, 0.5)",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
+                }}
+              >
+                <div
+                  style={{
+              width: "8px",
+              height: "8px",
+              borderRadius: "50%",
+              background: isOnline ? "#10b981" : "#ef4444",
+              transition: "background 0.2s",
+                  }}
+                />
+                <span
+                  style={{
+              fontSize: "13px",
+              fontWeight: "500",
+              color: isMe
+                ? darkMode
+                  ? "#3b82f6"
+                  : "#2563eb"
+                : darkMode
+                ? "#f3f4f6"
+                : "#111827",
               flex: 1,
-              paddingRight: "4px",
-            }}
-          >
-            <ul
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+                  }}
+                >
+                  {user}
+                  {isMe && " (You)"}
+                </span>
+                {isLeader && (
+                  <span
               style={{
-                listStyle: "none",
-                padding: 0,
-                margin: 0,
-                display: "flex",
-                flexDirection: "column",
-                gap: "8px",
+                fontSize: "10px",
+                fontWeight: "700",
+                color: "#f59e0b",
+                padding: "2px 4px",
+                borderRadius: "4px",
+                background: darkMode
+                  ? "rgba(245, 158, 11, 0.1)"
+                  : "rgba(245, 158, 11, 0.2)",
               }}
-            >
-              {users.map((userObj, index) => {
-                const user =
-                  typeof userObj === "string" ? userObj : userObj.name;
-                const isMe = user === userName;
-                const isLeader = user === leader;
-                return (
-                  <li
-                    key={index}
-                    style={{
-                      padding: "8px",
-                      borderRadius: "6px",
-                      background: isMe
-                        ? darkMode
-                          ? "rgba(59, 130, 246, 0.2)"
-                          : "rgba(37, 99, 235, 0.1)"
-                        : darkMode
-                        ? "rgba(31, 41, 55, 0.5)"
-                        : "rgba(243, 244, 246, 0.5)",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "8px",
-                    }}
                   >
-                    <div
-                      style={{
-                        width: "8px",
-                        height: "8px",
-                        borderRadius: "50%",
-                        background: "#10b981",
-                      }}
-                    />
-                    <span
-                      style={{
-                        fontSize: "13px",
-                        fontWeight: "500",
-                        color: isMe
-                          ? darkMode
-                            ? "#3b82f6"
-                            : "#2563eb"
-                          : darkMode
-                          ? "#f3f4f6"
-                          : "#111827",
-                        flex: 1,
-                        whiteSpace: "nowrap",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                      }}
-                    >
-                      {user}
-                      {isMe && " (You)"}
-                    </span>
-                    {isLeader && (
-                      <span
-                        style={{
-                          fontSize: "10px",
-                          fontWeight: "700",
-                          color: "#f59e0b",
-                          padding: "2px 4px",
-                          borderRadius: "4px",
-                          background: darkMode
-                            ? "rgba(245, 158, 11, 0.1)"
-                            : "rgba(245, 158, 11, 0.2)",
-                        }}
-                      >
-                        LEADER
-                      </span>
-                    )}
-                  </li>
-                );
-              })}
-            </ul>
+              LEADER
+                  </span>
+                )}
+              </li>
+            );
+                })}
+              </ul>
+            </div>
           </div>
-        </div>
 
-        {/* Footer Section */}
+          {/* Footer Section */}
         <div
           style={{
             padding: "16px",

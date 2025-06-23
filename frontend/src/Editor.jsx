@@ -43,7 +43,10 @@ const Editor1 = () => {
   const [darkMode, setDarkMode] = useState(() => {
     // Check localStorage for saved theme preference
     const savedTheme = localStorage.getItem("theme");
-    return savedTheme === "dark" || (!savedTheme && window.matchMedia("(prefers-color-scheme: dark)").matches);
+    return (
+      savedTheme === "dark" ||
+      (!savedTheme && window.matchMedia("(prefers-color-scheme: dark)").matches)
+    );
   });
 
   // Track if user already created a room (for Free plan restriction)
@@ -179,10 +182,10 @@ const Editor1 = () => {
 
     socket.on("chatMessage", (msg) => {
       setChatMessages((prev) => [...prev, msg]);
-      
+
       // Only increment unread count if chat is closed or if the message isn't from the current user
       if (!showChat && msg.userName !== userName) {
-        setUnreadChatCount(prev => prev + 1);
+        setUnreadChatCount((prev) => prev + 1);
       }
     });
 
@@ -230,7 +233,9 @@ const Editor1 = () => {
       setUserPlan(user.plan || "Free");
     }
     // Check how many rooms user created today (persisted in localStorage with date)
-    const createdData = JSON.parse(localStorage.getItem("roomCreatedData") || '{}');
+    const createdData = JSON.parse(
+      localStorage.getItem("roomCreatedData") || "{}"
+    );
     const today = new Date().toISOString().slice(0, 10);
     setRoomCreatedCount(createdData[today] || 0);
   }, []);
@@ -246,7 +251,7 @@ const Editor1 = () => {
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    
+
     // When chat is opened, reset unread count and update last seen message
     if (showChat) {
       setUnreadChatCount(0);
@@ -307,7 +312,9 @@ const Editor1 = () => {
 
   const createRoomId = () => {
     if (userPlan === "Free" && roomCreatedCount >= 3) {
-      toast.error("Free plan users can only create up to 3 rooms per day. Upgrade to Pro or Team Plan for unlimited rooms.");
+      toast.error(
+        "Free plan users can only create up to 3 rooms per day. Upgrade to Pro or Team Plan for unlimited rooms."
+      );
       return;
     }
     const roomId = uuid().slice(0, 10);
@@ -315,7 +322,9 @@ const Editor1 = () => {
     toast.success(`New room created: ${roomId}`);
     if (userPlan === "Free") {
       const today = new Date().toISOString().slice(0, 10);
-      const createdData = JSON.parse(localStorage.getItem("roomCreatedData") || '{}');
+      const createdData = JSON.parse(
+        localStorage.getItem("roomCreatedData") || "{}"
+      );
       createdData[today] = (createdData[today] || 0) + 1;
       localStorage.setItem("roomCreatedData", JSON.stringify(createdData));
       setRoomCreatedCount(createdData[today]);
@@ -352,7 +361,9 @@ const Editor1 = () => {
   const handleSidebarMouseMove = (e) => {
     if (!resizingSidebar) return;
     const dx = e.clientX - startSidebarX.current;
-    setSidebarWidth(Math.max(180, Math.min(500, startSidebarWidth.current + dx)));
+    setSidebarWidth(
+      Math.max(180, Math.min(500, startSidebarWidth.current + dx))
+    );
   };
 
   const handleSidebarMouseUp = () => {
@@ -390,7 +401,7 @@ const Editor1 = () => {
   };
 
   const toggleChat = () => {
-    setShowChat(prev => {
+    setShowChat((prev) => {
       // When opening chat, reset unread count
       if (!prev) {
         setUnreadChatCount(0);
@@ -401,14 +412,32 @@ const Editor1 = () => {
 
   if (!joined) {
     return (
-      <div className={`min-h-screen ${darkMode ? 'bg-gray-900' : 'bg-gray-50'} flex items-center justify-center p-4`}>
+      <div
+        className={`min-h-screen ${
+          darkMode ? "bg-gray-900" : "bg-gray-50"
+        } flex items-center justify-center p-4`}
+      >
         <div className="w-full max-w-6xl">
-          <div className={`flex flex-col lg:flex-row gap-8 rounded-xl shadow-lg overflow-hidden ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
+          <div
+            className={`flex flex-col lg:flex-row gap-8 rounded-xl shadow-lg overflow-hidden ${
+              darkMode ? "bg-gray-800" : "bg-white"
+            }`}
+          >
             {/* Left Side - Features */}
-            <div className={`lg:w-1/2 p-8 ${darkMode ? 'bg-gray-700' : 'bg-indigo-50'}`}>
+            <div
+              className={`lg:w-1/2 p-8 ${
+                darkMode ? "bg-gray-700" : "bg-indigo-50"
+              }`}
+            >
               <div className="h-full flex flex-col">
                 <Link to="/" className="self-start mb-6">
-                  <button className={`p-2 rounded-full transition-colors duration-200 ${darkMode ? 'text-indigo-300 hover:bg-gray-600' : 'text-indigo-600 hover:bg-indigo-600 hover:text-white'}`}>
+                  <button
+                    className={`p-2 rounded-full transition-colors duration-200 ${
+                      darkMode
+                        ? "text-indigo-300 hover:bg-gray-600"
+                        : "text-indigo-600 hover:bg-indigo-600 hover:text-white"
+                    }`}
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       className="h-5 w-5"
@@ -425,16 +454,28 @@ const Editor1 = () => {
                 </Link>
 
                 <div className="flex-grow">
-                  <h1 className={`text-3xl font-bold mb-2 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                  <h1
+                    className={`text-3xl font-bold mb-2 ${
+                      darkMode ? "text-white" : "text-gray-900"
+                    }`}
+                  >
                     Code Collaboration Made Simple
                   </h1>
-                  <p className={`text-lg mb-8 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                  <p
+                    className={`text-lg mb-8 ${
+                      darkMode ? "text-gray-300" : "text-gray-600"
+                    }`}
+                  >
                     Real-time editing with your team
                   </p>
 
                   <div className="space-y-6">
                     <div className="flex items-start">
-                      <div className={`p-3 rounded-lg mr-4 shadow-sm ${darkMode ? 'bg-gray-600' : 'bg-white'}`}>
+                      <div
+                        className={`p-3 rounded-lg mr-4 shadow-sm ${
+                          darkMode ? "bg-gray-600" : "bg-white"
+                        }`}
+                      >
                         <svg
                           className="h-6 w-6 text-indigo-600"
                           fill="none"
@@ -450,17 +491,29 @@ const Editor1 = () => {
                         </svg>
                       </div>
                       <div>
-                        <h3 className={`font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                        <h3
+                          className={`font-semibold ${
+                            darkMode ? "text-white" : "text-gray-900"
+                          }`}
+                        >
                           Real-time Sync
                         </h3>
-                        <p className={darkMode ? 'text-gray-300' : 'text-gray-600'}>
+                        <p
+                          className={
+                            darkMode ? "text-gray-300" : "text-gray-600"
+                          }
+                        >
                           See changes instantly as you code together
                         </p>
                       </div>
                     </div>
 
                     <div className="flex items-start">
-                      <div className={`p-3 rounded-lg mr-4 shadow-sm ${darkMode ? 'bg-gray-600' : 'bg-white'}`}>
+                      <div
+                        className={`p-3 rounded-lg mr-4 shadow-sm ${
+                          darkMode ? "bg-gray-600" : "bg-white"
+                        }`}
+                      >
                         <svg
                           className="h-6 w-6 text-indigo-600"
                           fill="none"
@@ -476,17 +529,29 @@ const Editor1 = () => {
                         </svg>
                       </div>
                       <div>
-                        <h3 className={`font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                        <h3
+                          className={`font-semibold ${
+                            darkMode ? "text-white" : "text-gray-900"
+                          }`}
+                        >
                           Multi-language Support
                         </h3>
-                        <p className={darkMode ? 'text-gray-300' : 'text-gray-600'}>
+                        <p
+                          className={
+                            darkMode ? "text-gray-300" : "text-gray-600"
+                          }
+                        >
                           Supports all major programming languages
                         </p>
                       </div>
                     </div>
 
                     <div className="flex items-start">
-                      <div className={`p-3 rounded-lg mr-4 shadow-sm ${darkMode ? 'bg-gray-600' : 'bg-white'}`}>
+                      <div
+                        className={`p-3 rounded-lg mr-4 shadow-sm ${
+                          darkMode ? "bg-gray-600" : "bg-white"
+                        }`}
+                      >
                         <svg
                           className="h-6 w-6 text-indigo-600"
                           fill="none"
@@ -502,10 +567,18 @@ const Editor1 = () => {
                         </svg>
                       </div>
                       <div>
-                        <h3 className={`font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                        <h3
+                          className={`font-semibold ${
+                            darkMode ? "text-white" : "text-gray-900"
+                          }`}
+                        >
                           Secure Rooms
                         </h3>
-                        <p className={darkMode ? 'text-gray-300' : 'text-gray-600'}>
+                        <p
+                          className={
+                            darkMode ? "text-gray-300" : "text-gray-600"
+                          }
+                        >
                           End-to-end encrypted collaboration
                         </p>
                       </div>
@@ -516,13 +589,27 @@ const Editor1 = () => {
             </div>
 
             {/* Right Side - Room Form */}
-            <div className={`lg:w-1/2 p-8 flex items-center justify-center ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
+            <div
+              className={`lg:w-1/2 p-8 flex items-center justify-center ${
+                darkMode ? "bg-gray-800" : "bg-white"
+              }`}
+            >
               <div className="w-full max-w-md">
                 <div className="text-center mb-8">
-                  <h1 className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                  <h1
+                    className={`text-2xl font-bold ${
+                      darkMode ? "text-white" : "text-gray-900"
+                    }`}
+                  >
                     Join Code Room
                   </h1>
-                  <p className={`mt-1 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>Collaborate in real-time</p>
+                  <p
+                    className={`mt-1 ${
+                      darkMode ? "text-gray-400" : "text-gray-500"
+                    }`}
+                  >
+                    Collaborate in real-time
+                  </p>
                 </div>
 
                 <div className="space-y-5">
@@ -532,7 +619,11 @@ const Editor1 = () => {
                       id="roomId"
                       value={roomId}
                       onChange={(e) => setRoomId(e.target.value)}
-                      className={`peer w-full px-4 py-2 border-0 border-b-2 rounded-t-lg focus:ring-0 focus:border-indigo-600 ${darkMode ? 'text-white bg-gray-700 border-gray-600 placeholder-gray-400' : 'text-black bg-gray-50 border-gray-300 placeholder-gray-500'}`}
+                      className={`peer w-full px-4 py-2 border-0 border-b-2 rounded-t-lg focus:ring-0 focus:border-indigo-600 ${
+                        darkMode
+                          ? "text-white bg-gray-700 border-gray-600 placeholder-gray-400"
+                          : "text-black bg-gray-50 border-gray-300 placeholder-gray-500"
+                      }`}
                       placeholder="Enter Room ID...!"
                       disabled={userPlan === "Free" && roomCreatedCount >= 3}
                     />
@@ -544,7 +635,11 @@ const Editor1 = () => {
                       id="userName"
                       value={userName}
                       onChange={(e) => setUserName(e.target.value)}
-                      className={`peer w-full px-4 py-2 border-0 border-b-2 rounded-t-lg focus:ring-0 focus:border-indigo-600 ${darkMode ? 'text-white bg-gray-700 border-gray-600 placeholder-gray-400' : 'text-black bg-gray-50 border-gray-300 placeholder-gray-500'}`}
+                      className={`peer w-full px-4 py-2 border-0 border-b-2 rounded-t-lg focus:ring-0 focus:border-indigo-600 ${
+                        darkMode
+                          ? "text-white bg-gray-700 border-gray-600 placeholder-gray-400"
+                          : "text-black bg-gray-50 border-gray-300 placeholder-gray-500"
+                      }`}
                       placeholder="Enter Your Name...!"
                       disabled={userPlan === "Free" && roomCreatedCount >= 3}
                     />
@@ -553,7 +648,11 @@ const Editor1 = () => {
                   <div className="flex space-x-3 pt-2">
                     <button
                       onClick={createRoomId}
-                      className={`flex-1 px-4 py-2.5 text-sm font-medium rounded-lg transition-colors duration-200 active:scale-[0.98] ${darkMode ? 'text-indigo-300 border border-indigo-300 hover:bg-gray-700' : 'text-indigo-600 border border-indigo-600 hover:bg-indigo-50'}`}
+                      className={`flex-1 px-4 py-2.5 text-sm font-medium rounded-lg transition-colors duration-200 active:scale-[0.98] ${
+                        darkMode
+                          ? "text-indigo-300 border border-indigo-300 hover:bg-gray-700"
+                          : "text-indigo-600 border border-indigo-600 hover:bg-indigo-50"
+                      }`}
                       disabled={userPlan === "Free" && roomCreatedCount >= 3}
                     >
                       Create Room
@@ -562,7 +661,9 @@ const Editor1 = () => {
                     <Link to="/api/editor" className="flex-1">
                       <button
                         onClick={joinRoom}
-                        className={`w-full px-4 py-2.5 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors duration-200 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed ${darkMode ? 'bg-indigo-700 hover:bg-indigo-800' : ''}`}
+                        className={`w-full px-4 py-2.5 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors duration-200 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed ${
+                          darkMode ? "bg-indigo-700 hover:bg-indigo-800" : ""
+                        }`}
                         disabled={!roomId || !userName}
                       >
                         Join Now
@@ -579,319 +680,681 @@ const Editor1 = () => {
   }
 
   return (
-    <div className={`editor-container ${darkMode ? 'dark' : ''}`} style={{ display: "flex", height: "100vh" }}>
+    <div
+      className={`editor-container ${darkMode ? "dark" : ""}`}
+      style={{ display: "flex", height: "100vh" }}
+    >
       <div
         ref={sidebarRef}
-        className={`sidebar ${darkMode ? 'dark' : ''}`}
-        style={{ 
-          width: sidebarWidth, 
-          minWidth: 180, 
-          maxWidth: 500, 
-          position: "relative", 
+        className={`sidebar ${darkMode ? "dark" : ""}`}
+        style={{
+          width: sidebarWidth,
+          minWidth: 220,
+          maxWidth: 400,
+          position: "relative",
           transition: resizingSidebar ? "none" : "width 0.2s",
-          backgroundColor: darkMode ? '#1f2937' : '#f3f4f6',
-          color: darkMode ? '#f3f4f6' : '#111827'
+          backgroundColor: darkMode ? "#1f2937" : "#ffffff",
+          color: darkMode ? "#f3f4f6" : "#111827",
+          display: "flex",
+          flexDirection: "column",
+          borderRight: darkMode ? "1px solid #374151" : "1px solid #e5e7eb",
+          boxShadow: darkMode ? "none" : "0 2px 8px rgba(0,0,0,0.05)",
         }}
       >
-        <h1
-              onClick={() => document.getElementById("hero")?.scrollIntoView({ behavior: "smooth" })}
-              className="text-4xl font-bold font-display text-black dark:text-white"
-              whileHover={{ scale: 1.05 }}
-              style={{ cursor: "pointer", textAlign: "center", margin: "16px 0" }}>
-              Code<span className="text-[#F83002]">Collab</span>
-            </h1>
-        <div className="room-info" style={{ display: "flex", alignItems: "center", gap: 8, padding: '12px 16px', borderBottom: darkMode ? '1px solid #374151' : '1px solid #e5e7eb' }}>
-          <h2 style={{ margin: 0, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>Room: {roomId}</h2>
-          <button
-            onClick={copyRoomId}
-            className="icon-button"
-            title="Copy Room ID"
-            style={{ background: "none", border: "none", padding: 0, cursor: "pointer", display: "flex", alignItems: "center", flexShrink: 0 }}
+        {/* Header Section */}
+        <div
+          style={{
+            padding: "16px",
+            borderBottom: darkMode ? "1px solid #374151" : "1px solid #e5e7eb",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <h1
+            style={{
+              fontSize: "24px",
+              fontWeight: "700",
+              margin: "8px 0",
+              color: darkMode ? "#ffffff" : "#111827",
+              display: "flex",
+              alignItems: "center",
+              gap: "4px",
+            }}
           >
-            <FiCopy size={18} color={darkMode ? '#9ca3af' : '#6b7280'} />
-          </button>
-          {copySuccess && <span className="copy-success" style={{ marginLeft: 8, fontSize: 12, color: darkMode ? '#9ca3af' : '#6b7280' }}>{copySuccess}</span>}
+            Code<span style={{ color: "#3b82f6" }}>Collab</span>
+          </h1>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              width: "100%",
+              justifyContent: "center",
+              marginTop: "8px",
+            }}
+          >
+            <span
+              style={{
+                padding: "4px 8px",
+                borderRadius: "4px",
+                fontSize: "12px",
+                fontWeight: "500",
+                backgroundColor: darkMode ? "#374151" : "#e5e7eb",
+                color: darkMode ? "#9ca3af" : "#4b5563",
+              }}
+            >
+              {userPlan} Plan
+            </span>
+            <button
+              onClick={toggleDarkMode}
+              style={{
+                background: "none",
+                border: "none",
+                color: darkMode ? "#fbbf24" : "#4b5563",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                padding: "4px",
+                borderRadius: "4px",
+                transition: "all 0.2s",
+              }}
+              title={darkMode ? "Switch to light mode" : "Switch to dark mode"}
+            >
+              {darkMode ? <FiSun size={16} /> : <FiMoon size={16} />}
+            </button>
+          </div>
         </div>
 
-        {/* Dark mode toggle button */}
-        <button
-          onClick={toggleDarkMode}
-          className="theme-toggle"
+        {/* Room Info Section */}
+        <div
           style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: '100%',
-            padding: '10px 16px',
-            margin: '12px 0',
-            gap: '8px',
-            background: darkMode ? '#374151' : '#e5e7eb',
-            color: darkMode ? '#f3f4f6' : '#111827',
-            border: 'none',
-            borderRadius: '6px',
-            cursor: 'pointer',
-            transition: 'all 0.2s ease'
+            padding: "16px",
+            borderBottom: darkMode ? "1px solid #374151" : "1px solid #e5e7eb",
           }}
         >
-          {darkMode ? (
-            <>
-              <FiSun size={18} />
-              <span>Light Mode</span>
-            </>
-          ) : (
-            <>
-              <FiMoon size={18} />
-              <span>Dark Mode</span>
-            </>
-          )}
-        </button>
-
-        <div className="user-list" style={{ padding: '0 16px', marginBottom: '16px' }}>
-          <h3 style={{ margin: '12px 0 8px', fontSize: '14px', fontWeight: '600' }}>Online Users ({users.length})</h3>
-          <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-            {users.map((userObj, index) => {
-              // Support both old (string) and new (object) user format
-              const user = typeof userObj === 'string' ? userObj : userObj.name;
-              const plan = typeof userObj === 'string' ? (user === userName ? userPlan : undefined) : userObj.plan;
-              const isMe = user === userName;
-              const isLeader = user === leader;
-              // Only leader can see plans, and only if the member is not Team
-              const showPlan = userName === leader && !isMe && plan && plan !== 'Team';
-              return (
-                <li
-                  key={index}
-                  style={{
-                    padding: '6px 0',
-                    fontSize: '14px',
-                    color: isMe ? (darkMode ? '#60a5fa' : '#2563eb') : 'inherit'
-                  }}
-                >
-                  {user}
-                  {isMe && ` (You, ${userPlan})`}
-                  {isLeader && <span style={{color:'#f59e42', fontWeight:700, fontSize:12, marginLeft:4}}>(Leader)</span>}
-                  {showPlan && (
-                    <span style={{color:'#a3a3a3', fontSize:12, marginLeft:4}}>[Plan: {plan}]</span>
-                  )}
-                </li>
-              );
-            })}
-          </ul>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              marginBottom: "8px",
+            }}
+          >
+            <h3
+              style={{
+                fontSize: "14px",
+                fontWeight: "600",
+                color: darkMode ? "#9ca3af" : "#4b5563",
+                margin: 0,
+              }}
+            >
+              Room Information
+            </h3>
+            <button
+              onClick={copyRoomId}
+              style={{
+                background: "none",
+                border: "none",
+                color: darkMode ? "#9ca3af" : "#6b7280",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                padding: "4px",
+                borderRadius: "4px",
+              }}
+              title="Copy Room ID"
+            >
+              <FiCopy size={14} />
+            </button>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "4px",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "4px",
+              }}
+            >
+              <span
+                style={{
+                  fontSize: "12px",
+                  color: darkMode ? "#9ca3af" : "#6b7280",
+                }}
+              >
+                ID:
+              </span>
+              <span
+                style={{
+                  fontSize: "13px",
+                  fontWeight: "500",
+                  color: darkMode ? "#ffffff" : "#111827",
+                }}
+              >
+                {roomId}
+              </span>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "4px",
+              }}
+            >
+              <span
+                style={{
+                  fontSize: "12px",
+                  color: darkMode ? "#9ca3af" : "#6b7280",
+                }}
+              >
+                Status:
+              </span>
+              <span
+                style={{
+                  fontSize: "13px",
+                  fontWeight: "500",
+                  color: "#10b981",
+                }}
+              >
+                Active
+              </span>
+            </div>
+          </div>
         </div>
 
-        {typing && (
-          <p className="typing-indicator" style={{
-            padding: '0 16px',
-            margin: '8px 0',
-            fontSize: '12px',
-            color: darkMode ? '#9ca3af' : '#6b7280',
-            fontStyle: 'italic'
-          }}>
-            {typing}
-          </p>
-        )}
-
-        {isTypingLocked && (
-          <p className="typing-lock-indicator" style={{
-            padding: '0 16px',
-            margin: '8px 0',
-            fontSize: '12px',
-            color: darkMode ? '#f87171' : '#dc2626'
-          }}>
-            Editor locked by: {currentTypingUser.slice(0, 8)}...
-          </p>
-        )}
-
-        <select
-          className="language-selector"
-          value={language}
-          onChange={handleLanguageChange}
+        {/* Quick Actions Section */}
+        <div
           style={{
-            width: 'calc(100% - 32px)',
-            margin: '0 16px 12px',
-            padding: '8px 12px',
-            borderRadius: '6px',
-            border: `1px solid ${darkMode ? '#4b5563' : '#d1d5db'}`,
-            background: darkMode ? '#1f2937' : '#ffffff',
-            color: darkMode ? '#f3f4f6' : '#111827',
-            cursor: 'pointer'
+            padding: "16px",
+            borderBottom: darkMode ? "1px solid #374151" : "1px solid #e5e7eb",
           }}
         >
-          <option value="javascript">JavaScript</option>
-          <option value="python">Python</option>
-          <option value="java">Java</option>
-          <option value="cpp">C++</option>
-          <option value="c">C</option>
-          <option value="php">PHP</option>
-          <option value="go">Go</option>
-          <option value="ruby">Ruby</option>
-          <option value="rust">Rust</option>
-        </select>
+          <h3
+            style={{
+              fontSize: "14px",
+              fontWeight: "600",
+              color: darkMode ? "#9ca3af" : "#4b5563",
+              margin: "0 0 12px 0",
+            }}
+          >
+            Quick Actions
+          </h3>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(2, 1fr)",
+              gap: "8px",
+            }}
+          >
+            <button
+              onClick={toggleTypingLock}
+              style={{
+                padding: "8px",
+                borderRadius: "6px",
+                border: "none",
+                background: isTypingLocked
+                  ? darkMode
+                    ? "#7f1d1d"
+                    : "#fee2e2"
+                  : darkMode
+                  ? "#1e40af"
+                  : "#dbeafe",
+                color: isTypingLocked
+                  ? darkMode
+                    ? "#fca5a5"
+                    : "#b91c1c"
+                  : darkMode
+                  ? "#bfdbfe"
+                  : "#1e40af",
+                cursor:
+                  isTypingLocked && currentTypingUser !== userName
+                    ? "not-allowed"
+                    : "pointer",
+                fontSize: "12px",
+                fontWeight: "500",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "4px",
+              }}
+              disabled={isTypingLocked && currentTypingUser !== userName}
+            >
+              {isTypingLocked && currentTypingUser === userName
+                ? "Unlock"
+                : isTypingLocked
+                ? "Locked"
+                : "Lock"}
+            </button>
+            <button
+              onClick={downloadCode}
+              style={{
+                padding: "8px",
+                borderRadius: "6px",
+                border: "none",
+                background: darkMode ? "#374151" : "#e5e7eb",
+                color: darkMode ? "#f3f4f6" : "#111827",
+                cursor: "pointer",
+                fontSize: "12px",
+                fontWeight: "500",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "4px",
+              }}
+            >
+              Download
+            </button>
+            <select
+              value={language}
+              onChange={handleLanguageChange}
+              style={{
+                padding: "8px",
+                borderRadius: "6px",
+                border: "none",
+                background: darkMode ? "#374151" : "#e5e7eb",
+                color: darkMode ? "#f3f4f6" : "#111827",
+                cursor: "pointer",
+                fontSize: "12px",
+                fontWeight: "500",
+                gridColumn: "span 2",
+                appearance: "none",
+                paddingRight: "28px",
+              }}
+            >
+              <option value="javascript">JavaScript</option>
+              <option value="python">Python</option>
+              <option value="java">Java</option>
+              <option value="cpp">C++</option>
+              <option value="c">C</option>
+              <option value="php">PHP</option>
+              <option value="go">Go</option>
+              <option value="ruby">Ruby</option>
+              <option value="rust">Rust</option>
+            </select>
+          </div>
+        </div>
 
-        <button
-          className={`lock-button ${isTypingLocked ? "locked" : ""}`}
-          onClick={toggleTypingLock}
+        {/* Users Section */}
+        <div
           style={{
-            width: 'calc(100% - 32px)',
-            margin: '0 16px 12px',
-            padding: '10px',
-            borderRadius: '6px',
-            border: 'none',
-            background: isTypingLocked 
-              ? (darkMode ? '#7f1d1d' : '#fee2e2') 
-              : (darkMode ? '#1e40af' : '#dbeafe'),
-            color: isTypingLocked 
-              ? (darkMode ? '#fca5a5' : '#b91c1c') 
-              : (darkMode ? '#bfdbfe' : '#1e40af'),
-            cursor: 'pointer',
-            fontWeight: '500',
-            transition: 'all 0.2s ease'
+            padding: "16px",
+            borderBottom: darkMode ? "1px solid #374151" : "1px solid #e5e7eb",
+            flex: 1,
+            overflow: "hidden",
+            display: "flex",
+            flexDirection: "column",
           }}
-          disabled={isTypingLocked && currentTypingUser !== userName}
         >
-          {isTypingLocked && currentTypingUser === userName
-            ? "Unlock Editor"
-            : isTypingLocked
-            ? "Editor Locked"
-            : "Lock Editor"}
-        </button>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              marginBottom: "12px",
+            }}
+          >
+            <h3
+              style={{
+                fontSize: "14px",
+                fontWeight: "600",
+                color: darkMode ? "#9ca3af" : "#4b5563",
+                margin: 0,
+              }}
+            >
+              Online Users ({users.length})
+            </h3>
+            <span
+              style={{
+                fontSize: "12px",
+                color: darkMode ? "#6b7280" : "#9ca3af",
+              }}
+            >
+              {leader ? `Leader: ${leader.slice(0, 8)}...` : ""}
+            </span>
+          </div>
+          <div
+            style={{
+              overflowY: "auto",
+              flex: 1,
+              paddingRight: "4px",
+            }}
+          >
+            <ul
+              style={{
+                listStyle: "none",
+                padding: 0,
+                margin: 0,
+                display: "flex",
+                flexDirection: "column",
+                gap: "8px",
+              }}
+            >
+              {users.map((userObj, index) => {
+                const user =
+                  typeof userObj === "string" ? userObj : userObj.name;
+                const isMe = user === userName;
+                const isLeader = user === leader;
+                return (
+                  <li
+                    key={index}
+                    style={{
+                      padding: "8px",
+                      borderRadius: "6px",
+                      background: isMe
+                        ? darkMode
+                          ? "rgba(59, 130, 246, 0.2)"
+                          : "rgba(37, 99, 235, 0.1)"
+                        : darkMode
+                        ? "rgba(31, 41, 55, 0.5)"
+                        : "rgba(243, 244, 246, 0.5)",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "8px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: "8px",
+                        height: "8px",
+                        borderRadius: "50%",
+                        background: "#10b981",
+                      }}
+                    />
+                    <span
+                      style={{
+                        fontSize: "13px",
+                        fontWeight: "500",
+                        color: isMe
+                          ? darkMode
+                            ? "#3b82f6"
+                            : "#2563eb"
+                          : darkMode
+                          ? "#f3f4f6"
+                          : "#111827",
+                        flex: 1,
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                      }}
+                    >
+                      {user}
+                      {isMe && " (You)"}
+                    </span>
+                    {isLeader && (
+                      <span
+                        style={{
+                          fontSize: "10px",
+                          fontWeight: "700",
+                          color: "#f59e0b",
+                          padding: "2px 4px",
+                          borderRadius: "4px",
+                          background: darkMode
+                            ? "rgba(245, 158, 11, 0.1)"
+                            : "rgba(245, 158, 11, 0.2)",
+                        }}
+                      >
+                        LEADER
+                      </span>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        </div>
 
-        <button 
-          className="download-button" 
-          onClick={downloadCode}
+        {/* Footer Section */}
+        <div
           style={{
-            width: 'calc(100% - 32px)',
-            margin: '0 16px 12px',
-            padding: '10px',
-            borderRadius: '6px',
-            border: 'none',
-            background: darkMode ? '#374151' : '#e5e7eb',
-            color: darkMode ? '#f3f4f6' : '#111827',
-            cursor: 'pointer',
-            fontWeight: '500',
-            transition: 'all 0.2s ease',
-            opacity: !chatAllowed ? 0.6 : 1,
-            cursor: !chatAllowed ? 'not-allowed' : 'pointer'
+            padding: "16px",
+            borderTop: darkMode ? "1px solid #374151" : "1px solid #e5e7eb",
           }}
         >
-          Download Code
-        </button>
-
-        <Link to="/api/create-room" style={{ width: 'calc(100% - 32px)', margin: '0 16px', display: 'block' }}>
-          <button 
-            className="leave-button" 
+          <button
             onClick={leaveRoom}
             style={{
-              width: '100%',
-              padding: '10px',
-              borderRadius: '6px',
-              border: 'none',
-              background: darkMode ? '#7f1d1d' : '#fee2e2',
-              color: darkMode ? '#fca5a5' : '#b91c1c',
-              cursor: 'pointer',
-              fontWeight: '500',
-              transition: 'all 0.2s ease'
+              width: "100%",
+              padding: "10px",
+              borderRadius: "6px",
+              border: "none",
+              background: darkMode
+                ? "rgba(239, 68, 68, 0.2)"
+                : "rgba(239, 68, 68, 0.1)",
+              color: darkMode ? "#fca5a5" : "#dc2626",
+              cursor: "pointer",
+              fontWeight: "500",
+              fontSize: "14px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "8px",
+              transition: "all 0.2s",
             }}
           >
             Leave Room
           </button>
-        </Link>
+        </div>
+
+        {/* Resize Handle */}
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            right: 0,
+            width: "8px",
+            height: "100%",
+            cursor: "ew-resize",
+            zIndex: 10,
+            background: resizingSidebar
+              ? darkMode
+                ? "rgba(59, 130, 246, 0.2)"
+                : "rgba(37, 99, 235, 0.08)"
+              : "transparent",
+            borderRight: resizingSidebar
+              ? `2px solid ${darkMode ? "#3b82f6" : "#2563eb"}`
+              : "none",
+          }}
+          onMouseDown={handleSidebarMouseDown}
+          title="Resize sidebar"
+        />
 
         {/* --- Floating Chat Button and Chat Box --- */}
-        <div style={{ position: 'fixed', top: 24, right: 24, zIndex: 1200 }}>
+        <div style={{ position: "fixed", top: 24, right: 24, zIndex: 1200 }}>
           <button
             onClick={chatAllowed ? toggleChat : undefined}
             style={{
-              background: darkMode ? '#2563eb' : '#2563eb',
-              color: '#fff',
-              border: 'none',
-              borderRadius: '50%',
+              background: darkMode ? "#2563eb" : "#2563eb",
+              color: "#fff",
+              border: "none",
+              borderRadius: "50%",
               width: 56,
               height: 56,
-              boxShadow: '0 2px 8px #0002',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
+              boxShadow: "0 2px 8px #0002",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
               fontSize: 28,
-              cursor: chatAllowed ? 'pointer' : 'not-allowed',
+              cursor: chatAllowed ? "pointer" : "not-allowed",
               marginBottom: 8,
-              position: 'relative',
+              position: "relative",
               padding: 0,
-              opacity: chatAllowed ? 1 : 0.6
+              opacity: chatAllowed ? 1 : 0.6,
             }}
-            title={chatAllowed ? (showChat ? 'Close Chat' : 'Open Chat') : 'Chat is available only for Team users'}
+            title={
+              chatAllowed
+                ? showChat
+                  ? "Close Chat"
+                  : "Open Chat"
+                : "Chat is available only for Team users"
+            }
             disabled={!chatAllowed}
           >
             {/* Use inbuilt message icon */}
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M21 6.5C21 5.11929 19.8807 4 18.5 4H5.5C4.11929 4 3 5.11929 3 6.5V17.5C3 18.8807 4.11929 20 5.5 20H18.5C19.8807 20 21 18.8807 21 17.5V6.5Z" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M8 10H16" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M8 14H14" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <svg
+              width="32"
+              height="32"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M21 6.5C21 5.11929 19.8807 4 18.5 4H5.5C4.11929 4 3 5.11929 3 6.5V17.5C3 18.8807 4.11929 20 5.5 20H18.5C19.8807 20 21 18.8807 21 17.5V6.5Z"
+                stroke="#fff"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M8 10H16"
+                stroke="#fff"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M8 14H14"
+                stroke="#fff"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
             </svg>
             {unreadChatCount > 0 && !showChat && (
-              <span style={{
-                position: 'absolute',
-                top: -8,
-                right: -8,
-                background: '#ef4444',
-                color: '#fff',
-                borderRadius: '50%',
-                minWidth: 20,
-                height: 20,
-                padding: '0 6px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: 13,
-                fontWeight: 700,
-                boxShadow: '0 2px 8px #ef444422',
-                border: '2px solid #fff',
-                zIndex: 2
-              }}>{unreadChatCount}</span>
+              <span
+                style={{
+                  position: "absolute",
+                  top: -8,
+                  right: -8,
+                  background: "#ef4444",
+                  color: "#fff",
+                  borderRadius: "50%",
+                  minWidth: 20,
+                  height: 20,
+                  padding: "0 6px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: 13,
+                  fontWeight: 700,
+                  boxShadow: "0 2px 8px #ef444422",
+                  border: "2px solid #fff",
+                  zIndex: 2,
+                }}
+              >
+                {unreadChatCount}
+              </span>
             )}
           </button>
           {showChat && chatAllowed && (
-            <div className="chat-bot bg-white dark:bg-gray-800 rounded-lg shadow p-4 flex flex-col h-[40rem] w-[28rem]" style={{marginTop: 8, minWidth: 340, maxWidth: 480}}>
+            <div
+              className="chat-bot bg-white dark:bg-gray-800 rounded-lg shadow p-4 flex flex-col h-[40rem] w-[28rem]"
+              style={{ marginTop: 8, minWidth: 340, maxWidth: 480 }}
+            >
               <div className="flex justify-between items-center mb-2">
                 <span className="font-bold">Room Chat</span>
-                <span style={{ color: '#22c55e', fontWeight: 600, fontSize: 14, marginLeft: 12 }}>
+                <span
+                  style={{
+                    color: "#22c55e",
+                    fontWeight: 600,
+                    fontSize: 14,
+                    marginLeft: 12,
+                  }}
+                >
                   {users.length} online
                 </span>
                 <button
                   onClick={clearChat}
-                  className={`text-xs px-2 py-1 rounded flex items-center ${userName === leader ? 'bg-red-500 text-white hover:bg-red-600 cursor-pointer' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`}
-                  title={userName === leader ? "Clear Chat" : `Only leader (${leader}) can clear`}
+                  className={`text-xs px-2 py-1 rounded flex items-center ${
+                    userName === leader
+                      ? "bg-red-500 text-white hover:bg-red-600 cursor-pointer"
+                      : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                  }`}
+                  title={
+                    userName === leader
+                      ? "Clear Chat"
+                      : `Only leader (${leader}) can clear`
+                  }
                   disabled={userName !== leader}
                 >
                   <FiTrash2 className="mr-1" /> Clear
                 </button>
               </div>
-              <div className="flex-1 overflow-y-auto mb-2" style={{fontSize: 14}}>
+              <div
+                className="flex-1 overflow-y-auto mb-2"
+                style={{ fontSize: 14 }}
+              >
                 {chatMessages.map((msg, idx) => {
                   const isMe = msg.userName === userName;
                   return (
                     <div
                       key={idx}
                       className="mb-1 flex"
-                      style={{ justifyContent: isMe ? 'flex-end' : 'flex-start' }}
+                      style={{
+                        justifyContent: isMe ? "flex-end" : "flex-start",
+                      }}
                     >
                       <div
                         style={{
-                          background: isMe ? (darkMode ? '#2563eb' : '#dbeafe') : (darkMode ? '#374151' : '#f3f4f6'),
-                          color: isMe ? (darkMode ? '#fff' : '#1e3a8a') : (darkMode ? '#f3f4f6' : '#111827'),
-                          borderRadius: '12px',
-                          padding: '6px 12px',
-                          maxWidth: '75%',
-                          minWidth: '80px',
-                          alignSelf: isMe ? 'flex-end' : 'flex-start',
-                          boxShadow: isMe ? '0 2px 8px #2563eb22' : '0 2px 8px #0001',
+                          background: isMe
+                            ? darkMode
+                              ? "#2563eb"
+                              : "#dbeafe"
+                            : darkMode
+                            ? "#374151"
+                            : "#f3f4f6",
+                          color: isMe
+                            ? darkMode
+                              ? "#fff"
+                              : "#1e3a8a"
+                            : darkMode
+                            ? "#f3f4f6"
+                            : "#111827",
+                          borderRadius: "12px",
+                          padding: "6px 12px",
+                          maxWidth: "75%",
+                          minWidth: "80px",
+                          alignSelf: isMe ? "flex-end" : "flex-start",
+                          boxShadow: isMe
+                            ? "0 2px 8px #2563eb22"
+                            : "0 2px 8px #0001",
                         }}
                       >
-                        <div style={{ fontWeight: 600, fontSize: 13, marginBottom: 2 }}>
+                        <div
+                          style={{
+                            fontWeight: 600,
+                            fontSize: 13,
+                            marginBottom: 2,
+                          }}
+                        >
                           {msg.userName}
                           {msg.userName === leader && (
-                            <span style={{ color: '#f59e42', fontWeight: 600, fontSize: 11, marginLeft: 4 }}>(Leader)</span>
+                            <span
+                              style={{
+                                color: "#f59e42",
+                                fontWeight: 600,
+                                fontSize: 11,
+                                marginLeft: 4,
+                              }}
+                            >
+                              (Leader)
+                            </span>
                           )}
-                          <span style={{ fontWeight: 400, fontSize: 11, marginLeft: 8, color: isMe ? '#e0e7ef' : '#64748b' }}>{msg.time}</span>
+                          <span
+                            style={{
+                              fontWeight: 400,
+                              fontSize: 11,
+                              marginLeft: 8,
+                              color: isMe ? "#e0e7ef" : "#64748b",
+                            }}
+                          >
+                            {msg.time}
+                          </span>
                         </div>
                         <div style={{ fontSize: 14 }}>{msg.message}</div>
                       </div>
@@ -905,15 +1368,15 @@ const Editor1 = () => {
                   type="text"
                   value={chatInput}
                   onChange={(e) => setChatInput(e.target.value)}
-                  onKeyDown={e => e.key === "Enter" && sendChat()}
+                  onKeyDown={(e) => e.key === "Enter" && sendChat()}
                   className="flex-1 border rounded-l bg-gray-100 dark:bg-gray-700"
                   style={{
                     width: 0,
                     minWidth: 0,
-                    flex: '1 1 0%',
-                    padding: '8px',
-                    fontSize: '14px',
-                    borderRight: 'none',
+                    flex: "1 1 0%",
+                    padding: "8px",
+                    fontSize: "14px",
+                    borderRight: "none",
                   }}
                   placeholder="Type a message..."
                 />
@@ -922,14 +1385,14 @@ const Editor1 = () => {
                   className="bg-blue-500 text-white rounded-r hover:bg-blue-600"
                   style={{
                     flexShrink: 0,
-                    padding: '8px 16px',
-                    fontSize: '14px',
+                    padding: "8px 16px",
+                    fontSize: "14px",
                     minWidth: 60,
-                    border: 'none',
-                    height: '100%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
+                    border: "none",
+                    height: "100%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
                   }}
                 >
                   Send
@@ -938,13 +1401,20 @@ const Editor1 = () => {
             </div>
           )}
           {!chatAllowed && showChat && (
-            <div className="chat-bot bg-white dark:bg-gray-800 rounded-lg shadow p-4 flex flex-col h-[16rem] w-[22rem] items-center justify-center text-center" style={{marginTop: 8, minWidth: 220, maxWidth: 320}}>
+            <div
+              className="chat-bot bg-white dark:bg-gray-800 rounded-lg shadow p-4 flex flex-col h-[16rem] w-[22rem] items-center justify-center text-center"
+              style={{ marginTop: 8, minWidth: 220, maxWidth: 320 }}
+            >
               <span className="font-bold text-lg mb-2">Room Chat</span>
-              <div className="text-gray-700 dark:text-gray-200 mb-2">Chat is available only for <b>Pro</b> or <b>Team</b> plan users.</div>
+              <div className="text-gray-700 dark:text-gray-200 mb-2">
+                Chat is available only for <b>Pro</b> or <b>Team</b> plan users.
+              </div>
               <button
                 className="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
                 onClick={() => setShowChat(false)}
-              >Close</button>
+              >
+                Close
+              </button>
             </div>
           )}
         </div>
@@ -958,15 +1428,30 @@ const Editor1 = () => {
             height: "100%",
             cursor: "ew-resize",
             zIndex: 10,
-            background: resizingSidebar ? (darkMode ? 'rgba(59, 130, 246, 0.2)' : 'rgba(37,99,235,0.08)') : "transparent",
-            borderRight: resizingSidebar ? `2px solid ${darkMode ? '#3b82f6' : '#2563eb'}` : "none",
+            background: resizingSidebar
+              ? darkMode
+                ? "rgba(59, 130, 246, 0.2)"
+                : "rgba(37,99,235,0.08)"
+              : "transparent",
+            borderRight: resizingSidebar
+              ? `2px solid ${darkMode ? "#3b82f6" : "#2563eb"}`
+              : "none",
           }}
           onMouseDown={handleSidebarMouseDown}
           title="Resize sidebar"
         />
       </div>
 
-      <div className="editor-wrapper" style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', backgroundColor: darkMode ? '#1a202c' : '#f7fafc' }}>
+      <div
+        className="editor-wrapper"
+        style={{
+          flex: 1,
+          minWidth: 0,
+          display: "flex",
+          flexDirection: "column",
+          backgroundColor: darkMode ? "#1a202c" : "#f7fafc",
+        }}
+      >
         <Editor
           height={"60%"}
           defaultLanguage={language}
@@ -1028,7 +1513,9 @@ const Editor1 = () => {
           }}
         />
 
-        <div style={{ display: 'flex', flexDirection: 'column', height: '40%' }}>
+        <div
+          style={{ display: "flex", flexDirection: "column", height: "40%" }}
+        >
           <textarea
             className="user-input"
             placeholder="Enter input for your program here..."
@@ -1036,29 +1523,29 @@ const Editor1 = () => {
             onChange={(e) => setUserInput(e.target.value)}
             style={{
               flex: 1,
-              padding: '12px',
-              border: 'none',
-              borderTop: darkMode ? '1px solid #374151' : '1px solid #e5e7eb',
-              resize: 'none',
-              backgroundColor: darkMode ? '#1f2937' : '#ffffff',
-              color: darkMode ? '#f3f4f6' : '#111827',
-              outline: 'none',
-              fontFamily: 'monospace',
-              fontSize: '14px'
+              padding: "12px",
+              border: "none",
+              borderTop: darkMode ? "1px solid #374151" : "1px solid #e5e7eb",
+              resize: "none",
+              backgroundColor: darkMode ? "#1f2937" : "#ffffff",
+              color: darkMode ? "#f3f4f6" : "#111827",
+              outline: "none",
+              fontFamily: "monospace",
+              fontSize: "14px",
             }}
           />
 
-          <button 
-            className="run-btn" 
+          <button
+            className="run-btn"
             onClick={runCode}
             style={{
-              padding: '10px',
-              border: 'none',
-              background: darkMode ? '#1e40af' : '#2563eb',
-              color: '#ffffff',
-              cursor: 'pointer',
-              fontWeight: '500',
-              transition: 'all 0.2s ease'
+              padding: "10px",
+              border: "none",
+              background: darkMode ? "#1e40af" : "#2563eb",
+              color: "#ffffff",
+              cursor: "pointer",
+              fontWeight: "500",
+              transition: "all 0.2s ease",
             }}
           >
             Execute
@@ -1071,20 +1558,24 @@ const Editor1 = () => {
             placeholder="Output will appear here..."
             style={{
               flex: 2,
-              padding: '12px',
-              border: 'none',
-              borderTop: darkMode ? '1px solid #374151' : '1px solid #e5e7eb',
-              resize: 'none',
-              backgroundColor: darkMode ? '#111827' : '#f3f4f6',
-              color: darkMode ? '#f3f4f6' : '#111827',
-              outline: 'none',
-              fontFamily: 'monospace',
-              fontSize: '14px'
+              padding: "12px",
+              border: "none",
+              borderTop: darkMode ? "1px solid #374151" : "1px solid #e5e7eb",
+              resize: "none",
+              backgroundColor: darkMode ? "#111827" : "#f3f4f6",
+              color: darkMode ? "#f3f4f6" : "#111827",
+              outline: "none",
+              fontFamily: "monospace",
+              fontSize: "14px",
             }}
           />
         </div>
       </div>
-      <ToastContainer position="top-right" autoClose={2000} theme={darkMode ? "dark" : "light"} />
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        theme={darkMode ? "dark" : "light"}
+      />
     </div>
   );
 };

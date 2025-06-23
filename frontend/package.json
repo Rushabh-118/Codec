@@ -17,6 +17,7 @@
     "axios": "^1.9.0",
     "cce": "file:..",
     "dotenv": "^16.5.0",
+    "emoji-picker-react": "^4.12.2",
     "file-saver": "^2.0.5",
     "frontend": "file:",
     "lucide-react": "^0.476.0",

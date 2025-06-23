@@ -7,6 +7,7 @@ import { toast, ToastContainer } from "react-toastify";
 import { v4 as uuid } from "uuid";
 import { saveAs } from "file-saver";
 import { FiCopy, FiSun, FiMoon, FiTrash2 } from "react-icons/fi";
+import EmojiPicker from 'emoji-picker-react';
 
 const socket =
   import.meta.env.MODE === "development"
@@ -72,6 +73,9 @@ const Editor1 = () => {
   const [showChat, setShowChat] = useState(false);
   const [unreadChatCount, setUnreadChatCount] = useState(0);
   const lastSeenMessageIndex = useRef(-1);
+
+  // --- Emoji Picker State ---
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
   // Only allow chat for Team users
   const chatAllowed = userPlan === "Team";
@@ -409,6 +413,16 @@ const Editor1 = () => {
       return !prev;
     });
   };
+
+  useEffect(() => {
+  const handleClickOutside = (event) => {
+    if (showEmojiPicker && !event.target.closest('.emoji-picker')) {
+      setShowEmojiPicker(false);
+    }
+  };
+  document.addEventListener('mousedown', handleClickOutside);
+  return () => document.removeEventListener('mousedown', handleClickOutside);
+}, [showEmojiPicker]);
 
   if (!joined) {
     return (
@@ -769,7 +783,7 @@ const Editor1 = () => {
                     fontSize: "12px",
                     color: darkMode ? "#fbbf24" : "#4b5563",
                   }}
-                > 
+                >
                   {copySuccess}
                 </span>
               )}
@@ -777,109 +791,109 @@ const Editor1 = () => {
           </div>
         </div>
 
+        <div
+          style={{
+            padding: "16px",
+            borderBottom: darkMode ? "1px solid #374151" : "1px solid #e5e7eb",
+          }}
+        >
           <div
             style={{
-              padding: "16px",
-              borderBottom: darkMode ? "1px solid #374151" : "1px solid #e5e7eb",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              marginBottom: "8px",
+            }}
+          >
+            <h3
+              style={{
+                fontSize: "14px",
+                fontWeight: "600",
+                color: darkMode ? "#9ca3af" : "#4b5563",
+                margin: 0,
+              }}
+            >
+              Room Information
+            </h3>
+            <button
+              onClick={copyRoomId}
+              style={{
+                background: "none",
+                border: "none",
+                color: darkMode ? "#9ca3af" : "#6b7280",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                padding: "4px",
+                borderRadius: "4px",
+              }}
+              title="Copy Room ID"
+            >
+              <FiCopy size={14} />
+            </button>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "4px",
             }}
           >
             <div
               style={{
                 display: "flex",
                 alignItems: "center",
-                justifyContent: "space-between",
-                marginBottom: "8px",
+                gap: "4px",
               }}
             >
-              <h3
+              <span
                 style={{
-            fontSize: "14px",
-            fontWeight: "600",
-            color: darkMode ? "#9ca3af" : "#4b5563",
-            margin: 0,
+                  fontSize: "12px",
+                  color: darkMode ? "#9ca3af" : "#6b7280",
                 }}
               >
-                Room Information
-              </h3>
-              <button
-                onClick={copyRoomId}
+                ID:
+              </span>
+              <span
                 style={{
-            background: "none",
-            border: "none",
-            color: darkMode ? "#9ca3af" : "#6b7280",
-            cursor: "pointer",
-            display: "flex",
-            alignItems: "center",
-            padding: "4px",
-            borderRadius: "4px",
+                  fontSize: "13px",
+                  fontWeight: "500",
+                  color: darkMode ? "#ffffff" : "#111827",
                 }}
-                title="Copy Room ID"
               >
-                <FiCopy size={14} />
-              </button>
+                {roomId}
+              </span>
             </div>
             <div
               style={{
                 display: "flex",
-                flexDirection: "column",
+                alignItems: "center",
                 gap: "4px",
               }}
             >
-              <div
+              <span
                 style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "4px",
+                  fontSize: "12px",
+                  color: darkMode ? "#9ca3af" : "#6b7280",
                 }}
               >
-                <span
-            style={{
-              fontSize: "12px",
-              color: darkMode ? "#9ca3af" : "#6b7280",
-            }}
-                >
-            ID:
-                </span>
-                <span
-            style={{
-              fontSize: "13px",
-              fontWeight: "500",
-              color: darkMode ? "#ffffff" : "#111827",
-            }}
-                >
-            {roomId}
-                </span>
-              </div>
-              <div
+                Status:
+              </span>
+              <span
                 style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "4px",
+                  fontSize: "13px",
+                  fontWeight: "500",
+                  color: navigator.onLine ? "#10b981" : "#ef4444",
+                  transition: "color 0.2s",
                 }}
               >
-                <span
-            style={{
-              fontSize: "12px",
-              color: darkMode ? "#9ca3af" : "#6b7280",
-            }}
-                >
-            Status:
-                </span>
-                <span
-            style={{
-              fontSize: "13px",
-              fontWeight: "500",
-              color: navigator.onLine ? "#10b981" : "#ef4444",
-              transition: "color 0.2s",
-            }}
-                >
-            {navigator.onLine ? "Active" : "Inactive"}
-                </span>
-              </div>
+                {navigator.onLine ? "Active" : "Inactive"}
+              </span>
             </div>
           </div>
+        </div>
 
-          {/* Quick Actions Section */}
+        {/* Quick Actions Section */}
         <div
           style={{
             padding: "16px",
@@ -991,137 +1005,137 @@ const Editor1 = () => {
           </div>
         </div>
 
-          <div
-            style={{
-              padding: "16px",
-              borderBottom: darkMode ? "1px solid #374151" : "1px solid #e5e7eb",
-              flex: 1,
-              overflow: "hidden",
-              display: "flex",
-              flexDirection: "column",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                marginBottom: "12px",
-              }}
-            >
-              <h3
-                style={{
-            fontSize: "14px",
-            fontWeight: "600",
-            color: darkMode ? "#9ca3af" : "#4b5563",
-            margin: 0,
-                }}
-              >
-                Online Users ({users.length})
-              </h3>
-              <span
-                style={{
-            fontSize: "12px",
-            color: darkMode ? "#6b7280" : "#9ca3af",
-                }}
-              >
-                {leader ? `Leader: ${leader.slice(0, 8)}...` : ""}
-              </span>
-            </div>
-            <div
-              style={{
-                overflowY: "auto",
-                flex: 1,
-                paddingRight: "4px",
-              }}
-            >
-              <ul
-                style={{
-            listStyle: "none",
-            padding: 0,
-            margin: 0,
+        <div
+          style={{
+            padding: "16px",
+            borderBottom: darkMode ? "1px solid #374151" : "1px solid #e5e7eb",
+            flex: 1,
+            overflow: "hidden",
             display: "flex",
             flexDirection: "column",
-            gap: "8px",
-                }}
-              >
-                {users.map((userObj, index) => {
-            const user =
-              typeof userObj === "string" ? userObj : userObj.name;
-            const isMe = user === userName;
-            const isLeader = user === leader;
-            const isOnline = navigator.onLine;
-            return (
-              <li
-                key={index}
-                style={{
-                  padding: "8px",
-                  borderRadius: "6px",
-                  background: isMe
-              ? darkMode
-                ? "rgba(59, 130, 246, 0.2)"
-                : "rgba(37, 99, 235, 0.1)"
-              : darkMode
-              ? "rgba(31, 41, 55, 0.5)"
-              : "rgba(243, 244, 246, 0.5)",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "8px",
-                }}
-              >
-                <div
-                  style={{
-              width: "8px",
-              height: "8px",
-              borderRadius: "50%",
-              background: isOnline ? "#10b981" : "#ef4444",
-              transition: "background 0.2s",
-                  }}
-                />
-                <span
-                  style={{
-              fontSize: "13px",
-              fontWeight: "500",
-              color: isMe
-                ? darkMode
-                  ? "#3b82f6"
-                  : "#2563eb"
-                : darkMode
-                ? "#f3f4f6"
-                : "#111827",
-              flex: 1,
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-                  }}
-                >
-                  {user}
-                  {isMe && " (You)"}
-                </span>
-                {isLeader && (
-                  <span
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              marginBottom: "12px",
+            }}
+          >
+            <h3
               style={{
-                fontSize: "10px",
-                fontWeight: "700",
-                color: "#f59e0b",
-                padding: "2px 4px",
-                borderRadius: "4px",
-                background: darkMode
-                  ? "rgba(245, 158, 11, 0.1)"
-                  : "rgba(245, 158, 11, 0.2)",
+                fontSize: "14px",
+                fontWeight: "600",
+                color: darkMode ? "#9ca3af" : "#4b5563",
+                margin: 0,
               }}
-                  >
-              LEADER
-                  </span>
-                )}
-              </li>
-            );
-                })}
-              </ul>
-            </div>
+            >
+              Online Users ({users.length})
+            </h3>
+            <span
+              style={{
+                fontSize: "12px",
+                color: darkMode ? "#6b7280" : "#9ca3af",
+              }}
+            >
+              {leader ? `Leader: ${leader.slice(0, 8)}...` : ""}
+            </span>
           </div>
+          <div
+            style={{
+              overflowY: "auto",
+              flex: 1,
+              paddingRight: "4px",
+            }}
+          >
+            <ul
+              style={{
+                listStyle: "none",
+                padding: 0,
+                margin: 0,
+                display: "flex",
+                flexDirection: "column",
+                gap: "8px",
+              }}
+            >
+              {users.map((userObj, index) => {
+                const user =
+                  typeof userObj === "string" ? userObj : userObj.name;
+                const isMe = user === userName;
+                const isLeader = user === leader;
+                const isOnline = navigator.onLine;
+                return (
+                  <li
+                    key={index}
+                    style={{
+                      padding: "8px",
+                      borderRadius: "6px",
+                      background: isMe
+                        ? darkMode
+                          ? "rgba(59, 130, 246, 0.2)"
+                          : "rgba(37, 99, 235, 0.1)"
+                        : darkMode
+                        ? "rgba(31, 41, 55, 0.5)"
+                        : "rgba(243, 244, 246, 0.5)",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "8px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: "8px",
+                        height: "8px",
+                        borderRadius: "50%",
+                        background: isOnline ? "#10b981" : "#ef4444",
+                        transition: "background 0.2s",
+                      }}
+                    />
+                    <span
+                      style={{
+                        fontSize: "13px",
+                        fontWeight: "500",
+                        color: isMe
+                          ? darkMode
+                            ? "#3b82f6"
+                            : "#2563eb"
+                          : darkMode
+                          ? "#f3f4f6"
+                          : "#111827",
+                        flex: 1,
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                      }}
+                    >
+                      {user}
+                      {isMe && " (You)"}
+                    </span>
+                    {isLeader && (
+                      <span
+                        style={{
+                          fontSize: "10px",
+                          fontWeight: "700",
+                          color: "#f59e0b",
+                          padding: "2px 4px",
+                          borderRadius: "4px",
+                          background: darkMode
+                            ? "rgba(245, 158, 11, 0.1)"
+                            : "rgba(245, 158, 11, 0.2)",
+                        }}
+                      >
+                        LEADER
+                      </span>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        </div>
 
-          {/* Footer Section */}
+        {/* Footer Section */}
         <div
           style={{
             padding: "16px",
@@ -1376,12 +1390,72 @@ const Editor1 = () => {
                 <div ref={chatEndRef} />
               </div>
               <div className="flex" style={{ minWidth: 0 }}>
+                {/* Emoji Picker Button */}
+                <button
+                  onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                  className="bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-l border-r border-gray-300 dark:border-gray-600"
+                  style={{
+                    padding: "8px 12px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    cursor: "pointer",
+                  }}
+                  title="Emoji"
+                >
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    />
+                    <path
+                      d="M8 14C8 14 9.5 16 12 16C14.5 16 16 14 16 14"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                    />
+                    <path
+                      d="M9 9H9.01"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                    />
+                    <path
+                      d="M15 9H15.01"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                </button>
+
+                {/* Emoji Picker (shown when toggled) */}
+                {showEmojiPicker && (
+                  <div className="absolute bottom-16 left-4 z-10 emoji-picker">
+                    <EmojiPicker
+                      onEmojiClick={(emojiObject, event) => {
+                        setChatInput((prev) => prev + (emojiObject.emoji || emojiObject.native || ""));
+                      }}
+                      width={300}
+                      height={350}
+                    />
+                  </div>
+                )}
+
+                {/* Message Input */}
                 <input
                   type="text"
                   value={chatInput}
                   onChange={(e) => setChatInput(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && sendChat()}
-                  className="flex-1 border rounded-l bg-gray-100 dark:bg-gray-700"
+                  className="flex-1 border bg-gray-100 dark:bg-gray-700"
                   style={{
                     width: 0,
                     minWidth: 0,
@@ -1392,6 +1466,8 @@ const Editor1 = () => {
                   }}
                   placeholder="Type a message..."
                 />
+
+                {/* Send Button */}
                 <button
                   onClick={sendChat}
                   className="bg-blue-500 text-white rounded-r hover:bg-blue-600"

@@ -367,14 +367,14 @@ export const Navigation = () => {
         <div className="flex items-center justify-between h-16">
           <Link to="/" className="flex items-center gap-2">
             <motion.div whileHover={{ rotate: 15, scale: 1.1 }} whileTap={{ scale: 0.9 }}>
-              <MonitorCog className="text-[#F83002]" size={24} />
+              <MonitorCog className="text-[#3b82f6]" size={24} />
             </motion.div>
             <motion.h1
               onClick={() => document.getElementById("hero")?.scrollIntoView({ behavior: "smooth" })}
               className="text-2xl font-bold font-display text-black dark:text-white"
               whileHover={{ scale: 1.05 }}
             >
-              Code<span className="text-[#F83002]">C</span>
+              Code<span className="text-[#3b82f6]">C</span>
             </motion.h1>
           </Link>
 
@@ -949,7 +949,7 @@ const FeedbackForm = () => {
               htmlFor="name"
               className="block text-sm font-medium text-gray-700 mb-1 dark:text-gray-300"
             >
-              Name <span className="text-red-500">*</span>
+              Name <span className="text-[#3b82f6]">*</span>
             </label>
             <motion.input
               type="text"
@@ -968,7 +968,7 @@ const FeedbackForm = () => {
               htmlFor="email"
               className="block text-sm font-medium text-gray-700 mb-1 dark:text-gray-300"
             >
-              Email <span className="text-red-500">*</span>
+              Email <span className="text-[#3b82f6]">*</span>
             </label>
             <motion.input
               type="email"
@@ -987,7 +987,7 @@ const FeedbackForm = () => {
               htmlFor="message"
               className="block text-sm font-medium text-gray-700 mb-1 dark:text-gray-300"
             >
-              Message <span className="text-red-500">*</span>
+              Message <span className="text-[#3b82f6]">*</span>
             </label>
             <motion.textarea
               name="message"
@@ -1007,7 +1007,7 @@ const FeedbackForm = () => {
               disabled={isSubmitting}
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.98 }}
-              className="w-full flex justify-center items-center px-6 py-3 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-md hover:from-orange-600 hover:to-red-600 transition-colors disabled:opacity-70"
+              className="w-full flex justify-center items-center px-6 py-3 bg-gradient-to-r from-[#3b82f6] to-[#0060fa] text-white rounded-md hover:from-[#3b82f6] hover:to-[#0060fa] transition-colors disabled:opacity-70"
             >
               {isSubmitting ? (
                 <motion.span
@@ -1759,10 +1759,10 @@ const Footer = () => {
           <motion.div variants={itemVariants} className="md:col-span-2">
             <div className="flex items-center gap-3 mb-6">
               <motion.div whileHover={{ rotate: 15, scale: 1.1 }}>
-                <MonitorCog className="text-[#F83002]" size={28} />
+                <MonitorCog className="text-[#3b82f6]" size={28} />
               </motion.div>
               <h3 className="text-2xl font-bold">
-                Code<span className="text-[#F83002]">Collab</span>
+                Code<span className="text-[#3b82f6]">Collab</span>
               </h3>
             </div>
             <p className="text-gray-400 dark:text-gray-300 mb-6">

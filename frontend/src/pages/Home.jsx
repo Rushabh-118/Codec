@@ -1366,9 +1366,9 @@ const Pricing = () => {
                 <div
                   className={`bg-white dark:bg-gray-800 p-8 rounded-xl text-gray-900 dark:text-white"`}
                 >
-                  <h3 className="text-2xl font-semibold mb-2">{tier.plan}</h3>
+                  <h3 className="text-2xl font-semibold mb-2 text-black dark:text-white">{tier.plan}</h3>
 
-                  <div className="mb-6">
+                  <div className="mb-6 text-black dark:text-white">
                     <p className="text-4xl font-bold mb-1">
                       ₹{tier.price.toLocaleString("en-IN")}
                       <span className="text-lg font-normal"> /mo</span>

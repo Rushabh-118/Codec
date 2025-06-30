@@ -1290,7 +1290,7 @@ const Pricing = () => {
               plan: "Free",
               price: 0,
               features: [
-                "1 Room",
+                "3 Rooms per Day",
                 "Basic Support",
                 "Limited Collaboration",
                 "Community Access",

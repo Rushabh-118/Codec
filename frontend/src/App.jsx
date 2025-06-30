@@ -96,8 +96,18 @@ const App = () => {
             </ProtectedRoute>
           }
         />
-        <Route path="/success" element={<Success />} />
-        <Route path="/cancel" element={<Cancel />} />
+        <Route path="/success" element={
+          <ProtectedRoute>
+            <Success />
+          </ProtectedRoute>
+          }
+        />
+        <Route path="/cancel" element={
+          <ProtectedRoute>
+            <Cancel />
+          </ProtectedRoute>
+        }
+        />
       </Routes>
       <Toaster />
     </div>

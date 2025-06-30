@@ -263,10 +263,27 @@ const Editor1 = () => {
     }
   }, [chatMessages, showChat]);
 
+  // Restore session from localStorage on mount
+  useEffect(() => {
+    const storedRoomId = localStorage.getItem("roomId");
+    const storedUserName = localStorage.getItem("userName");
+    const storedJoined = localStorage.getItem("joined");
+    if (storedRoomId && storedUserName && storedJoined === "true") {
+      setRoomId(storedRoomId);
+      setUserName(storedUserName);
+      setJoined(true);
+      // Optionally, re-join the room on refresh
+      socket.emit("join", { roomId: storedRoomId, userName: storedUserName });
+    }
+  }, []);
+
   const joinRoom = () => {
     if (roomId && userName) {
       socket.emit("join", { roomId, userName });
       setJoined(true);
+      localStorage.setItem("roomId", roomId);
+      localStorage.setItem("userName", userName);
+      localStorage.setItem("joined", "true");
       toast.success("You have joined the room");
     }
   };
@@ -282,6 +299,9 @@ const Editor1 = () => {
     setUserName("");
     setCode(DEFAULT_CODE.javascript);
     setLanguage("javascript");
+    localStorage.removeItem("roomId");
+    localStorage.removeItem("userName");
+    localStorage.removeItem("joined");
     toast.success("You have left the room");
   };
 

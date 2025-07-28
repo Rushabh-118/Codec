@@ -13,7 +13,6 @@ import AdComponent from "../components/AdComponent";
 import SkeletonNav from "../components/SkeletonNav";
 import SkeletonHero from "../components/SkeletonHero";
 
-
 // ------------------------ Home ------------------------
 const Home = () => {
   const [isLoading, setIsLoading] = useState(true);

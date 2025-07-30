@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { motion, useAnimation, AnimatePresence } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { toast } from "react-hot-toast";
-import picture from "../assets/hero_image.svg";
 import { ArrowRight, ChevronDown } from "lucide-react";
 import SkeletonHero from "./SkeletonHero";
 
@@ -108,8 +107,11 @@ const Hero = () => {
       initial="hidden"
       animate={controls}
       variants={containerVariants}
-      className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 via-purple-50 to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 overflow-hidden pt-16 pb-24"
+      className="relative min-h-screen flex items-center justify-center bg-[url('https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80')] bg-cover bg-center bg-no-repeat overflow-hidden pt-16 pb-24"
     >
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-black/50 dark:bg-gray-900/80" />
+      
       {/* Gradient blobs */}
       <div className="absolute inset-0 overflow-hidden opacity-20 dark:opacity-10">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-300 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-2000 dark:bg-purple-900 dark:opacity-20" />
@@ -118,62 +120,11 @@ const Hero = () => {
       </div>
 
       {/* Main content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex flex-col lg:flex-row items-center gap-12 relative z-10">
-        {/* Image */}
-        <motion.div
-          variants={slideInVariants}
-          className="w-full lg:w-1/2 flex justify-center lg:justify-start order-1"
-        >
-          <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
-            className="relative"
-          >
-            <motion.div
-              className="absolute -inset-4 bg-gradient-to-r from-indigo-400 to-purple-500 rounded-2xl opacity-20 blur-xl dark:opacity-15"
-              animate={{ rotate: [0, 5, -5, 0] }}
-              transition={{
-                duration: 10,
-                repeat: Infinity,
-                repeatType: "reverse",
-              }}
-            />
-            <motion.img
-              src={picture}
-              alt="Collaborative code editor interface"
-              loading="lazy"
-              className="relative max-w-full h-auto rounded-xl shadow-2xl border-8 border-white/50 dark:border-gray-800/50"
-            />
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.8, duration: 0.6 }}
-              className="absolute -bottom-6 -right-6 bg-white dark:bg-gray-800 p-4 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700"
-              whileHover={{ y: -5, rotate: 3 }}
-            >
-              <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center text-blue-600 dark:text-blue-300 text-2xl">
-                👨‍💻
-              </div>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 1, duration: 0.6 }}
-              className="absolute -top-6 -left-6 bg-white dark:bg-gray-800 p-4 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700"
-              whileHover={{ y: -5, rotate: -3 }}
-            >
-              <div className="w-16 h-16 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center text-green-600 dark:text-green-300 text-2xl">
-                👩‍💻
-              </div>
-            </motion.div>
-          </motion.div>
-        </motion.div>
-
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex flex-col items-center gap-12 relative z-10 text-center">
         {/* Text Content */}
         <motion.div
           variants={containerVariants}
-          className="w-full lg:w-1/2 text-center lg:text-left px-4 lg:px-0 order-2"
+          className="w-full text-center px-4 lg:px-0"
         >
           <motion.span
             variants={itemVariants}
@@ -185,11 +136,11 @@ const Hero = () => {
 
           <motion.h1
             variants={containerVariants}
-            className="text-2xl sm:text-3xl md:text-6xl font-bold mb-6 font-display leading-tight text-gray-900 dark:text-white"
+            className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 font-display leading-tight text-white"
           >
             <span className="block">Develop from</span>
             <div className="relative h-20 md:h-24 mt-10 overflow-hidden font-mono">
-              <span className="text-indigo-600 dark:text-indigo-400 text-4xl md:text-5xl">
+              <span className="text-indigo-300 dark:text-indigo-300 text-4xl md:text-5xl">
                 {typedText}
                 <span className="animate-pulse">|</span>
               </span>
@@ -198,7 +149,7 @@ const Hero = () => {
 
           <motion.p
             variants={itemVariants}
-            className="text-gray-600 text-lg md:text-xl mb-8 max-w-2xl mx-auto lg:mx-0 dark:text-gray-300 leading-relaxed"
+            className="text-gray-200 text-lg md:text-xl mb-8 max-w-2xl mx-auto leading-relaxed"
           >
             Transform your workflow with our real-time collaborative platform
             designed for teams to code together seamlessly.
@@ -206,7 +157,7 @@ const Hero = () => {
 
           <motion.div
             variants={itemVariants}
-            className="flex flex-wrap justify-center lg:justify-start gap-3 mb-8"
+            className="flex flex-wrap justify-center gap-3 mb-8"
           >
             {[
               "⚡ Live Code Sharing",
@@ -226,7 +177,7 @@ const Hero = () => {
 
           <motion.div
             variants={itemVariants}
-            className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
+            className="flex flex-col sm:flex-row gap-4 justify-center"
           >
             <motion.button
               onClick={handleGetStarted}
@@ -260,7 +211,7 @@ const Hero = () => {
         className="absolute bottom-8 left-1/2 transform -translate-x-1/2 hidden md:block"
       >
         <div className="flex flex-col items-center">
-          <span className="text-sm text-gray-500 dark:text-gray-400 mb-2">
+          <span className="text-sm text-gray-300 dark:text-gray-300 mb-2">
             Scroll down
           </span>
           <motion.div
@@ -268,7 +219,7 @@ const Hero = () => {
             transition={{ duration: 1.5, repeat: Infinity }}
           >
             <ChevronDown
-              className="text-gray-500 dark:text-gray-400"
+              className="text-gray-300 dark:text-gray-300"
               size={24}
             />
           </motion.div>

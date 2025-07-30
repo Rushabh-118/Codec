@@ -1,6 +1,3 @@
-import React from "react";
-import { motion } from "framer-motion";
-
 const SkeletonHero = () => {
   return (
     <div className="relative min-h-screen flex items-center justify-center bg-gray-200 dark:bg-gray-800 overflow-hidden pt-16 pb-24">

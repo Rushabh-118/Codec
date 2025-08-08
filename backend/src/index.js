@@ -24,6 +24,15 @@ app.use(cors({
 
 app.use(express.json());
 
+// Root endpoint to indicate server is running
+app.get("/", (req, res) => {
+  res.json({ 
+    message: "Server is running successfully!",
+    status: "online",
+    timestamp: new Date().toISOString()
+  });
+});
+
 // API Routes
 app.use("/api", apiRoutes);
 app.use("/api/auth", authRoutes);

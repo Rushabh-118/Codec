@@ -4,6 +4,7 @@ import { useInView } from "react-intersection-observer";
 import { toast } from "react-hot-toast";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
+// Section Fade-In
 const fadeInVariants = {
   hidden: { opacity: 0 },
   visible: {
@@ -12,16 +13,22 @@ const fadeInVariants = {
   },
 };
 
+// Staggered Items
 const itemVariants = {
   hidden: { y: 60, opacity: 0, scale: 0.95 },
-  visible: {
+  visible: (i = 0) => ({
     y: 0,
     opacity: 1,
     scale: 1,
-    transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] },
-  },
+    transition: {
+      duration: 0.8,
+      ease: [0.16, 1, 0.3, 1],
+      delay: i * 0.1,
+    },
+  }),
 };
 
+// Subtle Scale-Up
 const scaleUpVariants = {
   hidden: { scale: 0.85, opacity: 0 },
   visible: {
@@ -31,35 +38,38 @@ const scaleUpVariants = {
   },
 };
 
-
+// Fancy Star Rating Component
 const StarRating = ({ rating, setRating }) => {
   const [hover, setHover] = useState(0);
+
   return (
-    <div style={{ display: "flex", gap: 4, marginBottom: 12 }}>
-      {[1, 2, 3, 4, 5].map((star) => (
-        <button
-          type="button"
-          key={star}
-          onClick={() => setRating(star)}
-          onMouseEnter={() => setHover(star)}
-          onMouseLeave={() => setHover(0)}
-          aria-label={`Rate ${star} star${star > 1 ? 's' : ''}`}
-          style={{
-            background: "none",
-            border: "none",
-            cursor: "pointer",
-            outline: "none",
-            fontSize: 28,
-            color: (hover || rating) >= star ? "#fbbf24" : "#d1d5db",
-            transition: "color 0.2s"
-          }}
-        >
-          ★
-        </button>
-      ))}
+    <div className="flex gap-1 mb-4" role="radiogroup" aria-label="Star Rating">
+      {[1, 2, 3, 4, 5].map((star) => {
+        const isActive = (hover || rating) >= star;
+        return (
+          <motion.button
+            key={star}
+            type="button"
+            role="radio"
+            aria-checked={rating === star}
+            onClick={() => setRating(star)}
+            onMouseEnter={() => setHover(star)}
+            onMouseLeave={() => setHover(0)}
+            whileHover={{ scale: 1.2 }}
+            whileTap={{ scale: 0.9 }}
+            className={`text-4xl transition-all duration-300 focus:outline-none
+              ${isActive
+                ? "text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-amber-500 drop-shadow-[0_0_8px_rgba(251,191,36,0.8)]"
+                : "text-gray-300 hover:text-yellow-300"
+              }`}
+          >
+            ★
+          </motion.button>
+        );
+      })}
     </div>
   );
-}
+};
 
 const FeedbackForm = () => {
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
@@ -76,8 +86,12 @@ const FeedbackForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsSubmitting(true);
+    if (rating === 0) {
+      toast.error("Please select a star rating before submitting.");
+      return;
+    }
 
+    setIsSubmitting(true);
     try {
       const response = await fetch("http://localhost:5001/api/feedback", {
         method: "POST",
@@ -88,7 +102,7 @@ const FeedbackForm = () => {
       if (!response.ok) throw new Error("Failed to submit");
 
       await response.json();
-      toast.success("Thank you for your feedback!");
+      toast.success("Thank you for your feedback! 🎉");
       setFormData({ name: "", email: "", message: "" });
       setRating(0);
     } catch (error) {
@@ -105,18 +119,21 @@ const FeedbackForm = () => {
       initial="hidden"
       animate={controls}
       variants={fadeInVariants}
-      className="py-20 bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900"
+      className="py-20 bg-gradient-to-br from-blue-50 via-white to-purple-50 
+                 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900"
     >
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Title & Subtitle */}
-        <motion.div variants={itemVariants} className="text-center mb-12">
+        {/* Title */}
+        <motion.div variants={itemVariants} custom={0} className="text-center mb-12">
           <motion.h2
-            whileHover={{ scale: 1.02 }}
-            className="text-4xl font-extrabold mb-4 text-gray-800 tracking-tight font-display dark:text-white"
+            whileHover={{ scale: 1.03 }}
+            className="text-4xl font-extrabold mb-4 text-gray-800 tracking-tight 
+                       font-display dark:text-white"
           >
             Share Your Feedback
           </motion.h2>
-          {/* Lottie Animation */}
+
+          {/* Lottie */}
           <motion.div variants={scaleUpVariants} className="flex justify-center">
             <DotLottieReact
               src="https://lottie.host/77152b8e-09a3-4439-a2d8-414a11d40be6/uIN5YSUswm.lottie"
@@ -124,12 +141,13 @@ const FeedbackForm = () => {
               style={{ width: 180, height: 180 }}
             />
           </motion.div>
+
           <p className="text-lg text-gray-600 dark:text-gray-300">
             Your insights help us make the platform better for everyone.
           </p>
         </motion.div>
 
-        {/* Feedback Form */}
+        {/* Form */}
         <motion.form
           variants={scaleUpVariants}
           onSubmit={handleSubmit}
@@ -139,17 +157,17 @@ const FeedbackForm = () => {
                      transition-all duration-300 hover:shadow-[0_25px_80px_-15px_rgba(0,0,0,0.3)]"
         >
           {/* Name */}
-          <motion.div variants={itemVariants}>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <motion.div variants={itemVariants} custom={1}>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Name <span className="text-blue-500">*</span>
             </label>
             <motion.input
               type="text"
               name="name"
-              id="name"
               required
               value={formData.name}
               onChange={handleChange}
+              whileFocus={{ scale: 1.01 }}
               className="w-full px-4 py-3 border border-gray-300/40 dark:border-gray-600/50 rounded-lg 
                          text-black dark:text-white bg-white/60 dark:bg-gray-700/50 
                          placeholder-gray-400 focus:outline-none 
@@ -159,58 +177,56 @@ const FeedbackForm = () => {
           </motion.div>
 
           {/* Email */}
-          <motion.div variants={itemVariants}>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <motion.div variants={itemVariants} custom={2}>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Email <span className="text-blue-500">*</span>
             </label>
             <motion.input
               type="email"
               name="email"
-              id="email"
               required
               value={formData.email}
               onChange={handleChange}
+              whileFocus={{ scale: 1.01 }}
               className="w-full px-4 py-3 border border-gray-300/40 dark:border-gray-600/50 rounded-lg 
                          text-black dark:text-white bg-white/60 dark:bg-gray-700/50 
                          placeholder-gray-400 focus:outline-none 
                          focus:ring-4 focus:ring-blue-500/40 focus:border-blue-500/60 
                          transition-all duration-200"
-              whileFocus={{ scale: 1.01 }}
             />
           </motion.div>
 
-          {/* Star Rating */}
-          <motion.div variants={itemVariants}>
+          {/* Rating */}
+          <motion.div variants={itemVariants} custom={3}>
             <label className="block mb-2 font-medium">Your Rating:</label>
             <StarRating rating={rating} setRating={setRating} />
           </motion.div>
 
           {/* Message */}
-          <motion.div variants={itemVariants}>
-            <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <motion.div variants={itemVariants} custom={4}>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Message <span className="text-blue-500">*</span>
             </label>
             <motion.textarea
               name="message"
-              id="message"
               rows="4"
               required
               value={formData.message}
               onChange={handleChange}
+              whileFocus={{ scale: 1.01 }}
               className="w-full px-4 py-3 border border-gray-300/40 dark:border-gray-600/50 rounded-lg 
                          text-black dark:text-white bg-white/60 dark:bg-gray-700/50 
                          placeholder-gray-400 focus:outline-none 
                          focus:ring-4 focus:ring-blue-500/40 focus:border-blue-500/60 
                          transition-all duration-200"
-              whileFocus={{ scale: 1.01 }}
-            ></motion.textarea>
+            />
           </motion.div>
 
-          {/* Submit Button */}
-          <motion.div variants={itemVariants} className="pt-2">
+          {/* Submit */}
+          <motion.div variants={itemVariants} custom={5} className="pt-2">
             <motion.button
               type="submit"
-              disabled={isSubmitting || rating === 0}
+              disabled={isSubmitting}
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.98 }}
               className="w-full flex justify-center items-center px-6 py-3 
@@ -236,9 +252,8 @@ const FeedbackForm = () => {
           </motion.div>
         </motion.form>
       </div>
-
     </motion.section>
   );
-}
+};
 
 export default FeedbackForm;

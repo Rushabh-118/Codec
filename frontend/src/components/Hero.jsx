@@ -100,8 +100,16 @@ const Hero = () => {
       initial="hidden"
       animate={controls}
       variants={containerVariants}
-      className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16 pb-24 bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 animate-gradient-x"
+      style={{
+        backgroundImage: "url('/background.png')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+      className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16 pb-24"
     >
+      {/* Gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-gray-900/80 via-blue-900/70 to-purple-900/70"></div>
+
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_20%_30%,rgba(99,102,241,0.15)_0%,transparent_25%),radial-gradient(circle_at_80%_70%,rgba(168,85,247,0.15)_0%,transparent_25%)]"></div>
@@ -197,7 +205,7 @@ const Hero = () => {
             <img
               src="/hero_image.svg"
               alt="Hero Illustration"
-              className="w-150 max-w-lg lg:max-w-xl xl:max-w-2xl object-contain relative z-10 drop-shadow-2xl"
+              className="max-w-lg lg:max-w-xl xl:max-w-2xl object-contain relative z-10 drop-shadow-2xl"
             />
             <div className="absolute inset-0 bg-indigo-500/10 blur-3xl rounded-full -z-0"></div>
           </div>
@@ -206,46 +214,45 @@ const Hero = () => {
 
       {/* Scroll Indicator */}
       <motion.div
-  initial={{ opacity: 0, y: 20 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ delay: 1.5 }}
-  className="absolute bottom-8 left-1/2 transform -translate-x-1/2 hidden md:block"
->
-  <div className="flex flex-col items-center">
-    {/* Mouse Shape */}
-    <motion.div
-      className="w-8 h-12 border-2 border-gray-300 rounded-full flex justify-center"
-      animate={{ y: [0, 5, 0] }}
-      transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-    >
-      {/* Wheel */}
-      <motion.div
-        className="w-1 h-3 bg-gray-300 rounded-full mt-2"
-        animate={{ y: [0, 6, 0], opacity: [1, 0, 1] }}
-        transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-      />
-    </motion.div>
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1.5 }}
+        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 hidden md:block"
+      >
+        <div className="flex flex-col items-center">
+          {/* Mouse Shape */}
+          <motion.div
+            className="w-8 h-12 border-2 border-gray-300 rounded-full flex justify-center"
+            animate={{ y: [0, 5, 0] }}
+            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+          >
+            {/* Wheel */}
+            <motion.div
+              className="w-1 h-3 bg-gray-300 rounded-full mt-2"
+              animate={{ y: [0, 6, 0], opacity: [1, 0, 1] }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+            />
+          </motion.div>
 
-    {/* Animated Chevrons */}
-    <div className="flex flex-col items-center mt-1">
-      {[0, 0.2].map((delay, idx) => (
-        <motion.div
-          key={idx}
-          animate={{ y: [0, 5], opacity: [0.3, 1] }}
-          transition={{
-            duration: 1,
-            repeat: Infinity,
-            delay,
-            ease: "easeInOut",
-          }}
-        >
-          <ChevronDown className="text-gray-300" size={18} />
-        </motion.div>
-      ))}
-    </div>
-  </div>
-</motion.div>
-
+          {/* Animated Chevrons */}
+          <div className="flex flex-col items-center mt-1">
+            {[0, 0.2].map((delay, idx) => (
+              <motion.div
+                key={idx}
+                animate={{ y: [0, 5], opacity: [0.3, 1] }}
+                transition={{
+                  duration: 1,
+                  repeat: Infinity,
+                  delay,
+                  ease: "easeInOut",
+                }}
+              >
+                <ChevronDown className="text-gray-300" size={18} />
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </motion.div>
     </motion.section>
   );
 };

@@ -134,7 +134,7 @@ const Navigation = () => {
                 </motion.div>
                 <span className="text-black dark:text-white">
                   Welcome,{" "}
-                  <span className="font-semibold text-[#F83002]">
+                  <span className={`font-semibold px-3 ${getPlanBadgeStyle(userPlan)}`}>
                     {user.name ? user.name : user.email?.split("@")[0]}
                   </span>
                 </span>

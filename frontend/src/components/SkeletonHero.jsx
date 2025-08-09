@@ -1,59 +1,77 @@
+import React from "react";
+import { motion } from "framer-motion";
+
 const SkeletonHero = () => {
   return (
-    <div className="relative min-h-screen flex items-center justify-center bg-gray-200 dark:bg-gray-800 overflow-hidden pt-16 pb-24">
-      {/* Overlay Skeleton */}
-      <div className="absolute inset-0 bg-gray-300/50 dark:bg-gray-700/80" />
-      
-      {/* Gradient blobs Skeleton */}
-      <div className="absolute inset-0 overflow-hidden opacity-20 dark:opacity-10">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-gray-400 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-pulse" />
-        <div className="absolute top-0 right-1/4 w-96 h-96 bg-gray-400 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-pulse" />
-        <div className="absolute bottom-0 left-1/2 w-96 h-96 bg-gray-400 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-pulse" />
+    <section
+      className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16 pb-24 bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 animate-gradient-x"
+    >
+      {/* Animated background */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_20%_30%,rgba(99,102,241,0.1)_0%,transparent_25%),radial-gradient(circle_at_80%_70%,rgba(168,85,247,0.1)_0%,transparent_25%)]"></div>
+        <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-10"></div>
+        <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-gradient-to-t from-gray-900/90 via-gray-900/30 to-transparent"></div>
       </div>
 
-      {/* Main content Skeleton */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex flex-col items-center gap-12 relative z-10 text-center">
-        <div className="w-full text-center px-4 lg:px-0">
-          {/* Badge Skeleton */}
-          <div className="inline-block px-4 py-2 mb-4 text-sm font-semibold bg-gray-100 dark:bg-gray-700 rounded-full shadow-sm w-48 h-8 mx-auto animate-pulse" />
-          
-          {/* Title Skeleton */}
-          <div className="mb-6">
-            <div className="h-12 bg-gray-300 dark:bg-gray-600 rounded-lg w-3/4 mx-auto mb-6 animate-pulse" />
-            <div className="relative h-24 w-64 mx-auto">
-              <div className="absolute inset-0 bg-gray-300 dark:bg-gray-600 rounded-lg animate-pulse" />
-            </div>
+      {/* Main container */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex flex-col lg:flex-row items-center gap-12 relative z-10">
+        {/* Left content skeleton */}
+        <div className="flex-1 text-center lg:text-left space-y-6 animate-pulse">
+          {/* Tagline */}
+          <div className="inline-block w-60 h-8 bg-white/10 rounded-full"></div>
+
+          {/* Heading */}
+          <div className="space-y-3">
+            <div className="h-12 sm:h-14 md:h-16 bg-white/10 rounded-lg w-4/5 mx-auto lg:mx-0"></div>
+            <div className="h-10 sm:h-12 md:h-14 bg-white/10 rounded-lg w-3/5 mx-auto lg:mx-0"></div>
           </div>
-          
-          {/* Description Skeleton */}
-          <div className="h-6 bg-gray-300 dark:bg-gray-600 rounded-lg max-w-2xl mx-auto mb-8 animate-pulse" />
-          <div className="h-6 bg-gray-300 dark:bg-gray-600 rounded-lg max-w-xl mx-auto mb-8 animate-pulse" />
-          
-          {/* Features Skeleton */}
-          <div className="flex flex-wrap justify-center gap-3 mb-8">
-            {[1, 2, 3].map((item) => (
-              <div 
-                key={item}
-                className="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-sm font-medium rounded-full shadow-sm w-32 h-8 animate-pulse"
-              />
+
+          {/* Paragraph */}
+          <div className="h-6 bg-white/10 rounded-lg w-full max-w-2xl mx-auto lg:mx-0"></div>
+          <div className="h-6 bg-white/10 rounded-lg w-5/6 mx-auto lg:mx-0"></div>
+
+          {/* Features */}
+          <div className="flex flex-wrap justify-center lg:justify-start gap-3 mt-6">
+            {[1, 2, 3].map((i) => (
+              <div
+                key={i}
+                className="px-8 py-3 bg-white/10 rounded-full w-40 h-10"
+              ></div>
             ))}
           </div>
-          
-          {/* Button Skeleton */}
-          <div className="flex justify-center">
-            <div className="px-8 py-4 bg-gray-300 dark:bg-gray-600 rounded-xl w-48 h-14 animate-pulse" />
+
+          {/* Button */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mt-6">
+            <div className="w-48 h-14 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl"></div>
+          </div>
+        </div>
+
+        {/* Right image skeleton */}
+        <div className="flex-1 flex justify-center lg:justify-end animate-pulse">
+          <div className="relative">
+            <div className="w-full max-w-lg lg:max-w-xl xl:max-w-2xl h-80 bg-white/10 rounded-3xl"></div>
+            <div className="absolute inset-0 bg-indigo-500/10 blur-3xl rounded-full -z-0"></div>
           </div>
         </div>
       </div>
 
-      {/* Scroll Indicator Skeleton */}
+      {/* Scroll indicator */}
       <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 hidden md:block">
-        <div className="flex flex-col items-center">
-          <div className="text-sm bg-gray-300 dark:bg-gray-600 rounded-lg w-20 h-4 mb-2 animate-pulse" />
-          <div className="w-6 h-6 bg-gray-300 dark:bg-gray-600 rounded-full animate-pulse" />
+      <div className="flex flex-col items-center animate-pulse">
+        {/* Mouse shape placeholder */}
+        <div className="w-8 h-12 border-2 border-white/10 rounded-full flex justify-center">
+          <div className="w-1 h-3 bg-white/10 rounded-full mt-2"></div>
+        </div>
+
+        {/* Chevrons placeholder */}
+        <div className="flex flex-col items-center mt-1 gap-1">
+          {[1, 2].map((i) => (
+            <div key={i} className="w-5 h-5 bg-white/10 rounded-full"></div>
+          ))}
         </div>
       </div>
     </div>
+    </section>
   );
 };
 

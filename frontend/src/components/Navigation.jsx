@@ -103,7 +103,7 @@ const Navigation = () => {
             </motion.div>
             <motion.h1
               onClick={() => document.getElementById("hero")?.scrollIntoView({ behavior: "smooth" })}
-              className="text-2xl font-bold font-display text-gray-600 dark:text-white"
+              className="text-2xl font-bold font-display text-black dark:text-white"
               whileHover={{ scale: 1.05 }}
             >
               Code<span className="text-[#3b82f6]">C</span>
@@ -115,7 +115,7 @@ const Navigation = () => {
               <motion.li key={section} whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.95 }}>
                 <button
                   onClick={() => document.getElementById(section)?.scrollIntoView({ behavior: "smooth" })}
-                  className="text-xl text-blue-400 dark:text-gray-300 hover:text-blue-900 dark:hover:text-white transition-colors"
+                  className="text-2xl text-black dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
                 >
                   {section.charAt(0).toUpperCase() + section.slice(1)}
                 </button>
@@ -132,7 +132,7 @@ const Navigation = () => {
                 >
                   {userPlan}
                 </motion.div>
-                <span className="text-sm text-gray-700 dark:text-gray-300">
+                <span className="text-black dark:text-white">
                   Welcome,{" "}
                   <span className="font-semibold text-[#F83002]">
                     {user.name ? user.name : user.email?.split("@")[0]}

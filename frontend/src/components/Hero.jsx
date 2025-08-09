@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { motion, useAnimation, AnimatePresence } from "framer-motion";
+import { motion, useAnimation } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { toast } from "react-hot-toast";
 import { ArrowRight, ChevronDown } from "lucide-react";
@@ -32,7 +32,7 @@ const itemVariants = {
 };
 
 const slideInVariants = {
-  hidden: { x: -120, opacity: 0 },
+  hidden: { x: 120, opacity: 0 },
   visible: {
     x: 0,
     opacity: 1,
@@ -50,14 +50,7 @@ const Hero = () => {
   const [ref, inView] = useInView({ threshold: 0.1 });
   const [isLoading, setIsLoading] = useState(true);
 
-  const texts = [
-    "Anywhere",
-    "Any Device",
-    "One Platform",
-    "The Web",
-    "Your Browser",
-  ];
-
+  const texts = ["Anywhere", "Any Device", "One Platform", "The Web", "Your Browser"];
   const [loopIndex, setLoopIndex] = useState(0);
   const [typedText, setTypedText] = useState("");
   const [charIndex, setCharIndex] = useState(0);
@@ -107,28 +100,25 @@ const Hero = () => {
       initial="hidden"
       animate={controls}
       variants={containerVariants}
-      className="relative min-h-screen flex items-center justify-center bg-[url('https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80')] bg-cover bg-center bg-no-repeat overflow-hidden pt-16 pb-24"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16 pb-24 bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 animate-gradient-x"
     >
-      {/* Overlay */}
-      <div className="absolute inset-0 bg-black/50 dark:bg-gray-900/80" />
-      
-      {/* Gradient blobs */}
-      <div className="absolute inset-0 overflow-hidden opacity-20 dark:opacity-10">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-300 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-2000 dark:bg-purple-900 dark:opacity-20" />
-        <div className="absolute top-0 right-1/4 w-96 h-96 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-4000 dark:bg-blue-900 dark:opacity-20" />
-        <div className="absolute bottom-0 left-1/2 w-96 h-96 bg-indigo-300 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob dark:bg-indigo-900 dark:opacity-20" />
+      {/* Animated background elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_20%_30%,rgba(99,102,241,0.15)_0%,transparent_25%),radial-gradient(circle_at_80%_70%,rgba(168,85,247,0.15)_0%,transparent_25%)]"></div>
+        <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-10"></div>
+        <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-gradient-to-t from-gray-900/90 via-gray-900/30 to-transparent"></div>
       </div>
 
       {/* Main content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex flex-col items-center gap-12 relative z-10 text-center">
-        {/* Text Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex flex-col lg:flex-row items-center gap-12 relative z-10">
+        {/* Left text content */}
         <motion.div
           variants={containerVariants}
-          className="w-full text-center px-4 lg:px-0"
+          className="flex-1 text-center lg:text-left"
         >
           <motion.span
             variants={itemVariants}
-            className="inline-block px-4 py-2 mb-4 text-sm font-semibold bg-white/90 backdrop-blur-sm rounded-full shadow-sm dark:bg-gray-800/80 dark:text-gray-200 text-black border border-gray-100 dark:border-gray-700"
+            className="inline-block px-4 py-2 mb-4 text-sm font-semibold bg-white/10 backdrop-blur-md rounded-full shadow-lg dark:bg-gray-800/80 text-white border border-white/20 dark:border-gray-700"
             whileHover={{ scale: 1.05 }}
           >
             🚀 Build Faster. Collaborate Better.
@@ -138,9 +128,9 @@ const Hero = () => {
             variants={containerVariants}
             className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 font-display leading-tight text-white"
           >
-            <span className="block">Develop from</span>
-            <div className="relative h-20 md:h-24 mt-10 overflow-hidden font-mono">
-              <span className="text-indigo-300 dark:text-indigo-300 text-4xl md:text-5xl">
+            <span className="block bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-300">Develop from</span>
+            <div className="relative h-20 md:h-24 mt-10 overflow-hidden">
+              <span className="text-indigo-300 text-4xl md:text-5xl font-mono font-medium">
                 {typedText}
                 <span className="animate-pulse">|</span>
               </span>
@@ -149,7 +139,7 @@ const Hero = () => {
 
           <motion.p
             variants={itemVariants}
-            className="text-gray-200 text-lg md:text-xl mb-8 max-w-2xl mx-auto leading-relaxed"
+            className="text-gray-300 text-lg md:text-xl mb-8 max-w-2xl leading-relaxed"
           >
             Transform your workflow with our real-time collaborative platform
             designed for teams to code together seamlessly.
@@ -157,18 +147,14 @@ const Hero = () => {
 
           <motion.div
             variants={itemVariants}
-            className="flex flex-wrap justify-center gap-3 mb-8"
+            className="flex flex-wrap justify-center lg:justify-start gap-3 mb-8"
           >
-            {[
-              "⚡ Live Code Sharing",
-              "👨‍💻 Multiplayer Editing",
-              "🔒 Secure & Private",
-            ].map((label, idx) => (
+            {["⚡ Live Code Sharing", "👨‍💻 Multiplayer Editing", "🔒 Secure & Private"].map((label, idx) => (
               <motion.span
                 key={idx}
                 whileHover={{ y: -3, scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
-                className="px-4 py-2 bg-white/80 backdrop-blur-sm text-gray-800 text-sm font-medium rounded-full shadow-sm border border-gray-100 dark:bg-gray-800/80 dark:text-gray-200 dark:border-gray-700"
+                className="px-4 py-2 bg-white/10 backdrop-blur-md text-white text-sm font-medium rounded-full shadow-lg border border-white/20 hover:bg-white/20 transition-all"
               >
                 {label}
               </motion.span>
@@ -177,17 +163,17 @@ const Hero = () => {
 
           <motion.div
             variants={itemVariants}
-            className="flex flex-col sm:flex-row gap-4 justify-center"
+            className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
           >
             <motion.button
               onClick={handleGetStarted}
               whileHover={{
                 scale: 1.05,
                 y: -3,
-                boxShadow: "0 10px 25px rgba(79, 70, 229, 0.3)",
+                boxShadow: "0 10px 25px rgba(79, 70, 229, 0.5)",
               }}
               whileTap={{ scale: 0.98 }}
-              className="relative inline-flex items-center px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl transition-all hover:shadow-lg text-lg font-semibold overflow-hidden group"
+              className="relative inline-flex items-center px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl transition-all hover:shadow-xl text-lg font-semibold overflow-hidden group"
             >
               <span className="relative z-10">Start Coding Now</span>
               <motion.span
@@ -201,30 +187,65 @@ const Hero = () => {
             </motion.button>
           </motion.div>
         </motion.div>
+
+        {/* Right side image */}
+        <motion.div
+          variants={slideInVariants}
+          className="flex-1 flex justify-center lg:justify-end"
+        >
+          <div className="relative">
+            <img
+              src="/hero_image.svg"
+              alt="Hero Illustration"
+              className="w-150 max-w-lg lg:max-w-xl xl:max-w-2xl object-contain relative z-10 drop-shadow-2xl"
+            />
+            <div className="absolute inset-0 bg-indigo-500/10 blur-3xl rounded-full -z-0"></div>
+          </div>
+        </motion.div>
       </div>
 
       {/* Scroll Indicator */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.5 }}
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 hidden md:block"
-      >
-        <div className="flex flex-col items-center">
-          <span className="text-sm text-gray-300 dark:text-gray-300 mb-2">
-            Scroll down
-          </span>
-          <motion.div
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
-          >
-            <ChevronDown
-              className="text-gray-300 dark:text-gray-300"
-              size={24}
-            />
-          </motion.div>
-        </div>
-      </motion.div>
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ delay: 1.5 }}
+  className="absolute bottom-8 left-1/2 transform -translate-x-1/2 hidden md:block"
+>
+  <div className="flex flex-col items-center">
+    {/* Mouse Shape */}
+    <motion.div
+      className="w-8 h-12 border-2 border-gray-300 rounded-full flex justify-center"
+      animate={{ y: [0, 5, 0] }}
+      transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+    >
+      {/* Wheel */}
+      <motion.div
+        className="w-1 h-3 bg-gray-300 rounded-full mt-2"
+        animate={{ y: [0, 6, 0], opacity: [1, 0, 1] }}
+        transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+      />
+    </motion.div>
+
+    {/* Animated Chevrons */}
+    <div className="flex flex-col items-center mt-1">
+      {[0, 0.2].map((delay, idx) => (
+        <motion.div
+          key={idx}
+          animate={{ y: [0, 5], opacity: [0.3, 1] }}
+          transition={{
+            duration: 1,
+            repeat: Infinity,
+            delay,
+            ease: "easeInOut",
+          }}
+        >
+          <ChevronDown className="text-gray-300" size={18} />
+        </motion.div>
+      ))}
+    </div>
+  </div>
+</motion.div>
+
     </motion.section>
   );
 };

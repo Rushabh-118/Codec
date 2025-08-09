@@ -84,6 +84,17 @@ const Navigation = () => {
     }
   };
 
+  const getPlanBadgeColor = (plan) => {
+    switch (plan) {
+      case "Pro":
+        return "text-blue-500";
+      case "Team":
+        return "text-purple-500";
+      default:
+        return "text-gray-500";
+    }
+  };
+
   return (
     <motion.nav
       initial={{ y: -100 }}
@@ -133,8 +144,8 @@ const Navigation = () => {
                   {userPlan}
                 </motion.div>
                 <span className="text-black dark:text-white">
-                  Welcome,{" "}
-                  <span className={`font-semibold px-3 ${getPlanBadgeStyle(userPlan)}`}>
+                  Welcome,
+                  <span className={` underline font-semibold px-3 ${getPlanBadgeColor(userPlan)}`}>
                     {user.name ? user.name : user.email?.split("@")[0]}
                   </span>
                 </span>

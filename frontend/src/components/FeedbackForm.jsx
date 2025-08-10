@@ -138,6 +138,7 @@ const FeedbackForm = () => {
             <DotLottieReact
               src="https://lottie.host/77152b8e-09a3-4439-a2d8-414a11d40be6/uIN5YSUswm.lottie"
               autoplay
+              loop
               style={{ width: 180, height: 180 }}
             />
           </motion.div>

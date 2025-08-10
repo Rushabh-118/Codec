@@ -198,12 +198,9 @@ const CTA = () => {
             >
               <div className="flex -space-x-2">
                 {[1, 2, 3].map((item) => (
-                  <img
+                  <div
                     key={item}
-                    src={`https://randomuser.me/api/portraits/${
-                      item % 2 === 0 ? "women" : "men"
-                    }/${item + 20}.jpg`}
-                    className="w-8 h-8 rounded-full border-2 border-white dark:border-gray-800"
+                    className="w-8 h-8 bg-black dark:bg-white rounded-full border-2 border-white dark:border-gray-800"
                     alt="User"
                   />
                 ))}

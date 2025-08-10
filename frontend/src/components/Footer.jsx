@@ -50,7 +50,7 @@ const Footer = () => {
         <div className="grid md:grid-cols-4 gap-12">
           <motion.div variants={itemVariants} className="md:col-span-2">
             <div className="flex items-center gap-3 mb-6">
-              <motion.div whileHover={{ rotate: 15, scale: 1.1 }}>
+              <motion.div whileHover={{ rotate: 360, scale: 1.5 }}>
                 <MonitorCog className="text-[#3b82f6]" size={28} />
               </motion.div>
               <h3 className="text-2xl font-bold">

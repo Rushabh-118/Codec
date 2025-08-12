@@ -11,7 +11,7 @@ import EmojiPicker from 'emoji-picker-react';
 
 const socket =
   import.meta.env.MODE === "development"
-    ? io("http://localhost:5001")
+    ? io(import.meta.env.VITE_BACKEND_URL)
     : io("https://codec-backend.onrender.com");
 
 // Default code templates for each language

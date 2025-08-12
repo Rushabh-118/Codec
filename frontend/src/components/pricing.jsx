@@ -80,7 +80,7 @@ const Pricing = () => {
       toast.success("Free plan selected! No payment required.");
       if (userId) {
         // Update plan in DB
-        await fetch("http://localhost:5001/api/user/plan", {
+        await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/user/plan`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ userId, plan }),
@@ -96,7 +96,7 @@ const Pricing = () => {
     }
 
     try {
-      const res = await fetch("http://localhost:5001/create-checkout-session", {
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/create-checkout-session`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ plan }),
@@ -113,7 +113,7 @@ const Pricing = () => {
       sessionStorage.setItem("lastSelectedPlan", plan);
       // Update plan in DB after payment success (should be handled on backend webhook ideally)
       if (userId) {
-        await fetch("http://localhost:5001/api/user/plan", {
+        await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/user/plan`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ userId, plan }),

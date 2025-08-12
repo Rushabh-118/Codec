@@ -6,8 +6,8 @@ import Particles from 'react-tsparticles';
 import { loadFull } from 'tsparticles';
 import axios from 'axios';
 
-const url = process.env.NODE_ENV === 'development' 
-  ? 'http://localhost:5001' 
+const url = import.meta.env.MODE === 'development' 
+  ? import.meta.env.VITE_BACKEND_URL 
   : 'https://codec-backend.onrender.com';
 
 const Signup = () => {

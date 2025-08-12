@@ -68,7 +68,7 @@ const Navigation = () => {
     }
   };
 
-  const navLinks = ["features", "pricing", "feedback"];
+  const navLinks = ["features", "pricing", "Feedback"];
 
   return (
     <motion.nav
@@ -87,7 +87,8 @@ const Navigation = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
             <motion.div whileHover={{ rotate: 360, scale: 1.5 }} whileTap={{ scale: 0.9 }}>
-              <MonitorCog className="text-[#3b82f6]" size={28} />
+              <MonitorCog onClick={() => document.getElementById("hero")?.scrollIntoView({ behavior: "smooth" })}
+               className="text-[#3b82f6]" size={28} />
             </motion.div>
             <motion.h1
               onClick={() => document.getElementById("hero")?.scrollIntoView({ behavior: "smooth" })}

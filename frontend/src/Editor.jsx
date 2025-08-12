@@ -1624,40 +1624,44 @@ const Editor1 = () => {
         <div
           style={{ display: "flex", flexDirection: "column", height: "40%" }}
         >
-          <textarea
-            className="user-input"
-            placeholder="Enter input for your program here..."
-            value={userInput}
-            onChange={(e) => setUserInput(e.target.value)}
-            style={{
-              flex: 1,
-              padding: "12px",
-              border: "none",
-              borderTop: darkMode ? "1px solid #374151" : "1px solid #e5e7eb",
-              resize: "none",
-              backgroundColor: darkMode ? "#1f2937" : "#ffffff",
-              color: darkMode ? "#f3f4f6" : "#111827",
-              outline: "none",
-              fontFamily: "monospace",
-              fontSize: "14px",
-            }}
-          />
-
-          <button
-            className="run-btn"
-            onClick={runCode}
-            style={{
-              padding: "10px",
-              border: "none",
-              background: darkMode ? "#1e40af" : "#2563eb",
-              color: "#ffffff",
-              cursor: "pointer",
-              fontWeight: "500",
-              transition: "all 0.2s ease",
-            }}
-          >
-            Execute
-          </button>
+          <div style={{ display: "flex", alignItems: "stretch", borderTop: darkMode ? "1px solid #374151" : "1px solid #e5e7eb" }}>
+            <textarea
+              className="user-input"
+              placeholder="Enter input for your program here..."
+              value={userInput}
+              onChange={(e) => setUserInput(e.target.value)}
+              style={{
+                flex: 1,
+                padding: "12px",
+                border: "none",
+                borderRight: darkMode ? "1px solid #374151" : "1px solid #e5e7eb", // Add right border
+                resize: "none",
+                backgroundColor: darkMode ? "#1f2937" : "#ffffff",
+                color: darkMode ? "#f3f4f6" : "#111827",
+                outline: "none",
+                fontFamily: "monospace",
+                fontSize: "14px",
+                height: "auto", 
+              }}
+            />
+            <button
+              className="run-btn"
+              onClick={runCode}
+              style={{
+                padding: "12px 20px", 
+                border: "none",
+                background: darkMode ? "#1e40af" : "#2563eb",
+                color: "#ffffff",
+                cursor: "pointer",
+                fontWeight: "500",
+                transition: "all 0.2s ease",
+                whiteSpace: "nowrap",
+                height: "auto", 
+              }}
+            >
+              Execute
+            </button>
+          </div>
 
           <textarea
             className="output-console"

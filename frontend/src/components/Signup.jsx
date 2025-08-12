@@ -6,6 +6,10 @@ import Particles from 'react-tsparticles';
 import { loadFull } from 'tsparticles';
 import axios from 'axios';
 
+const url = process.env.NODE_ENV === 'development' 
+  ? 'http://localhost:5001' 
+  : 'https://codec-backend.onrender.com';
+
 const Signup = () => {
   const particlesInit = async (engine) => {
     await loadFull(engine);
@@ -95,7 +99,7 @@ const Signup = () => {
     setLoading(true);
 
     try {
-      const res = await axios.post('http://localhost:5001/api/auth/signup', {
+      const res = await axios.post(`${url}/api/auth/signup`, {
         name: form.name,
         email: form.email,
         password: form.password

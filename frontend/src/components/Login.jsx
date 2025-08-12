@@ -6,6 +6,10 @@ import Particles from 'react-tsparticles';
 import { loadFull } from 'tsparticles';
 import axios from 'axios';
 
+const url = process.env.NODE_ENV === 'development' 
+  ? 'http://localhost:5001' 
+  : 'https://codec-backend.onrender.com';
+
 const Login = () => {
   const particlesInit = async (engine) => {
     await loadFull(engine);
@@ -87,7 +91,7 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const res = await axios.post('http://localhost:5001/api/auth/login', form);
+      const res = await axios.post(`${url}/api/auth/login`, form);
       const { token, user } = res.data;
       localStorage.setItem('token', token);
       // On successful login, store user with plan in localStorage

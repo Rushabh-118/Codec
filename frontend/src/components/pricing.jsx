@@ -50,6 +50,8 @@ const Pricing = () => {
   const [ref, inView] = useInView({ threshold: 0.1 });
   const [selectedPlan, setSelectedPlan] = useState(null);
   const [hoveredPlan, setHoveredPlan] = useState(null);
+  const [couponCodes, setCouponCodes] = useState({}); // { planIndex: code }
+  const [discountedPrices, setDiscountedPrices] = useState({}); // { planIndex: price }
 
   useEffect(() => {
     if (inView) {
@@ -95,11 +97,18 @@ const Pricing = () => {
       return;
     }
 
+    // Get discounted price if available
+    let priceToPay = null;
+    const planIndex = ["Free", "Pro", "Team"].indexOf(plan);
+    if (discountedPrices[planIndex] !== undefined) {
+      priceToPay = discountedPrices[planIndex] * 100; // Convert rupees to paise
+    }
+
     try {
       const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/create-checkout-session`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ plan }),
+        body: JSON.stringify({ plan, price: priceToPay }),
       });
 
       if (!res.ok) {
@@ -159,7 +168,7 @@ const Pricing = () => {
           variants={containerVariants}
           className="grid md:grid-cols-3 gap-8 items-end"
         >
-          {[
+          {[ 
             {
               plan: "Free",
               price: 0,
@@ -207,7 +216,13 @@ const Pricing = () => {
               textColor: "text-white",
               delay: 0.3,
             },
-          ].map((tier, i) => (
+          ].map((tier, i) => {
+            // Calculate discounted price if coupon applied
+            let displayPrice = tier.price;
+            if (discountedPrices[i] !== undefined) {
+              displayPrice = discountedPrices[i];
+            }
+            return (
             <motion.div
               key={i}
               variants={slideUpVariants}
@@ -244,13 +259,40 @@ const Pricing = () => {
 
                   <div className="mb-6 text-black dark:text-white">
                     <p className="text-4xl font-bold mb-1">
-                      ₹{tier.price.toLocaleString("en-IN")}
+                      ₹{displayPrice.toLocaleString("en-IN")}
                       <span className="text-lg font-normal"> /mo</span>
                     </p>
                     {tier.price > 0 && (
                       <p className="text-sm text-gray-500 dark:text-gray-400">
                         GST Included
                       </p>
+                    )}
+                    {/* Coupon code input for paid plans */}
+                    {tier.price > 0 && (
+                      <div className="mt-2">
+                        <input
+                          type="text"
+                          placeholder="Enter coupon code"
+                          value={couponCodes[i] || ""}
+                          onChange={e => {
+                            const code = e.target.value;
+                            setCouponCodes(prev => ({ ...prev, [i]: code }));
+                            // If code is 'SAVE10', apply 10% discount
+                            if (code.trim().toUpperCase() === "SAVE10") {
+                              setDiscountedPrices(prev => ({ ...prev, [i]: Math.round(tier.price * 0.9) }));
+                              toast.success("Coupon applied! 10% discount.");
+                            } else {
+                              setDiscountedPrices(prev => {
+                                const copy = { ...prev };
+                                delete copy[i];
+                                return copy;
+                              });
+                            }
+                          }}
+                          className="border text-black rounded px-2 py-1 text-sm w-36 mr-2"
+                        />
+                        <span className="text-xs text-gray-500">Use code <b>SAVE10</b> for 10% off</span>
+                      </div>
                     )}
                   </div>
 
@@ -315,7 +357,8 @@ const Pricing = () => {
                 </div>
               </motion.div>
             </motion.div>
-          ))}
+          );
+          })}
         </motion.div>
 
         <motion.div

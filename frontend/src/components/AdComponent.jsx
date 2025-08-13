@@ -29,7 +29,7 @@ const AdComponent = () => {
     {
       id: 3,
       title: "🎉 Limited Time Offer",
-      content: "Get 20% off your first year! Offer ends soon!",
+      content: "Get 10% off your first year! Offer ends soon!",
       cta: "Claim Discount",
       link: "#pricing",
       bg: "bg-gradient-to-r from-red-500 to-pink-600",

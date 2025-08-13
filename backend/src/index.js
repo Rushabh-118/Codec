@@ -47,10 +47,17 @@ const plans = {
 };
 
 app.post("/create-checkout-session", async (req, res) => {
-  const { plan } = req.body;
+  const { plan, price } = req.body;
   const selected = plans[plan];
 
   if (!selected) return res.status(400).json({ error: "Invalid plan selected" });
+
+  // Use discounted price if provided and valid
+  let finalPrice = selected.price;
+  if (typeof price === "number" && price > 0 && price < selected.price) {
+    finalPrice = price * 100; // Convert to paise if price is in rupees
+    if (price > 1000) finalPrice = price; // If already in paise
+  }
 
   try {
     const session = await stripe.checkout.sessions.create({
@@ -59,11 +66,11 @@ app.post("/create-checkout-session", async (req, res) => {
       line_items: [
         {
           price_data: {
-            currency: "inr", // INR currency
+            currency: "inr",
             product_data: {
               name: `${selected.name} Plan`,
             },
-            unit_amount: selected.price,
+            unit_amount: finalPrice,
             recurring: {
               interval: "month",
             },

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { loadStripe } from "@stripe/stripe-js";
 import { toast } from "react-hot-toast";
 import { motion, useAnimation } from "framer-motion";
@@ -42,7 +43,7 @@ const slideUpVariants = {
 };
 
 const stripePromise = loadStripe(
-  "pk_test_51Qir0GSAr3AIYJYDvsWQeUu1nqEzqEWY5HYBkWxeijRYjVzw02BMpWy3j1xQbN5WYVyZi8FUZT6NIav7WiP9Q5Fp005ZV3WYa6"
+  import.meta.env.VITE_STRIPE_PUBLIC_KEY
 );
 
 const Pricing = () => {
@@ -52,6 +53,7 @@ const Pricing = () => {
   const [hoveredPlan, setHoveredPlan] = useState(null);
   const [couponCodes, setCouponCodes] = useState({}); // { planIndex: code }
   const [discountedPrices, setDiscountedPrices] = useState({}); // { planIndex: price }
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (inView) {
@@ -69,6 +71,14 @@ const Pricing = () => {
   }, []);
 
   const handleCheckout = async (plan) => {
+    // Only check login for paid plans
+    if (plan === "Pro" || plan === "Team") {
+      const storedUser = localStorage.getItem("user");
+      if (!storedUser) {
+        navigate("/login", { replace: true });
+        return;
+      }
+    }
     setSelectedPlan(plan);
 
     const storedUser = localStorage.getItem("user");

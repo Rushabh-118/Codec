@@ -176,7 +176,6 @@ const Pricing = () => {
                 "3 Rooms per Day",
                 "Basic Support",
                 "Limited Collaboration",
-                "Community Access",
               ],
               description: "Perfect for individuals",
               color:
@@ -206,7 +205,6 @@ const Pricing = () => {
               features: [
                 "Unlimited Rooms",
                 "Team Management",
-                "Analytics Dashboard",
                 "In Room Chat",
                 "Dedicated Support",
               ],

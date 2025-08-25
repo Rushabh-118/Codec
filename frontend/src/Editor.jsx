@@ -7,7 +7,7 @@ import { toast, ToastContainer } from "react-toastify";
 import { v4 as uuid } from "uuid";
 import { saveAs } from "file-saver";
 import { FiCopy, FiSun, FiMoon, FiTrash2 } from "react-icons/fi";
-import EmojiPicker from 'emoji-picker-react';
+import EmojiPicker from "emoji-picker-react";
 
 const socket =
   import.meta.env.MODE === "development"
@@ -435,187 +435,197 @@ const Editor1 = () => {
   };
 
   useEffect(() => {
-  const handleClickOutside = (event) => {
-    if (showEmojiPicker && !event.target.closest('.emoji-picker')) {
-      setShowEmojiPicker(false);
-    }
-  };
-  document.addEventListener('mousedown', handleClickOutside);
-  return () => document.removeEventListener('mousedown', handleClickOutside);
-}, [showEmojiPicker]);
+    const handleClickOutside = (event) => {
+      if (showEmojiPicker && !event.target.closest(".emoji-picker")) {
+        setShowEmojiPicker(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [showEmojiPicker]);
 
   if (!joined) {
     return (
       <div
-        className={`min-h-screen ${
-          darkMode ? "bg-gray-900" : "bg-gray-50"
-        } flex items-center justify-center p-4`}
+        className={`min-h-screen relative flex items-center justify-center p-6 overflow-hidden ${
+          darkMode
+            ? "bg-gradient-to-br from-gray-900 via-gray-800 to-black"
+            : "bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100"
+        }`}
       >
-        <div className="w-full max-w-6xl">
+        {/* Background Gradient Overlay */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(99,102,241,0.25),transparent_40%),radial-gradient(circle_at_bottom_right,rgba(236,72,153,0.25),transparent_40%)] blur-2xl"></div>
+
+        <div className="w-full max-w-6xl relative z-10">
           <div
-            className={`flex flex-col lg:flex-row gap-8 rounded-xl shadow-lg overflow-hidden ${
-              darkMode ? "bg-gray-800" : "bg-white"
+            className={`flex flex-col lg:flex-row gap-8 rounded-2xl shadow-2xl backdrop-blur-xl overflow-hidden border ${
+              darkMode
+                ? "bg-gray-800/70 border-gray-700"
+                : "bg-white/70 border-gray-200"
             }`}
           >
             {/* Left Side - Features */}
             <div
-              className={`lg:w-1/2 p-8 ${
-                darkMode ? "bg-gray-700" : "bg-indigo-50"
+              className={`lg:w-1/2 p-10 flex flex-col justify-between ${
+                darkMode
+                  ? "bg-gradient-to-br from-gray-700/80 to-gray-800/70"
+                  : "bg-gradient-to-br from-indigo-50 to-purple-50"
               }`}
             >
-              <div className="h-full flex flex-col">
-                <Link to="/" className="self-start mb-6">
-                  <button
-                    className={`p-2 rounded-full transition-colors duration-200 ${
-                      darkMode
-                        ? "text-indigo-300 hover:bg-gray-600"
-                        : "text-indigo-600 hover:bg-indigo-600 hover:text-white"
-                    }`}
+              <Link to="/" className="self-start mb-6">
+                <button
+                  className={`p-2 rounded-full transition duration-300 shadow-md ${
+                    darkMode
+                      ? "text-indigo-300 hover:bg-gray-600 hover:scale-105"
+                      : "text-indigo-600 hover:bg-indigo-600 hover:text-white hover:scale-105"
+                  }`}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
+                    <path
+                      fillRule="evenodd"
+                      d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </button>
+              </Link>
+
+              <div className="flex-grow">
+                <h1
+                  className={`text-4xl font-extrabold mb-3 ${
+                    darkMode ? "text-white" : "text-gray-900"
+                  }`}
+                >
+                  Code Collaboration{" "}
+                  <span className="bg-gradient-to-r from-indigo-500 to-pink-500 bg-clip-text text-transparent">
+                    Made Simple
+                  </span>
+                </h1>
+                <p
+                  className={`text-lg mb-8 ${
+                    darkMode ? "text-gray-300" : "text-gray-600"
+                  }`}
+                >
+                  Real-time editing with your team
+                </p>
+
+                <div className="space-y-6">
+                  <div className="flex items-start">
+                    <div
+                      className={`p-3 rounded-lg mr-4 shadow-md transition ${
+                        darkMode
+                          ? "bg-gray-600/70 group-hover:bg-indigo-600/30"
+                          : "bg-white"
+                      }`}
                     >
-                      <path
-                        fillRule="evenodd"
-                        d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </button>
-                </Link>
-
-                <div className="flex-grow">
-                  <h1
-                    className={`text-3xl font-bold mb-2 ${
-                      darkMode ? "text-white" : "text-gray-900"
-                    }`}
-                  >
-                    Code Collaboration Made Simple
-                  </h1>
-                  <p
-                    className={`text-lg mb-8 ${
-                      darkMode ? "text-gray-300" : "text-gray-600"
-                    }`}
-                  >
-                    Real-time editing with your team
-                  </p>
-
-                  <div className="space-y-6">
-                    <div className="flex items-start">
-                      <div
-                        className={`p-3 rounded-lg mr-4 shadow-sm ${
-                          darkMode ? "bg-gray-600" : "bg-white"
-                        }`}
+                      <svg
+                        className="h-6 w-6 text-indigo-600"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
                       >
-                        <svg
-                          className="h-6 w-6 text-indigo-600"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M13 10V3L4 14h7v7l9-11h-7z"
-                          />
-                        </svg>
-                      </div>
-                      <div>
-                        <h3
-                          className={`font-semibold ${
-                            darkMode ? "text-white" : "text-gray-900"
-                          }`}
-                        >
-                          Real-time Sync
-                        </h3>
-                        <p
-                          className={
-                            darkMode ? "text-gray-300" : "text-gray-600"
-                          }
-                        >
-                          See changes instantly as you code together
-                        </p>
-                      </div>
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M13 10V3L4 14h7v7l9-11h-7z"
+                        />
+                      </svg>
                     </div>
-
-                    <div className="flex items-start">
-                      <div
-                        className={`p-3 rounded-lg mr-4 shadow-sm ${
-                          darkMode ? "bg-gray-600" : "bg-white"
+                    <div>
+                      <h3
+                        className={`font-semibold ${
+                          darkMode ? "text-white" : "text-gray-900"
                         }`}
                       >
-                        <svg
-                          className="h-6 w-6 text-indigo-600"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                          />
-                        </svg>
-                      </div>
-                      <div>
-                        <h3
-                          className={`font-semibold ${
-                            darkMode ? "text-white" : "text-gray-900"
-                          }`}
-                        >
-                          Multi-language Support
-                        </h3>
-                        <p
-                          className={
-                            darkMode ? "text-gray-300" : "text-gray-600"
-                          }
-                        >
-                          Supports all major programming languages
-                        </p>
-                      </div>
+                        Real-time Sync
+                      </h3>
+                      <p
+                        className={darkMode ? "text-gray-300" : "text-gray-600"}
+                      >
+                        See changes instantly as you code together
+                      </p>
                     </div>
+                  </div>
 
-                    <div className="flex items-start">
-                      <div
-                        className={`p-3 rounded-lg mr-4 shadow-sm ${
-                          darkMode ? "bg-gray-600" : "bg-white"
+                  <div className="flex items-start">
+                    <div
+                      className={`p-3 rounded-lg mr-4 shadow-md transition ${
+                        darkMode
+                          ? "bg-gray-600/70 group-hover:bg-indigo-600/30"
+                          : "bg-white"
+                      }`}
+                    >
+                      <svg
+                        className="h-6 w-6 text-indigo-600"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                        />
+                      </svg>
+                    </div>
+                    <div>
+                      <h3
+                        className={`font-semibold ${
+                          darkMode ? "text-white" : "text-gray-900"
                         }`}
                       >
-                        <svg
-                          className="h-6 w-6 text-indigo-600"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                          />
-                        </svg>
-                      </div>
-                      <div>
-                        <h3
-                          className={`font-semibold ${
-                            darkMode ? "text-white" : "text-gray-900"
-                          }`}
-                        >
-                          Secure Rooms
-                        </h3>
-                        <p
-                          className={
-                            darkMode ? "text-gray-300" : "text-gray-600"
-                          }
-                        >
-                          End-to-end encrypted collaboration
-                        </p>
-                      </div>
+                        Multi-language Support
+                      </h3>
+                      <p
+                        className={darkMode ? "text-gray-300" : "text-gray-600"}
+                      >
+                        Supports all major programming languages
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start">
+                    <div
+                      className={`p-3 rounded-lg mr-4 shadow-md transition ${
+                        darkMode
+                          ? "bg-gray-600/70 group-hover:bg-indigo-600/30"
+                          : "bg-white"
+                      }`}
+                    >
+                      <svg
+                        className="h-6 w-6 text-indigo-600"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                        />
+                      </svg>
+                    </div>
+                    <div>
+                      <h3
+                        className={`font-semibold ${
+                          darkMode ? "text-white" : "text-gray-900"
+                        }`}
+                      >
+                        Secure Rooms
+                      </h3>
+                      <p
+                        className={darkMode ? "text-gray-300" : "text-gray-600"}
+                      >
+                        End-to-end encrypted collaboration
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -624,14 +634,14 @@ const Editor1 = () => {
 
             {/* Right Side - Room Form */}
             <div
-              className={`lg:w-1/2 p-8 flex items-center justify-center ${
-                darkMode ? "bg-gray-800" : "bg-white"
+              className={`lg:w-1/2 p-10 flex items-center justify-center ${
+                darkMode ? "bg-gray-900/70" : "bg-white/80"
               }`}
             >
               <div className="w-full max-w-md">
                 <div className="text-center mb-8">
                   <h1
-                    className={`text-2xl font-bold ${
+                    className={`text-3xl font-bold ${
                       darkMode ? "text-white" : "text-gray-900"
                     }`}
                   >
@@ -653,7 +663,7 @@ const Editor1 = () => {
                       id="roomId"
                       value={roomId}
                       onChange={(e) => setRoomId(e.target.value)}
-                      className={`peer w-full px-4 py-2 border-0 border-b-2 rounded-t-lg focus:ring-0 focus:border-indigo-600 ${
+                      className={`peer w-full px-4 py-2 border-0 border-b-2 rounded-t-lg focus:ring-0 focus:border-indigo-600 transition-all ${
                         darkMode
                           ? "text-white bg-gray-700 border-gray-600 placeholder-gray-400"
                           : "text-black bg-gray-50 border-gray-300 placeholder-gray-500"
@@ -669,7 +679,7 @@ const Editor1 = () => {
                       id="userName"
                       value={userName}
                       onChange={(e) => setUserName(e.target.value)}
-                      className={`peer w-full px-4 py-2 border-0 border-b-2 rounded-t-lg focus:ring-0 focus:border-indigo-600 ${
+                      className={`peer w-full px-4 py-2 border-0 border-b-2 rounded-t-lg focus:ring-0 focus:border-indigo-600 transition-all ${
                         darkMode
                           ? "text-white bg-gray-700 border-gray-600 placeholder-gray-400"
                           : "text-black bg-gray-50 border-gray-300 placeholder-gray-500"
@@ -695,7 +705,7 @@ const Editor1 = () => {
                     <Link to="/api/editor" className="flex-1">
                       <button
                         onClick={joinRoom}
-                        className={`w-full px-4 py-2.5 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors duration-200 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed ${
+                        className={`w-full px-4 py-2.5 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors duration-200 active:scale-[0.98] ${
                           darkMode ? "bg-indigo-700 hover:bg-indigo-800" : ""
                         }`}
                         disabled={!roomId || !userName}
@@ -1461,7 +1471,11 @@ const Editor1 = () => {
                   <div className="absolute bottom-16 left-4 z-10 emoji-picker">
                     <EmojiPicker
                       onEmojiClick={(emojiObject, event) => {
-                        setChatInput((prev) => prev + (emojiObject.emoji || emojiObject.native || ""));
+                        setChatInput(
+                          (prev) =>
+                            prev +
+                            (emojiObject.emoji || emojiObject.native || "")
+                        );
                       }}
                       width={300}
                       height={350}
@@ -1624,7 +1638,13 @@ const Editor1 = () => {
         <div
           style={{ display: "flex", flexDirection: "column", height: "40%" }}
         >
-          <div style={{ display: "flex", alignItems: "stretch", borderTop: darkMode ? "1px solid #374151" : "1px solid #e5e7eb" }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "stretch",
+              borderTop: darkMode ? "1px solid #374151" : "1px solid #e5e7eb",
+            }}
+          >
             <textarea
               className="user-input"
               placeholder="Enter input for your program here..."
@@ -1634,21 +1654,23 @@ const Editor1 = () => {
                 flex: 1,
                 padding: "12px",
                 border: "none",
-                borderRight: darkMode ? "1px solid #374151" : "1px solid #e5e7eb", // Add right border
+                borderRight: darkMode
+                  ? "1px solid #374151"
+                  : "1px solid #e5e7eb", // Add right border
                 resize: "none",
                 backgroundColor: darkMode ? "#1f2937" : "#ffffff",
                 color: darkMode ? "#f3f4f6" : "#111827",
                 outline: "none",
                 fontFamily: "monospace",
                 fontSize: "14px",
-                height: "auto", 
+                height: "auto",
               }}
             />
             <button
               className="run-btn"
               onClick={runCode}
               style={{
-                padding: "12px 20px", 
+                padding: "12px 20px",
                 border: "none",
                 background: darkMode ? "#1e40af" : "#2563eb",
                 color: "#ffffff",
@@ -1656,7 +1678,7 @@ const Editor1 = () => {
                 fontWeight: "500",
                 transition: "all 0.2s ease",
                 whiteSpace: "nowrap",
-                height: "auto", 
+                height: "auto",
               }}
             >
               Execute

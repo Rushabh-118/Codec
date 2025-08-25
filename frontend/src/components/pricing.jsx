@@ -283,24 +283,38 @@ const Pricing = () => {
                           placeholder="Enter coupon code"
                           value={couponCodes[i] || ""}
                           onChange={e => {
-                            const code = e.target.value;
+                            const code = e.target.value.trim().toUpperCase();
                             setCouponCodes(prev => ({ ...prev, [i]: code }));
-                            // If code is 'SAVE10', apply 10% discount
-                            if (code.trim().toUpperCase() === "SAVE10") {
-                              setDiscountedPrices(prev => ({ ...prev, [i]: Math.round(tier.price * 0.9) }));
-                              toast.success("Coupon applied! 10% discount.");
+                            let discount = null;
+                            let message = "";
+                            if (code === "SAVE10") {
+                              discount = 0.9;
+                              message = "Coupon applied! 10% discount.";
+                            } else if (code === "TEAM20" && tier.plan === "Team") {
+                              discount = 0.8;
+                              message = "Coupon applied! 20% off Team plan.";
+                            } else if (code === "TEAM20" && tier.plan !== "Team") {
+                              discount = null;
+                              message = "TEAM20 is only valid for Team plan.";
+                            } 
+
+                            if (discount) {
+                              setDiscountedPrices(prev => ({ ...prev, [i]: Math.round(tier.price * discount) }));
+                              toast.success(message);
                             } else {
                               setDiscountedPrices(prev => {
                                 const copy = { ...prev };
                                 delete copy[i];
                                 return copy;
                               });
+                              if (message) toast.error(message);
                             }
                           }}
                           className="border text-black rounded px-2 py-1 text-sm w-36 mr-2"
                         />
-                        <span className="text-xs text-gray-500">Use code <b>SAVE10</b> for 10% off</span>
+                        <span>Enter coupon code for {tier.plan} discount!</span>
                       </div>
+                      
                     )}
                   </div>
 

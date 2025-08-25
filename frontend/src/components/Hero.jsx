@@ -110,12 +110,12 @@ const Hero = () => {
         playsInline
         className="absolute inset-0 w-full h-full object-cover -z-10"
       >
-        <source src="/backG.mp4" type="video/mp4" />
+        <source src="/bg.mp4" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
       
-      {/* Gradient overlay */}
-<div className="absolute inset-0 bg-gradient-to-br from-indigo-900/70 via-purple-800/60 to-pink-700/50"></div>
+      {/* Gradient overlay
+      <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/70 via-purple-800/60 to-pink-700/50"></div> */}
 
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden">
@@ -205,21 +205,6 @@ const Hero = () => {
               <span className="absolute inset-0 bg-gradient-to-r from-indigo-700 to-purple-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             </motion.button>
           </motion.div>
-        </motion.div>
-
-        {/* Right side image */}
-        <motion.div
-          variants={slideInVariants}
-          className="flex-1 flex justify-center lg:justify-end"
-        >
-          <div className="relative">
-            <img
-              src="/hero_image.svg"
-              alt="Hero Illustration"
-              className="max-w-lg lg:max-w-xl xl:max-w-2xl object-contain relative z-10 drop-shadow-2xl"
-            />
-            <div className="absolute inset-0 bg-indigo-500/10 blur-3xl rounded-full -z-0"></div>
-          </div>
         </motion.div>
       </div>
 

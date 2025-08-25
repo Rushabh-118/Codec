@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 const SkeletonHero = () => {
   return (
     <section
-      className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16 pb-24 bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 animate-gradient-x"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16 pb-24 bg-gradient-to-br from-black animate-gradient-x"
     >
       {/* Animated background */}
       <div className="absolute inset-0 overflow-hidden">

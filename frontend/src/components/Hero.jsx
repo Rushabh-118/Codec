@@ -102,27 +102,24 @@ const Hero = () => {
       variants={containerVariants}
       className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16 pb-24"
     >
-      {/* Video Background */}
-      <video
-        autoPlay
-        loop
-        muted
-        playsInline
+      {/* Video Background with fade-in animation */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1.2 }}
         className="absolute inset-0 w-full h-full object-cover -z-10"
       >
-        <source src="/bg.mp4" type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
-      
-      {/* Gradient overlay
-      <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/70 via-purple-800/60 to-pink-700/50"></div> */}
-
-      {/* Animated background elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_20%_30%,rgba(99,102,241,0.15)_0%,transparent_25%),radial-gradient(circle_at_80%_70%,rgba(168,85,247,0.15)_0%,transparent_25%)]"></div>
-        <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-10"></div>
-        <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-gradient-to-t from-gray-900/90 via-gray-900/30 to-transparent"></div>
-      </div>
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="w-full h-full object-cover"
+        >
+          <source src="/bg.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      </motion.div>
 
       {/* Main content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex flex-col lg:flex-row items-center gap-12 relative z-10">

@@ -100,15 +100,22 @@ const Hero = () => {
       initial="hidden"
       animate={controls}
       variants={containerVariants}
-      style={{
-        backgroundImage: "url('/background.png')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
       className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16 pb-24"
     >
+      {/* Video Background */}
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover -z-10"
+      >
+        <source src="/backG.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+      
       {/* Gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-gray-900/80 via-blue-900/70 to-purple-900/70"></div>
+<div className="absolute inset-0 bg-gradient-to-br from-indigo-900/70 via-purple-800/60 to-pink-700/50"></div>
 
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden">
@@ -136,7 +143,9 @@ const Hero = () => {
             variants={containerVariants}
             className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 font-display leading-tight text-white"
           >
-            <span className="block bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-300">Develop from</span>
+            <span className="block bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-300">
+              Develop from
+            </span>
             <div className="relative h-20 md:h-24 mt-10 overflow-hidden">
               <span className="text-indigo-300 text-4xl md:text-5xl font-mono font-medium">
                 {typedText}
@@ -157,16 +166,18 @@ const Hero = () => {
             variants={itemVariants}
             className="flex flex-wrap justify-center lg:justify-start gap-3 mb-8"
           >
-            {["⚡ Live Code Sharing", "👨‍💻 Multiplayer Editing", "🔒 Secure & Private"].map((label, idx) => (
-              <motion.span
-                key={idx}
-                whileHover={{ y: -3, scale: 1.03 }}
-                whileTap={{ scale: 0.97 }}
-                className="px-4 py-2 bg-white/10 backdrop-blur-md text-white text-sm font-medium rounded-full shadow-lg border border-white/20 hover:bg-white/20 transition-all"
-              >
-                {label}
-              </motion.span>
-            ))}
+            {["⚡ Live Code Sharing", "👨‍💻 Multiplayer Editing", "🔒 Secure & Private"].map(
+              (label, idx) => (
+                <motion.span
+                  key={idx}
+                  whileHover={{ y: -3, scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
+                  className="px-4 py-2 bg-white/10 backdrop-blur-md text-white text-sm font-medium rounded-full shadow-lg border border-white/20 hover:bg-white/20 transition-all"
+                >
+                  {label}
+                </motion.span>
+              )
+            )}
           </motion.div>
 
           <motion.div

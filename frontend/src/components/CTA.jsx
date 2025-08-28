@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
+// import lottieGif from "../assets/lottigif.gif";
 import { useNavigate } from "react-router-dom";
 import { motion, useAnimation } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { toast } from "react-hot-toast";
 import { ArrowRight, Zap, Sparkles } from "lucide-react";
-import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
 const fadeInVariants = {
   hidden: { opacity: 0 },
@@ -219,11 +219,15 @@ const CTA = () => {
             >
               <div className="absolute -inset-4 bg-gradient-to-r from-blue-400 to-purple-500 rounded-2xl opacity-20 blur-xl"></div>
               <div className="relative overflow-hidden h-full w-full">
-                <DotLottieReact
-                  src="https://lottie.host/3f4633e3-4926-4e4b-ba7f-2a7ecf7ff111/sMfrxScZia.json"
-                  loop
-                  autoplay
-                />
+                  <iframe
+                    src="https://lottie.host/embed/31791ad8-6d95-44f7-b6a5-90301753a49f/aQADaiEEe3.lottie"
+                    title="Lottie Animation"
+                    width="600"
+                    height="600"
+                    className="object-contain rounded-2xl"
+                    style={{ border: 'none', display: 'block', margin: '0 auto' }}
+                    allowFullScreen
+                  />
               </div>
             </motion.div>
           </div>

@@ -126,7 +126,7 @@ const Navigation = () => {
                 <span className="text-gray-600 dark:text-white font-bold">
                   Hi,{" "}
                   <span className="underline font-semibold text-blue-500">
-                    {user.name || user.email?.split("@")[0]}
+                    {user.name.split(" ")[0] || user.email?.split("@")[0]}
                   </span>
                 </span>
                 <motion.button

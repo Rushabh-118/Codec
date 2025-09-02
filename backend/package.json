@@ -6,13 +6,15 @@
   "scripts": {
     "dev": "nodemon src/index.js",
     "start": "node src/index.js",
-    "build" : "npm run build"
+    "build": "npm run build"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@google/genai": "^1.16.0",
+    "@google/generative-ai": "^0.24.1",
     "axios": "^1.10.0",
     "backend": "file:",
     "bcrypt": "^6.0.0",

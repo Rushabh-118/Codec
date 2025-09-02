@@ -1,13 +1,13 @@
 import "./App.css";
 import { Routes, Route, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
 import Editor1 from "./Editor";
 import Home from "./pages/Home";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
 import ProtectedRoute from "./middleware/protectedRoute";
-
+import { ChatBox } from "./components/ChatBox";
 // Loader component
 const Loader = () => {
   return (
@@ -17,7 +17,7 @@ const Loader = () => {
       </div>
     </div>
   );
-}
+};
 
 // Success component with redirect and toast
 const Success = () => {
@@ -76,14 +76,8 @@ const App = () => {
     <div>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route
-          path="/login"
-          element={<Login />}
-        />
-        <Route
-          path="/signup"
-          element={<Signup />}
-        />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
         <Route
           path="/api/create-room"
           element={
@@ -100,19 +94,24 @@ const App = () => {
             </ProtectedRoute>
           }
         />
-        <Route path="/success" element={
-          <ProtectedRoute>
-            <Success />
-          </ProtectedRoute>
+        <Route
+          path="/success"
+          element={
+            <ProtectedRoute>
+              <Success />
+            </ProtectedRoute>
           }
         />
-        <Route path="/cancel" element={
-          <ProtectedRoute>
-            <Cancel />
-          </ProtectedRoute>
-        }
+        <Route
+          path="/cancel"
+          element={
+            <ProtectedRoute>
+              <Cancel />
+            </ProtectedRoute>
+          }
         />
       </Routes>
+
       <Toaster />
     </div>
   );

@@ -8,6 +8,7 @@ import { v4 as uuid } from "uuid";
 import { saveAs } from "file-saver";
 import { FiCopy, FiSun, FiMoon, FiTrash2 } from "react-icons/fi";
 import EmojiPicker from "emoji-picker-react";
+import { ChatBox } from "./components/ChatBox";
 
 const socket =
   import.meta.env.MODE === "development"
@@ -76,6 +77,9 @@ const Editor1 = () => {
 
   // --- Emoji Picker State ---
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+
+  // --- ChatBot State ---
+  const [chatBotVisible, setChatBotVisible] = useState(false);
 
   // Only allow chat for Team users
   const chatAllowed = userPlan === "Team";
@@ -1219,349 +1223,6 @@ const Editor1 = () => {
           onMouseDown={handleSidebarMouseDown}
           title="Resize sidebar"
         />
-
-        {/* --- Floating Chat Button and Chat Box --- */}
-        <div style={{ position: "fixed", top: 24, right: 24, zIndex: 1200 }}>
-          <button
-            onClick={chatAllowed ? toggleChat : undefined}
-            style={{
-              background: darkMode ? "#2563eb" : "#2563eb",
-              color: "#fff",
-              border: "none",
-              borderRadius: "50%",
-              width: 56,
-              height: 56,
-              boxShadow: "0 2px 8px #0002",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: 28,
-              cursor: chatAllowed ? "pointer" : "not-allowed",
-              marginBottom: 8,
-              position: "relative",
-              padding: 0,
-              opacity: chatAllowed ? 1 : 0.6,
-            }}
-            title={
-              chatAllowed
-                ? showChat
-                  ? "Close Chat"
-                  : "Open Chat"
-                : "Chat is available only for Team users"
-            }
-            disabled={!chatAllowed}
-          >
-            {/* Use inbuilt message icon */}
-            <svg
-              width="32"
-              height="32"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M21 6.5C21 5.11929 19.8807 4 18.5 4H5.5C4.11929 4 3 5.11929 3 6.5V17.5C3 18.8807 4.11929 20 5.5 20H18.5C19.8807 20 21 18.8807 21 17.5V6.5Z"
-                stroke="#fff"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M8 10H16"
-                stroke="#fff"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M8 14H14"
-                stroke="#fff"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-            {unreadChatCount > 0 && !showChat && (
-              <span
-                style={{
-                  position: "absolute",
-                  top: -8,
-                  right: -8,
-                  background: "#ef4444",
-                  color: "#fff",
-                  borderRadius: "50%",
-                  minWidth: 20,
-                  height: 20,
-                  padding: "0 6px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: 13,
-                  fontWeight: 700,
-                  boxShadow: "0 2px 8px #ef444422",
-                  border: "2px solid #fff",
-                  zIndex: 2,
-                }}
-              >
-                {unreadChatCount}
-              </span>
-            )}
-          </button>
-          {showChat && chatAllowed && (
-            <div
-              className="chat-bot bg-white dark:bg-gray-800 rounded-lg shadow p-4 flex flex-col h-[40rem] w-[28rem]"
-              style={{ marginTop: 8, minWidth: 340, maxWidth: 480 }}
-            >
-              <div className="flex justify-between items-center mb-2">
-                <span className="font-bold">Room Chat</span>
-                <span
-                  style={{
-                    color: "#22c55e",
-                    fontWeight: 600,
-                    fontSize: 14,
-                    marginLeft: 12,
-                  }}
-                >
-                  {users.length} online
-                </span>
-                <button
-                  onClick={clearChat}
-                  className={`text-xs px-2 py-1 rounded flex items-center ${
-                    userName === leader
-                      ? "bg-red-500 text-white hover:bg-red-600 cursor-pointer"
-                      : "bg-gray-300 text-gray-500 cursor-not-allowed"
-                  }`}
-                  title={
-                    userName === leader
-                      ? "Clear Chat"
-                      : `Only leader (${leader}) can clear`
-                  }
-                  disabled={userName !== leader}
-                >
-                  <FiTrash2 className="mr-1" /> Clear
-                </button>
-              </div>
-              <div
-                className="flex-1 overflow-y-auto mb-2"
-                style={{ fontSize: 14 }}
-              >
-                {chatMessages.map((msg, idx) => {
-                  const isMe = msg.userName === userName;
-                  return (
-                    <div
-                      key={idx}
-                      className="mb-1 flex"
-                      style={{
-                        justifyContent: isMe ? "flex-end" : "flex-start",
-                      }}
-                    >
-                      <div
-                        style={{
-                          background: isMe
-                            ? darkMode
-                              ? "#2563eb"
-                              : "#dbeafe"
-                            : darkMode
-                            ? "#374151"
-                            : "#f3f4f6",
-                          color: isMe
-                            ? darkMode
-                              ? "#fff"
-                              : "#1e3a8a"
-                            : darkMode
-                            ? "#f3f4f6"
-                            : "#111827",
-                          borderRadius: "12px",
-                          padding: "6px 12px",
-                          maxWidth: "75%",
-                          minWidth: "80px",
-                          alignSelf: isMe ? "flex-end" : "flex-start",
-                          boxShadow: isMe
-                            ? "0 2px 8px #2563eb22"
-                            : "0 2px 8px #0001",
-                        }}
-                      >
-                        <div
-                          style={{
-                            fontWeight: 600,
-                            fontSize: 13,
-                            marginBottom: 2,
-                          }}
-                        >
-                          {msg.userName}
-                          {msg.userName === leader && (
-                            <span
-                              style={{
-                                color: "#f59e42",
-                                fontWeight: 600,
-                                fontSize: 11,
-                                marginLeft: 4,
-                              }}
-                            >
-                              (Leader)
-                            </span>
-                          )}
-                          <span
-                            style={{
-                              fontWeight: 400,
-                              fontSize: 11,
-                              marginLeft: 8,
-                              color: isMe ? "#e0e7ef" : "#64748b",
-                            }}
-                          >
-                            {msg.time}
-                          </span>
-                        </div>
-                        <div style={{ fontSize: 14 }}>{msg.message}</div>
-                      </div>
-                    </div>
-                  );
-                })}
-                <div ref={chatEndRef} />
-              </div>
-              <div className="flex" style={{ minWidth: 0 }}>
-                {/* Emoji Picker Button */}
-                <button
-                  onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-                  className="bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-l border-r border-gray-300 dark:border-gray-600"
-                  style={{
-                    padding: "8px 12px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    cursor: "pointer",
-                  }}
-                  title="Emoji"
-                >
-                  <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                    />
-                    <path
-                      d="M8 14C8 14 9.5 16 12 16C14.5 16 16 14 16 14"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                    />
-                    <path
-                      d="M9 9H9.01"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                    />
-                    <path
-                      d="M15 9H15.01"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                    />
-                  </svg>
-                </button>
-
-                {/* Emoji Picker (shown when toggled) */}
-                {showEmojiPicker && (
-                  <div className="absolute bottom-16 left-4 z-10 emoji-picker">
-                    <EmojiPicker
-                      onEmojiClick={(emojiObject, event) => {
-                        setChatInput(
-                          (prev) =>
-                            prev +
-                            (emojiObject.emoji || emojiObject.native || "")
-                        );
-                      }}
-                      width={300}
-                      height={350}
-                    />
-                  </div>
-                )}
-
-                {/* Message Input */}
-                <input
-                  type="text"
-                  value={chatInput}
-                  onChange={(e) => setChatInput(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && sendChat()}
-                  className="flex-1 border bg-gray-100 dark:bg-gray-700"
-                  style={{
-                    width: 0,
-                    minWidth: 0,
-                    flex: "1 1 0%",
-                    padding: "8px",
-                    fontSize: "14px",
-                    borderRight: "none",
-                  }}
-                  placeholder="Type a message..."
-                />
-
-                {/* Send Button */}
-                <button
-                  onClick={sendChat}
-                  className="bg-blue-500 text-white rounded-r hover:bg-blue-600"
-                  style={{
-                    flexShrink: 0,
-                    padding: "8px 16px",
-                    fontSize: "14px",
-                    minWidth: 60,
-                    border: "none",
-                    height: "100%",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  Send
-                </button>
-              </div>
-            </div>
-          )}
-          {!chatAllowed && showChat && (
-            <div
-              className="chat-bot bg-white dark:bg-gray-800 rounded-lg shadow p-4 flex flex-col h-[16rem] w-[22rem] items-center justify-center text-center"
-              style={{ marginTop: 8, minWidth: 220, maxWidth: 320 }}
-            >
-              <span className="font-bold text-lg mb-2">Room Chat</span>
-              <div className="text-gray-700 dark:text-gray-200 mb-2">
-                Chat is available only for <b>Pro</b> or <b>Team</b> plan users.
-              </div>
-              <button
-                className="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-                onClick={() => setShowChat(false)}
-              >
-                Close
-              </button>
-            </div>
-          )}
-        </div>
-
-        <div
-          style={{
-            position: "absolute",
-            top: 0,
-            right: 0,
-            width: 8,
-            height: "100%",
-            cursor: "ew-resize",
-            zIndex: 10,
-            background: resizingSidebar
-              ? darkMode
-                ? "rgba(59, 130, 246, 0.2)"
-                : "rgba(37,99,235,0.08)"
-              : "transparent",
-            borderRight: resizingSidebar
-              ? `2px solid ${darkMode ? "#3b82f6" : "#2563eb"}`
-              : "none",
-          }}
-          onMouseDown={handleSidebarMouseDown}
-          title="Resize sidebar"
-        />
       </div>
 
       <div
@@ -1574,6 +1235,370 @@ const Editor1 = () => {
           backgroundColor: darkMode ? "#1a202c" : "#f7fafc",
         }}
       >
+        {/* --- Floating Chat Button, Chat Box and AI Chatbot --- */}
+        <div
+          style={{ position: "fixed", top: 24, right: 24, zIndex: 1200 }}
+          className="flex items-start gap-4"
+        >
+          {/* Room Chat */}
+          <div>
+            <button
+              onClick={chatAllowed ? toggleChat : undefined}
+              style={{
+                background: darkMode ? "#2563eb" : "#2563eb",
+                color: "#fff",
+                border: "none",
+                borderRadius: "50%",
+                width: 56,
+                height: 56,
+                boxShadow: "0 2px 8px #0002",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: 28,
+                cursor: chatAllowed ? "pointer" : "not-allowed",
+                position: "relative",
+                padding: 0,
+                opacity: chatAllowed ? 1 : 0.6,
+              }}
+              title={
+                chatAllowed
+                  ? showChat
+                    ? "Close Chat"
+                    : "Open Chat"
+                  : "Chat is available only for Team users"
+              }
+              disabled={!chatAllowed}
+            >
+              <svg
+                width="32"
+                height="32"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M21 6.5C21 5.11929 19.8807 4 18.5 4H5.5C4.11929 4 3 5.11929 3 6.5V17.5C3 18.8807 4.11929 20 5.5 20H18.5C19.8807 20 21 18.8807 21 17.5V6.5Z"
+                  stroke="#fff"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M8 10H16"
+                  stroke="#fff"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M8 14H14"
+                  stroke="#fff"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              {unreadChatCount > 0 && !showChat && (
+                <span
+                  style={{
+                    position: "absolute",
+                    top: -8,
+                    right: -8,
+                    background: "#ef4444",
+                    color: "#fff",
+                    borderRadius: "50%",
+                    minWidth: 20,
+                    height: 20,
+                    padding: "0 6px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: 13,
+                    fontWeight: 700,
+                    boxShadow: "0 2px 8px #ef444422",
+                    border: "2px solid #fff",
+                    zIndex: 2,
+                  }}
+                >
+                  {unreadChatCount}
+                </span>
+              )}
+            </button>
+            {showChat && chatAllowed && (
+              <div
+                className="chat-bot bg-white dark:bg-gray-800 rounded-lg shadow p-4 flex flex-col h-[40rem] w-[28rem]"
+                style={{ marginTop: 8, minWidth: 340, maxWidth: 480 }}
+              >
+                <div className="flex justify-between items-center mb-2">
+                  <span className="font-bold">Room Chat</span>
+                  <span
+                    style={{
+                      color: "#22c55e",
+                      fontWeight: 600,
+                      fontSize: 14,
+                      marginLeft: 12,
+                    }}
+                  >
+                    {users.length} online
+                  </span>
+                  <button
+                    onClick={clearChat}
+                    className={`text-xs px-2 py-1 rounded flex items-center ${
+                      userName === leader
+                        ? "bg-red-500 text-white hover:bg-red-600 cursor-pointer"
+                        : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                    }`}
+                    title={
+                      userName === leader
+                        ? "Clear Chat"
+                        : `Only leader (${leader}) can clear`
+                    }
+                    disabled={userName !== leader}
+                  >
+                    <FiTrash2 className="mr-1" /> Clear
+                  </button>
+                </div>
+                <div
+                  className="flex-1 overflow-y-auto mb-2"
+                  style={{ fontSize: 14 }}
+                >
+                  {chatMessages.map((msg, idx) => {
+                    const isMe = msg.userName === userName;
+                    return (
+                      <div
+                        key={idx}
+                        className="mb-1 flex"
+                        style={{
+                          justifyContent: isMe ? "flex-end" : "flex-start",
+                        }}
+                      >
+                        <div
+                          style={{
+                            background: isMe
+                              ? darkMode
+                                ? "#2563eb"
+                                : "#dbeafe"
+                              : darkMode
+                              ? "#374151"
+                              : "#f3f4f6",
+                            color: isMe
+                              ? darkMode
+                                ? "#fff"
+                                : "#1e3a8a"
+                              : darkMode
+                              ? "#f3f4f6"
+                              : "#111827",
+                            borderRadius: "12px",
+                            padding: "6px 12px",
+                            maxWidth: "75%",
+                            minWidth: "80px",
+                            alignSelf: isMe ? "flex-end" : "flex-start",
+                            boxShadow: isMe
+                              ? "0 2px 8px #2563eb22"
+                              : "0 2px 8px #0001",
+                          }}
+                        >
+                          <div
+                            style={{
+                              fontWeight: 600,
+                              fontSize: 13,
+                              marginBottom: 2,
+                            }}
+                          >
+                            {msg.userName}
+                            {msg.userName === leader && (
+                              <span
+                                style={{
+                                  color: "#f59e42",
+                                  fontWeight: 600,
+                                  fontSize: 11,
+                                  marginLeft: 4,
+                                }}
+                              >
+                                (Leader)
+                              </span>
+                            )}
+                            <span
+                              style={{
+                                fontWeight: 400,
+                                fontSize: 11,
+                                marginLeft: 8,
+                                color: isMe ? "#e0e7ef" : "#64748b",
+                              }}
+                            >
+                              {msg.time}
+                            </span>
+                          </div>
+                          <div style={{ fontSize: 14 }}>{msg.message}</div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                  <div ref={chatEndRef} />
+                </div>
+                <div className="flex" style={{ minWidth: 0 }}>
+                  <button
+                    onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                    className="bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-l border-r border-gray-300 dark:border-gray-600"
+                    style={{
+                      padding: "8px 12px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      cursor: "pointer",
+                    }}
+                    title="Emoji"
+                  >
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                      />
+                      <path
+                        d="M8 14C8 14 9.5 16 12 16C14.5 16 16 14 16 14"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                      />
+                      <path
+                        d="M9 9H9.01"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                      />
+                      <path
+                        d="M15 9H15.01"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                      />
+                    </svg>
+                  </button>
+                  {showEmojiPicker && (
+                    <div className="absolute bottom-16 left-4 z-10 emoji-picker">
+                      <EmojiPicker
+                        onEmojiClick={(emojiObject, event) => {
+                          setChatInput(
+                            (prev) =>
+                              prev +
+                              (emojiObject.emoji || emojiObject.native || "")
+                          );
+                        }}
+                        width={300}
+                        height={350}
+                      />
+                    </div>
+                  )}
+                  <input
+                    type="text"
+                    value={chatInput}
+                    onChange={(e) => setChatInput(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && sendChat()}
+                    className="flex-1 border bg-gray-100 dark:bg-gray-700"
+                    style={{
+                      width: 0,
+                      minWidth: 0,
+                      flex: "1 1 0%",
+                      padding: "8px",
+                      fontSize: "14px",
+                      borderRight: "none",
+                    }}
+                    placeholder="Type a message..."
+                  />
+                  <button
+                    onClick={sendChat}
+                    className="bg-blue-500 text-white rounded-r hover:bg-blue-600"
+                    style={{
+                      flexShrink: 0,
+                      padding: "8px 16px",
+                      fontSize: "14px",
+                      minWidth: 60,
+                      border: "none",
+                      height: "100%",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    Send
+                  </button>
+                </div>
+              </div>
+            )}
+            {!chatAllowed && showChat && (
+              <div
+                className="chat-bot bg-white dark:bg-gray-800 rounded-lg shadow p-4 flex flex-col h-[16rem] w-[22rem] items-center justify-center text-center"
+                style={{ marginTop: 8, minWidth: 220, maxWidth: 320 }}
+              >
+                <span className="font-bold text-lg mb-2">Room Chat</span>
+                <div className="text-gray-700 dark:text-gray-200 mb-2">
+                  Chat is available only for <b>Pro</b> or <b>Team</b> plan
+                  users.
+                </div>
+                <button
+                  className="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                  onClick={() => setShowChat(false)}
+                >
+                  Close
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* AI chatbot */}
+          <div>
+            <button
+              onClick={
+                userPlan === "Team"
+                  ? () => setChatBotVisible(!chatBotVisible)
+                  : undefined
+              }
+              className="rounded-full bg-purple-600 p-4 h-14 w-14 font-bold text-white flex items-center justify-center shadow-lg"
+              style={{
+                opacity: userPlan === "Team" ? 1 : 0.6,
+                cursor: userPlan === "Team" ? "pointer" : "not-allowed",
+              }}
+              title={
+                userPlan === "Team"
+                  ? chatBotVisible
+                    ? "Close AI Chatbot"
+                    : "Open AI Chatbot"
+                  : "AI Chatbot is available only for Team users"
+              }
+              disabled={userPlan !== "Team"}
+            >
+              AI
+            </button>
+            {userPlan === "Team" && (
+              <div className={`${chatBotVisible ? "block" : "hidden"} mt-2`}>
+                <ChatBox />
+              </div>
+            )}
+            {userPlan !== "Team" && chatBotVisible && (
+              <div className="chat-bot bg-white dark:bg-gray-800 rounded-lg shadow p-4 flex flex-col h-[16rem] w-[22rem] items-center justify-center text-center mt-2">
+                <span className="font-bold text-lg mb-2">AI Chatbot</span>
+                <div className="text-gray-700 dark:text-gray-200 mb-2">
+                  AI Chatbot is available only for <b>Team</b> plan users.
+                </div>
+                <button
+                  className="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                  onClick={() => setChatBotVisible(false)}
+                >
+                  Close
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+
         <Editor
           height={"60%"}
           defaultLanguage={language}

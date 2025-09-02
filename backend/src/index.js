@@ -10,6 +10,7 @@ import authRoutes from "./routes/authRoutes.js";
 import feedbackRoutes from "./routes/feedbackRoutes.js";
 import Stripe from "stripe";
 import path from "path";
+import chatBotRoutes from "./routes/chatBotRoutes.js";
 
 dotenv.config();
 
@@ -17,19 +18,21 @@ const __dirname = path.resolve();
 const app = express();
 
 // CORS Setup
-app.use(cors({
-  origin: [process.env.FRONTEND_URL, 'http://localhost:5173'],
-  credentials: true,
-}));
+app.use(
+  cors({
+    origin: [process.env.FRONTEND_URL, "http://localhost:5173"],
+    credentials: true,
+  })
+);
 
 app.use(express.json());
 
 // Root endpoint to indicate server is running
 app.get("/", (req, res) => {
-  res.json({ 
+  res.json({
     message: "Server is running successfully!",
     status: "online",
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   });
 });
 
@@ -37,20 +40,22 @@ app.get("/", (req, res) => {
 app.use("/api", apiRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/feedback", feedbackRoutes);
+app.use("/api/chatbot", chatBotRoutes);
 
 // Stripe Setup
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 const plans = {
-  Pro: { price: 79900, name: "Pro" },      // ₹799.00
-  Team: { price: 249900, name: "Team" },   // ₹2499.00
+  Pro: { price: 79900, name: "Pro" }, // ₹799.00
+  Team: { price: 249900, name: "Team" }, // ₹2499.00
 };
 
 app.post("/create-checkout-session", async (req, res) => {
   const { plan, price } = req.body;
   const selected = plans[plan];
 
-  if (!selected) return res.status(400).json({ error: "Invalid plan selected" });
+  if (!selected)
+    return res.status(400).json({ error: "Invalid plan selected" });
 
   // Use discounted price if provided and valid
   let finalPrice = selected.price;
@@ -93,7 +98,7 @@ app.post("/create-checkout-session", async (req, res) => {
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: [process.env.FRONTEND_URL, 'http://localhost:5173'],
+    origin: [process.env.FRONTEND_URL, "http://localhost:5173"],
     credentials: true,
   },
 });

@@ -1245,13 +1245,17 @@ const Editor1 = () => {
             <button
               onClick={chatAllowed ? toggleChat : undefined}
               style={{
-                background: darkMode ? "#2563eb" : "#2563eb",
+                background: `${
+                  darkMode
+                    ? "linear-gradient(135deg, rgb(67, 56, 202), rgb(79, 70, 229))"
+                    : "linear-gradient(135deg, rgb(99, 102, 241), rgb(79, 70, 229))"
+                }`,
                 color: "#fff",
                 border: "none",
                 borderRadius: "50%",
                 width: 56,
                 height: 56,
-                boxShadow: "0 2px 8px #0002",
+                boxShadow: "0 4px 12px rgba(79, 70, 229, 0.3)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -1260,6 +1264,8 @@ const Editor1 = () => {
                 position: "relative",
                 padding: 0,
                 opacity: chatAllowed ? 1 : 0.6,
+                transition: "all 0.2s ease",
+                transform: showChat ? "scale(0.95)" : "scale(1)",
               }}
               title={
                 chatAllowed
@@ -1305,7 +1311,7 @@ const Editor1 = () => {
                     position: "absolute",
                     top: -8,
                     right: -8,
-                    background: "#ef4444",
+                    background: "linear-gradient(135deg, #ef4444, #dc2626)",
                     color: "#fff",
                     borderRadius: "50%",
                     minWidth: 20,
@@ -1316,7 +1322,7 @@ const Editor1 = () => {
                     justifyContent: "center",
                     fontSize: 13,
                     fontWeight: 700,
-                    boxShadow: "0 2px 8px #ef444422",
+                    boxShadow: "0 2px 8px rgba(220, 38, 38, 0.3)",
                     border: "2px solid #fff",
                     zIndex: 2,
                   }}
@@ -1327,27 +1333,44 @@ const Editor1 = () => {
             </button>
             {showChat && chatAllowed && (
               <div
-                className="chat-bot bg-white dark:bg-gray-800 rounded-lg shadow p-4 flex flex-col h-[40rem] w-[28rem]"
-                style={{ marginTop: 8, minWidth: 340, maxWidth: 480 }}
+                className={`chat-bot rounded-2xl shadow-lg backdrop-blur-sm p-4 flex flex-col h-[40rem] w-[28rem] ${
+                  darkMode
+                    ? "bg-gray-800/90 text-gray-100"
+                    : "bg-white/90 text-gray-900"
+                }`}
+                style={{
+                  marginTop: 8,
+                  minWidth: 340,
+                  maxWidth: 480,
+                  border: `1px solid ${
+                    darkMode ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)"
+                  }`,
+                }}
               >
-                <div className="flex justify-between items-center mb-2">
-                  <span className="font-bold">Room Chat</span>
-                  <span
-                    style={{
-                      color: "#22c55e",
-                      fontWeight: 600,
-                      fontSize: 14,
-                      marginLeft: 12,
-                    }}
-                  >
-                    {users.length} online
-                  </span>
+                <div className="flex justify-between items-center mb-4">
+                  <div className="flex items-center gap-2">
+                    <span className="font-bold text-lg">Room Chat</span>
+                    <span
+                      style={{
+                        background: darkMode
+                          ? "rgba(34, 197, 94, 0.2)"
+                          : "rgba(34, 197, 94, 0.1)",
+                        color: "#22c55e",
+                        fontWeight: 600,
+                        fontSize: 14,
+                        padding: "2px 8px",
+                        borderRadius: "12px",
+                      }}
+                    >
+                      {users.length} online
+                    </span>
+                  </div>
                   <button
                     onClick={clearChat}
-                    className={`text-xs px-2 py-1 rounded flex items-center ${
+                    className={`px-3 py-1.5 rounded-full flex items-center gap-1 transition-all duration-200 ${
                       userName === leader
-                        ? "bg-red-500 text-white hover:bg-red-600 cursor-pointer"
-                        : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                        ? "bg-red-500/10 text-red-500 hover:bg-red-500/20 cursor-pointer"
+                        : "bg-gray-500/10 text-gray-400 cursor-not-allowed"
                     }`}
                     title={
                       userName === leader
@@ -1356,11 +1379,12 @@ const Editor1 = () => {
                     }
                     disabled={userName !== leader}
                   >
-                    <FiTrash2 className="mr-1" /> Clear
+                    <FiTrash2 className="text-sm" />
+                    <span className="text-sm font-medium">Clear</span>
                   </button>
                 </div>
                 <div
-                  className="flex-1 overflow-y-auto mb-2"
+                  className="flex-1 overflow-y-auto mb-4 space-y-3"
                   style={{ fontSize: 14 }}
                 >
                   {chatMessages.map((msg, idx) => {
@@ -1368,86 +1392,91 @@ const Editor1 = () => {
                     return (
                       <div
                         key={idx}
-                        className="mb-1 flex"
+                        className="flex gap-2"
                         style={{
                           justifyContent: isMe ? "flex-end" : "flex-start",
                         }}
                       >
+                        {!isMe && (
+                          <div className="w-8 h-8 rounded-full flex items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-500 text-white text-sm">
+                            {msg.userName[0]?.toUpperCase()}
+                          </div>
+                        )}
                         <div
                           style={{
                             background: isMe
                               ? darkMode
-                                ? "#2563eb"
-                                : "#dbeafe"
+                                ? "linear-gradient(135deg, rgb(67, 56, 202, 0.3), rgb(79, 70, 229, 0.3))"
+                                : "linear-gradient(135deg, rgb(99, 102, 241, 0.1), rgb(79, 70, 229, 0.1))"
                               : darkMode
-                              ? "#374151"
-                              : "#f3f4f6",
+                              ? "rgba(55, 65, 81, 0.5)"
+                              : "rgba(243, 244, 246, 0.7)",
                             color: isMe
                               ? darkMode
                                 ? "#fff"
-                                : "#1e3a8a"
+                                : "#4338ca"
                               : darkMode
                               ? "#f3f4f6"
                               : "#111827",
-                            borderRadius: "12px",
-                            padding: "6px 12px",
+                            borderRadius: "18px",
+                            padding: "10px 16px",
                             maxWidth: "75%",
                             minWidth: "80px",
-                            alignSelf: isMe ? "flex-end" : "flex-start",
-                            boxShadow: isMe
-                              ? "0 2px 8px #2563eb22"
-                              : "0 2px 8px #0001",
+                            backdropFilter: "blur(8px)",
+                            border: `1px solid ${
+                              isMe
+                                ? darkMode
+                                  ? "rgba(67, 56, 202, 0.2)"
+                                  : "rgba(79, 70, 229, 0.2)"
+                                : darkMode
+                                ? "rgba(75, 85, 99, 0.2)"
+                                : "rgba(229, 231, 235, 0.5)"
+                            }`,
                           }}
                         >
-                          <div
-                            style={{
-                              fontWeight: 600,
-                              fontSize: 13,
-                              marginBottom: 2,
-                            }}
-                          >
-                            {msg.userName}
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="font-semibold text-sm">
+                              {msg.userName}
+                            </span>
                             {msg.userName === leader && (
                               <span
+                                className="text-xs font-semibold px-2 py-0.5 rounded-full"
                                 style={{
+                                  background: "rgba(245, 158, 66, 0.1)",
                                   color: "#f59e42",
-                                  fontWeight: 600,
-                                  fontSize: 11,
-                                  marginLeft: 4,
                                 }}
                               >
-                                (Leader)
+                                Leader
                               </span>
                             )}
-                            <span
-                              style={{
-                                fontWeight: 400,
-                                fontSize: 11,
-                                marginLeft: 8,
-                                color: isMe ? "#e0e7ef" : "#64748b",
-                              }}
-                            >
+                            <span className="text-xs text-gray-400">
                               {msg.time}
                             </span>
                           </div>
-                          <div style={{ fontSize: 14 }}>{msg.message}</div>
+                          <div className="text-sm">{msg.message}</div>
                         </div>
+                        {isMe && (
+                          <div className="w-8 h-8 rounded-full flex items-center justify-center bg-gradient-to-br from-violet-500 to-fuchsia-500 text-white text-sm">
+                            {msg.userName[0]?.toUpperCase()}
+                          </div>
+                        )}
                       </div>
                     );
                   })}
                   <div ref={chatEndRef} />
                 </div>
-                <div className="flex" style={{ minWidth: 0 }}>
+                <div
+                  className={`flex gap-2 p-2 rounded-xl ${
+                    darkMode ? "bg-gray-700/50" : "bg-gray-100/50"
+                  }`}
+                >
                   <button
                     onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-                    className="bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-l border-r border-gray-300 dark:border-gray-600"
-                    style={{
-                      padding: "8px 12px",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      cursor: "pointer",
-                    }}
+                    className={`p-2 rounded-lg transition-all duration-200 ${
+                      darkMode
+                        ? "hover:bg-gray-600/50 text-gray-300"
+                        : "hover:bg-gray-200/50 text-gray-600"
+                    }`}
                     title="Emoji"
                   >
                     <svg
@@ -1502,33 +1531,32 @@ const Editor1 = () => {
                     value={chatInput}
                     onChange={(e) => setChatInput(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && sendChat()}
-                    className="flex-1 border bg-gray-100 dark:bg-gray-700"
+                    className={`flex-1 px-4 py-2 rounded-lg transition-colors duration-200 ${
+                      darkMode
+                        ? "bg-gray-600/50 text-white placeholder-gray-400"
+                        : "bg-white/50 text-gray-900 placeholder-gray-500"
+                    }`}
                     style={{
-                      width: 0,
-                      minWidth: 0,
-                      flex: "1 1 0%",
-                      padding: "8px",
-                      fontSize: "14px",
-                      borderRight: "none",
+                      border: `1px solid ${
+                        darkMode
+                          ? "rgba(75, 85, 99, 0.2)"
+                          : "rgba(229, 231, 235, 0.5)"
+                      }`,
                     }}
                     placeholder="Type a message..."
                   />
                   <button
                     onClick={sendChat}
-                    className="bg-blue-500 text-white rounded-r hover:bg-blue-600"
+                    className="px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-2"
                     style={{
-                      flexShrink: 0,
-                      padding: "8px 16px",
-                      fontSize: "14px",
-                      minWidth: 60,
+                      background: darkMode
+                        ? "linear-gradient(135deg, rgb(67, 56, 202), rgb(79, 70, 229))"
+                        : "linear-gradient(135deg, rgb(99, 102, 241), rgb(79, 70, 229))",
+                      color: "#fff",
                       border: "none",
-                      height: "100%",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
                     }}
                   >
-                    Send
+                    Send ✨
                   </button>
                 </div>
               </div>

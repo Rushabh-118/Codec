@@ -1734,6 +1734,7 @@ const Editor1 = () => {
         position="top-right"
         autoClose={2000}
         theme={darkMode ? "dark" : "light"}
+        hideProgressBar={true}
       />
     </div>
   );

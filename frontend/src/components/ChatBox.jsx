@@ -40,7 +40,7 @@ export function ChatBox() {
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
       // Get AI response (replace with actual API call)
-      const res = await axios.post("http://localhost:5001/api/chatbot/chat", {
+      const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/chatbot/chat`, {
         message: inputMessage,
       });
       const aiMessage = {

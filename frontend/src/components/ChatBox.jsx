@@ -8,6 +8,15 @@ export function ChatBox() {
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
 
+  // Sample AI responses (you can replace with actual API calls)
+  const aiResponses = [
+    "Hello! How can I assist you today?",
+    "That's an interesting question. Let me think about that...",
+    "I'm an AI assistant here to help with your queries.",
+    "Could you elaborate more on that?",
+    "Thanks for chatting with me! Is there anything else you'd like to know?",
+  ];
+
   // Auto-scroll to bottom when messages change
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -79,16 +88,28 @@ export function ChatBox() {
 
   return (
     <div className="flex flex-col h-[500px] w-full max-w-md mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
-      {/* Chat header */}
+      {/* Chat header (unchanged) */}
       <div className="bg-indigo-600 text-white p-4">
         <h2 className="text-xl font-semibold">AI Assistant</h2>
       </div>
 
       {/* Messages container */}
-      <div className="flex-1 p-4 overflow-y-auto bg-gray-50">
+      <div
+        className={`flex-1 p-4 overflow-y-auto ${
+          isDarkMode ? "bg-gray-900/30" : "bg-gray-50/30"
+        }`}
+      >
         {messages.length === 0 ? (
-          <div className="flex items-center justify-center h-full text-gray-500">
-            Start a conversation with the AI
+          <div
+            className={`flex flex-col items-center justify-center h-full space-y-4 ${
+              isDarkMode ? "text-gray-400" : "text-gray-500"
+            }`}
+          >
+            <div className="text-4xl mb-2">🤖</div>
+            <p className="text-center">Start a conversation with the AI</p>
+            <p className="text-sm text-center opacity-75">
+              Ask me anything about coding, programming, or technical concepts!
+            </p>
           </div>
         ) : (
           messages.map((message, index) => (
@@ -98,26 +119,67 @@ export function ChatBox() {
                 message.sender === "user" ? "justify-end" : "justify-start"
               }`}
             >
+              {message.sender === "ai" && (
+                <div className="w-8 h-8 rounded-full flex items-center justify-center mr-2 bg-gradient-to-br from-purple-500 to-indigo-500 text-white text-sm">
+                  🤖
+                </div>
+              )}
               <div
-                className={`max-w-xs md:max-w-md rounded-lg px-4 py-2 ${
+                className={`max-w-xs md:max-w-md rounded-2xl px-4 py-2 shadow-sm ${
                   message.sender === "user"
-                    ? "bg-indigo-500 text-white rounded-br-none"
-                    : "bg-gray-200 text-gray-800 rounded-bl-none"
+                    ? `${
+                        isDarkMode
+                          ? "bg-indigo-600 text-white"
+                          : "bg-indigo-500 text-white"
+                      } rounded-br-none`
+                    : `${
+                        isDarkMode
+                          ? "bg-gray-800 text-gray-100"
+                          : "bg-white text-gray-800"
+                      } rounded-bl-none`
                 }`}
               >
-                {renderMessage(message.text)}
+                <div className="prose prose-sm dark:prose-invert">
+                  {renderMessage(message.text)}
+                </div>
               </div>
+              {message.sender === "user" && (
+                <div className="w-8 h-8 rounded-full flex items-center justify-center ml-2 bg-gradient-to-br from-pink-500 to-orange-500 text-white text-sm">
+                  👤
+                </div>
+              )}
             </div>
           ))
         )}
         {/* Loading indicator */}
         {isLoading && (
           <div className="flex justify-start mb-4">
-            <div className="bg-gray-200 text-gray-800 rounded-lg rounded-bl-none px-4 py-2">
+            <div className="w-8 h-8 rounded-full flex items-center justify-center mr-2 bg-gradient-to-br from-purple-500 to-indigo-500 text-white text-sm">
+              🤖
+            </div>
+            <div
+              className={`rounded-2xl px-4 py-2 ${
+                isDarkMode
+                  ? "bg-gray-800 text-gray-100"
+                  : "bg-white text-gray-800"
+              }`}
+            >
               <div className="flex space-x-2">
-                <div className="w-2 h-2 rounded-full bg-gray-500 animate-bounce"></div>
-                <div className="w-2 h-2 rounded-full bg-gray-500 animate-bounce delay-100"></div>
-                <div className="w-2 h-2 rounded-full bg-gray-500 animate-bounce delay-200"></div>
+                <div
+                  className={`w-2 h-2 rounded-full ${
+                    isDarkMode ? "bg-gray-400" : "bg-gray-500"
+                  } animate-bounce`}
+                ></div>
+                <div
+                  className={`w-2 h-2 rounded-full ${
+                    isDarkMode ? "bg-gray-400" : "bg-gray-500"
+                  } animate-bounce delay-100`}
+                ></div>
+                <div
+                  className={`w-2 h-2 rounded-full ${
+                    isDarkMode ? "bg-gray-400" : "bg-gray-500"
+                  } animate-bounce delay-200`}
+                ></div>
               </div>
             </div>
           </div>
@@ -125,7 +187,7 @@ export function ChatBox() {
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Input area */}
+      {/* Input area (unchanged) */}
       <div className="border-t border-gray-200 p-4 bg-white">
         <div className="flex space-x-2">
           <input
@@ -134,15 +196,24 @@ export function ChatBox() {
             value={inputMessage}
             onChange={(e) => setInputMessage(e.target.value)}
             onKeyPress={handleKeyPress}
-            className="text-white bg-slate-900 flex-1 border border-gray-300 rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className={`flex-1 px-4 py-2 rounded-full transition-all duration-200 focus:outline-none focus:ring-2 ${
+              isDarkMode
+                ? "bg-gray-700 text-white placeholder-gray-400 border-gray-600 focus:ring-purple-500"
+                : "bg-gray-100 text-gray-900 placeholder-gray-500 border-gray-200 focus:ring-indigo-500"
+            }`}
             disabled={isLoading}
           />
           <button
             onClick={handleSendMessage}
             disabled={!inputMessage.trim() || isLoading}
-            className="bg-indigo-600 text-white rounded-full px-4 py-2 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            className={`px-6 py-2 rounded-full font-medium transition-all duration-200 
+              ${
+                isDarkMode
+                  ? "bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700"
+                  : "bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600"
+              } text-white disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2`}
           >
-            Send
+            Send {!isLoading && "✨"}
           </button>
         </div>
       </div>

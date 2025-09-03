@@ -7,6 +7,8 @@ import { toast, ToastContainer } from "react-toastify";
 import { v4 as uuid } from "uuid";
 import { saveAs } from "file-saver";
 import { FiCopy, FiSun, FiMoon, FiTrash2 } from "react-icons/fi";
+import { SiJavascript, SiPython, SiCplusplus, SiC, SiPhp, SiGo, SiRuby, SiRust } from "react-icons/si";
+import { FaJava } from 'react-icons/fa';
 import EmojiPicker from "emoji-picker-react";
 import { ChatBox } from "./components/ChatBox";
 
@@ -29,6 +31,30 @@ const DEFAULT_CODE = {
 };
 
 const Editor1 = () => {
+  // Language icons and names for custom dropdown
+  const languageIcons = {
+    javascript: <SiJavascript color="#f7df1e" size={20} />,
+    python: <SiPython color="#3776ab" size={20} />,
+    java: <FaJava color="#007396" size={20} />,
+    cpp: <SiCplusplus color="#00599c" size={20} />,
+    c: <SiC color="#00599c" size={20} />,
+    php: <SiPhp color="#777bb4" size={20} />,
+    go: <SiGo color="#00add8" size={20} />,
+    ruby: <SiRuby color="#cc342d" size={20} />,
+    rust: <SiRust color="#dea584" size={20} />,
+  };
+  const languageNames = {
+    javascript: "JavaScript",
+    python: "Python",
+    java: "Java",
+    cpp: "C++",
+    c: "C",
+    php: "PHP",
+    go: "Go",
+    ruby: "Ruby",
+    rust: "Rust",
+  };
+  const [showLangDropdown, setShowLangDropdown] = useState(false);
   const [joined, setJoined] = useState(false);
   const [roomId, setRoomId] = useState("");
   const [userName, setUserName] = useState("");
@@ -1009,33 +1035,76 @@ const Editor1 = () => {
             >
               Download
             </button>
-            <select
-              value={language}
-              onChange={handleLanguageChange}
-              style={{
-                padding: "8px",
-                borderRadius: "6px",
-                border: "none",
-                background: darkMode ? "#374151" : "#e5e7eb",
-                color: darkMode ? "#f3f4f6" : "#111827",
-                cursor: "pointer",
-                fontSize: "12px",
-                fontWeight: "500",
-                gridColumn: "span 2",
-                appearance: "none",
-                paddingRight: "28px",
-              }}
-            >
-              <option value="javascript">JavaScript</option>
-              <option value="python">Python</option>
-              <option value="java">Java</option>
-              <option value="cpp">C++</option>
-              <option value="c">C</option>
-              <option value="php">PHP</option>
-              <option value="go">Go</option>
-              <option value="ruby">Ruby</option>
-              <option value="rust">Rust</option>
-            </select>
+            <div style={{ gridColumn: "span 2", position: "relative" }}>
+              {/* Custom Dropdown for Language Selection */}
+              <div style={{ position: "relative", width: "100%" }}>
+                <button
+                  type="button"
+                  onClick={() => setShowLangDropdown((prev) => !prev)}
+                  style={{
+                    width: "100%",
+                    padding: "8px",
+                    borderRadius: "6px",
+                    border: "none",
+                    background: darkMode ? "#374151" : "#e5e7eb",
+                    color: darkMode ? "#f3f4f6" : "#111827",
+                    cursor: "pointer",
+                    fontSize: "12px",
+                    fontWeight: "500",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "flex-start",
+                    gap: "10px"
+                  }}
+                >
+                  {languageIcons[language]}
+                  {languageNames[language]}
+                  <span style={{ marginLeft: "auto", opacity: 0.5 }}>▼</span>
+                </button>
+                {showLangDropdown && (
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: "110%",
+                      left: 0,
+                      width: "100%",
+                      background: darkMode ? "#374151" : "#fff",
+                      borderRadius: "8px",
+                      boxShadow: "0 4px 16px rgba(0,0,0,0.08)",
+                      zIndex: 100,
+                      border: darkMode ? "1px solid #222" : "1px solid #eee"
+                    }}
+                  >
+                    {Object.keys(languageIcons).map((lang) => (
+                      <div
+                        key={lang}
+                        onClick={() => {
+                          setLanguage(lang);
+                          setCode(DEFAULT_CODE[lang] || DEFAULT_CODE.javascript);
+                          setShowLangDropdown(false);
+                          socket.emit("languageChange", { roomId, language: lang });
+                          toast.success("Language changed!");
+                        }}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "10px",
+                          padding: "10px 16px",
+                          cursor: "pointer",
+                          fontSize: "13px",
+                          color: darkMode ? "#f3f4f6" : "#111827",
+                          background: language === lang ? (darkMode ? "#1e293b" : "#f3f4f6") : "inherit"
+                        }}
+                        onMouseDown={e => e.preventDefault()}
+                      >
+                        {languageIcons[lang]}
+                        {languageNames[lang]}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         </div>
 

@@ -7,15 +7,16 @@ import Home from "./pages/Home";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
 import ProtectedRoute from "./middleware/protectedRoute";
-import { ChatBox } from "./components/ChatBox";
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 // Loader component
 const Loader = () => {
   return (
-    <div className="fixed inset-0 flex flex-col gap-4 w-full h-full items-center justify-center z-50 bg-white bg-opacity-60">
-      <div className="w-44 h-44 border-[14px] border-transparent text-blue-400 text-6xl animate-spin flex items-center justify-center border-t-blue-400 rounded-full">
-        <div className="w-32 h-32 border-[10px] border-transparent text-red-400 text-4xl animate-spin flex items-center justify-center border-t-red-400 rounded-full" />
-      </div>
-    </div>
+    <DotLottieReact
+      src="https://lottie.host/72cfa64d-acbc-4efc-b17d-a0615ff6479e/IHa0rKxGzv.lottie"
+      loop
+      autoplay
+      style={{ width: 600, height: 600, margin: "auto" }}
+    />
   );
 };
 
@@ -44,8 +45,6 @@ const Success = () => {
 
   return (
     <div className="text-center text-green-600 p-10">
-      Payment Successful! 🎉
-      <br />
       Redirecting to Home...
       <Loader />
     </div>
@@ -63,7 +62,6 @@ const Cancel = () => {
 
   return (
     <div className="text-center text-red-600 p-10">
-      Payment Cancelled. ❌<br />
       Redirecting to Home...
       <Loader />
     </div>

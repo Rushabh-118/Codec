@@ -8,23 +8,20 @@ export function ChatBox() {
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
 
-  // Sample AI responses (you can replace with actual API calls)
-  const aiResponses = [
-    "Hello! How can I assist you today?",
-    "That's an interesting question. Let me think about that...",
-    "I'm an AI assistant here to help with your queries.",
-    "Could you elaborate more on that?",
-    "Thanks for chatting with me! Is there anything else you'd like to know?",
-  ];
-
   // Auto-scroll to bottom when messages change
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const getRandomResponse = () => {
-    return aiResponses[Math.floor(Math.random() * aiResponses.length)];
-  };
+  // Send first AI greeting when chat starts
+  useEffect(() => {
+    setMessages([
+      {
+        text: "Hello! How can I assist you today?",
+        sender: "ai",
+      },
+    ]);
+  }, []);
 
   const handleSendMessage = async () => {
     if (!inputMessage.trim()) return;
@@ -40,9 +37,11 @@ export function ChatBox() {
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
       // Get AI response (replace with actual API call)
-      const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/chatbot/chat`, {
-        message: inputMessage,
-      });
+      const res = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/chatbot/chat`,
+        { message: inputMessage }
+      );
+
       const aiMessage = {
         text:
           res.data.chatRes ||
@@ -80,7 +79,7 @@ export function ChatBox() {
 
   return (
     <div className="flex flex-col h-[500px] w-full max-w-md mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
-      {/* Chat header (unchanged) */}
+      {/* Chat header */}
       <div className="bg-indigo-600 text-white p-4">
         <h2 className="text-xl font-semibold">AI Assistant</h2>
       </div>
@@ -111,7 +110,7 @@ export function ChatBox() {
             </div>
           ))
         )}
-        {/* Loading indicator (unchanged) */}
+        {/* Loading indicator */}
         {isLoading && (
           <div className="flex justify-start mb-4">
             <div className="bg-gray-200 text-gray-800 rounded-lg rounded-bl-none px-4 py-2">
@@ -126,7 +125,7 @@ export function ChatBox() {
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Input area (unchanged) */}
+      {/* Input area */}
       <div className="border-t border-gray-200 p-4 bg-white">
         <div className="flex space-x-2">
           <input

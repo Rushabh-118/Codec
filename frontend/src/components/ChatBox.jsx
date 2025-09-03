@@ -6,16 +6,8 @@ export function ChatBox() {
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
   const messagesEndRef = useRef(null);
-
-  // Sample AI responses (you can replace with actual API calls)
-  const aiResponses = [
-    "Hello! How can I assist you today?",
-    "That's an interesting question. Let me think about that...",
-    "I'm an AI assistant here to help with your queries.",
-    "Could you elaborate more on that?",
-    "Thanks for chatting with me! Is there anything else you'd like to know?",
-  ];
 
   // Auto-scroll to bottom when messages change
   useEffect(() => {

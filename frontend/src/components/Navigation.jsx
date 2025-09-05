@@ -93,7 +93,6 @@ const Navigation = () => {
             <motion.h1
               onClick={() => document.getElementById("hero")?.scrollIntoView({ behavior: "smooth" })}
               className="text-2xl font-bold font-display text-gray-600 dark:text-white cursor-pointer"
-              whileHover={{ scale: 1.05 }}
             >
               Code<span className="text-[#3b82f6]">C</span>
             </motion.h1>

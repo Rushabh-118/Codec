@@ -6,6 +6,7 @@ import { Link, Navigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import { v4 as uuid } from "uuid";
 import { saveAs } from "file-saver";
+import {motion} from "framer-motion";
 import { FiCopy, FiSun, FiMoon, FiTrash2 } from "react-icons/fi";
 import {
   SiJavascript,
@@ -533,6 +534,22 @@ const Editor1 = () => {
                   </svg>
                 </button>
               </Link>
+              <motion.button
+              onClick={() => setDarkMode(!darkMode)}
+              whileHover={{ scale: 1.1, rotate: 15 }}
+              whileTap={{ scale: 0.85 }}
+              className="absolute top-4 right-4 w-10 h-10 rounded-full flex items-center justify-center bg-gray-200 dark:bg-gray-700"
+            >
+              {darkMode ? (
+                <svg className="h-6 w-6 text-yellow-400" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v1m0 16v1m8.66-8.66h-1M4.34 12H3m15.07 6.07l-.71-.71M6.34 6.34l-.71-.71m12.02 0l-.71.71M6.34 17.66l-.71.71M12 5a7 7 0 100 14 7 7 0 000-14z" />
+                </svg>
+              ) : (
+                <svg className="h-6 w-6 text-gray-800 dark:text-gray-100" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M17.293 13.293a8 8 0 01-10.586-10.586 8 8 0 1010.586 10.586z" />
+                </svg>
+              )}
+            </motion.button>
 
               <div className="flex-grow">
                 <h1

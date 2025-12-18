@@ -35,21 +35,6 @@ A real-time collaborative code editor built using the MERN stack with Socket.IO 
 
 ## 🚀 Getting Started
 
-### Clone the repository
-
 ```bash
-git clone https://github.com/Rushabh-118/Codec.git
-cd Codec
-```
-
-### install packages
-
-```bash
-npm run build
-```
-
-### start backend and frontend
-
-```bash
-npm start
+https://codec-two.vercel.app/
 ```
